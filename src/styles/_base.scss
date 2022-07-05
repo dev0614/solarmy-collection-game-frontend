@@ -2,6 +2,7 @@ body {
     margin: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: $back-color;
 }
 
 * {
@@ -188,7 +189,7 @@ button {
     .logo-text {
         padding: 24px;
         background: rgba(31, 31, 31, 0.5);
-        backdrop-filter: blur(3px);
+        backdrop-filter: blur(6px);
         border-radius: 24px;
         margin-bottom: 24px;
         display: flex;
@@ -198,7 +199,7 @@ button {
 }
 .wallet-connect {
     background: rgba(31, 31, 31, 0.5);
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(6px);
     border-radius: 24px;
     margin-bottom: 24px;
     padding: 24px;
@@ -219,6 +220,107 @@ button {
             text-transform: uppercase;
             color: #ffffff;
             margin-left: 8px;
+        }
+    }
+}
+
+.notmached-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: calc(100vh - 120px);
+    color: #fff;
+    text-align: center;
+    h1 {
+        font-size: 108px;
+        font-weight: bold;
+    }
+    p {
+        font-size: 18px;
+    }
+}
+.page-content {
+    position: relative;
+
+    padding-top: 120px;
+    z-index: 3;
+}
+.deploy-header {
+    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.4), inset 0px 1px 0px #383838;
+    border-radius: 24px;
+    background: #292929;
+    margin-right: 24px;
+    margin-left: 24px;
+    .content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 96px;
+        padding: 0 16px;
+        .content-left {
+            display: flex;
+            align-items: center;
+            p {
+                font-weight: 500;
+                font-size: 20px;
+                line-height: 158%;
+                letter-spacing: 1px;
+                color: rgba(255, 255, 255, 0.6);
+                display: flex;
+                align-items: center;
+                margin-left: 24px;
+                span {
+                    font-weight: 700;
+                    font-size: 48px;
+                    line-height: 124%;
+                    letter-spacing: 1px;
+                    color: #ffffff;
+                    margin-left: 24px;
+                }
+            }
+        }
+        .content-right {
+            display: flex;
+            align-items: center;
+            a {
+                font-weight: 500;
+                font-size: 17px;
+                line-height: 143%;
+                letter-spacing: 1px;
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                text-decoration: none;
+                padding: 20px 28px;
+                border-radius: 100px;
+                margin-right: 8px;
+                svg {
+                    margin-left: 12px;
+                }
+                &:hover {
+                    background: rgba(255, 255, 255, 0.16);
+                }
+            }
+            .view-switch {
+                padding: 4px;
+                width: 392px;
+                height: 32px;
+                border-radius: 100px;
+                background-color: $back-color;
+                button {
+                    width: 196px;
+                    height: 32px;
+                    background: transparent;
+                    border-radius: 16px;
+                    border: none;
+                    color: #fff;
+                    text-transform: uppercase;
+                    &.active {
+                        background: rgba(255, 255, 255, 0.16);
+                    }
+                }
+            }
         }
     }
 }

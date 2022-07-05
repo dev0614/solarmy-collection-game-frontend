@@ -12,9 +12,11 @@
 }
 
 header {
-    position: absolute;
+    position: fixed;
     z-index: 99;
     padding: 24px;
+    left: 0;
+    top: 0;
     width: calc(100% - 48px);
     .header-content {
         display: flex;
