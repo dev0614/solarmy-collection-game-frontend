@@ -1,4 +1,5 @@
 import { NextSeo } from "next-seo";
+import { DeveloperIcon } from "../components/svgIcons";
 import { LIVE_URL } from "../config";
 
 export default function HomePage(props: {
@@ -28,7 +29,40 @@ export default function HomePage(props: {
           site_name: 'Solarmy',
         }}
       />
-      <main>
+      <main className="login-page">
+        {/* eslint-disable-next-line */}
+        <img
+          src="/img/login-bg.jpg"
+          alt=""
+          className="login-bg"
+        />
+        {/* eslint-disable-next-line */}
+        <img
+          src="/img/login-guys.png"
+          alt=""
+          className="login-guys"
+        />
+        <div className="login-box">
+          {/* eslint-disable-next-line */}
+          <img
+            src="/img/login-logo.svg"
+            className="login-logo"
+            alt=""
+          />
+          <div className="logo-text">
+            {/* eslint-disable-next-line */}
+            <img
+              src="/img/logo-wordmark.svg"
+              alt=""
+            />
+          </div>
+          <div className="wallet-connect">
+            <button className="btn-wallet">
+              <DeveloperIcon />
+              <span>connect wallet</span>
+            </button>
+          </div>
+        </div>
       </main>
     </>
   )

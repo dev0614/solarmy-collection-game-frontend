@@ -152,3 +152,76 @@ button {
 .pb-80 {
     padding-bottom: 80px;
 }
+
+//========= LOGIN PAGE =============//
+.login-page {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    img.login-bg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: relative;
+        z-index: 1;
+    }
+    img.login-guys {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 0;
+        z-index: 2;
+    }
+}
+
+.login-box {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    z-index: 3;
+    text-align: center;
+    width: 260px;
+    img.login-logo {
+        margin: 24px auto;
+    }
+    .logo-text {
+        padding: 24px;
+        background: rgba(31, 31, 31, 0.5);
+        backdrop-filter: blur(3px);
+        border-radius: 24px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+.wallet-connect {
+    background: rgba(31, 31, 31, 0.5);
+    backdrop-filter: blur(3px);
+    border-radius: 24px;
+    margin-bottom: 24px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .btn-wallet {
+        padding: 12px 12px 12px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        border-radius: 16px;
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        span {
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin-left: 8px;
+        }
+    }
+}
