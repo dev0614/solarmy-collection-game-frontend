@@ -1,0 +1,157 @@
+// .wallet-adapter-button {
+//     background-color: transparent !important;
+//     font-family: $font-main !important;
+//     text-transform: uppercase;
+//     border: 2px solid #fff !important;
+//     font-size: 14px !important;
+//     padding: 7px 9px !important;
+//     height: 36px !important;
+// }
+// .wallet-adapter-modal-list .wallet-adapter-button {
+//     border-color: transparent !important;
+// }
+.wallet-adapter-button.wallet-adapter-button-trigger {
+    background: #9cf6b1;
+    border-radius: 16px !important;
+    font-family: $font-main !important;
+    padding: 16px 24px 16px 16px !important;
+    color: #001f25 !important;
+    font-weight: 500 !important;
+    font-size: 15px !important;
+    line-height: 20px !important;
+    height: 56px !important;
+}
+.wallet-adapter-button:not([disabled]):hover {
+    background-color: #5acc74 !important;
+}
+.wallet-adapter-dropdown-list {
+    top: -320% !important;
+}
+.Dropdown-control {
+    padding: 16px 52px 16px 10px !important;
+    border-radius: 16px !important;
+    background-color: transparent !important;
+    border-color: transparent !important;
+    width: 270px !important;
+    &:hover {
+        box-shadow: none !important;
+        background-color: #fff !important;
+    }
+}
+.Dropdown-root {
+    border: 1px solid transparent !important;
+    &.is-open {
+        box-shadow: none !important;
+        border: 1px solid #0265da !important;
+        background-color: #fff !important;
+        border-radius: 16px;
+    }
+}
+.Dropdown-arrow {
+    top: calc(50% - 2px) !important;
+}
+.Dropdown-menu {
+    top: calc(100% + 4px) !important;
+    border-radius: 16px !important;
+}
+.DatePicker {
+    width: 100%;
+}
+.DatePicker__input {
+    padding: 16px 12px 16px 16px !important;
+    border-radius: 16px !important;
+    border: 1px solid #40575b !important;
+    background-color: #40575b !important;
+    outline: none !important;
+    width: calc(100% - 30px) !important;
+    color: #fff !important;
+    font-weight: 400 !important;
+    font-size: 16px !important;
+    line-height: 24px !important;
+    text-align: left !important;
+    &::placeholder {
+        color: #fff !important;
+    }
+}
+.Calendar__monthText,
+.Calendar__yearText {
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    line-height: 20px !important;
+    color: #001f25 !important;
+}
+.Calendar__day {
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    line-height: 24px !important;
+    color: #001f25 !important;
+    height: 35px !important;
+    margin-bottom: 0 !important;
+}
+.Calendar {
+    background-color: $back-color !important;
+    max-width: 284px !important;
+    min-height: 0 !important;
+}
+.Calendar__day.-selected {
+    border-radius: 8px !important;
+    background-color: #0265da !important;
+    color: #fff !important;
+}
+.Calendar__monthSelectorItem.-active .Calendar__monthSelectorItemText,
+.Calendar__yearSelectorItem.-active .Calendar__yearSelectorText {
+    background-color: #0265da !important;
+    color: #fff !important;
+}
+.Calendar__section,
+.Calendar__weekDays,
+.Calendar__monthSelector {
+    padding: 0 16px !important;
+}
+.Calendar__day.-ltr {
+    min-height: 35px !important;
+}
+.Calendar__sectionWrapper {
+    min-height: 220px !important;
+}
+.Calendar__header {
+    padding: 8px 16px !important;
+}
+.Calendar__monthSelectorItemText {
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    line-height: 20px !important;
+    color: #001f25 !important;
+}
+.Calendar__yearSelectorItem {
+    width: 33.3% !important;
+}
+.Calendar__yearSelectorText {
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    line-height: 24px !important;
+    color: #001f25 !important;
+    min-width: 85% !important;
+    padding: 16px 20px !important;
+    border-radius: 8px !important;
+}
+.Calendar__section.-hiddenNext,
+.Calendar__section.-hiddenPrevious {
+    opacity: 0 !important;
+}
+.Calendar__weekDay {
+    font-weight: 400 !important;
+    font-size: 12px !important;
+    line-height: 16px !important;
+    color: #001f25 !important;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.DatePicker__calendarContainer {
+    z-index: 2000 !important;
+}
+.Calendar {
+    z-index: 120 !important;
+}
