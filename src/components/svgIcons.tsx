@@ -337,3 +337,59 @@ export const EditTwoTone = () => {
         </svg>
     )
 }
+
+export const DashboardIcon = () => {
+    return (
+        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.3" d="M5.5 5H9.5V11H5.5V5ZM15.5 13H19.5V19H15.5V13ZM5.5 17H9.5V19H5.5V17ZM15.5 5H19.5V7H15.5V5Z" fill="white" fillOpacity="1" />
+            <path d="M3.5 13H11.5V3H3.5V13ZM5.5 5H9.5V11H5.5V5ZM13.5 21H21.5V11H13.5V21ZM15.5 13H19.5V19H15.5V13ZM13.5 3V9H21.5V3H13.5ZM19.5 7H15.5V5H19.5V7ZM3.5 21H11.5V15H3.5V21ZM5.5 17H9.5V19H5.5V17Z" fill="white" fillOpacity="1" />
+        </svg>
+    )
+}
+export const LeaderboardIcon = () => {
+    return (
+        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4.5 22H2.5V2H4.5V22ZM22.5 7H6.5V10H22.5V7ZM16.5 14H6.5V17H16.5V14Z" fill="white" fillOpacity="1" />
+        </svg>
+    )
+}
+export const DeployIcon = () => {
+    return (
+        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10.28 11.16L8.86 12.58C8.18 11.89 7.52 11 7.07 9.64L9.01 9.15C9.33 10.04 9.78 10.65 10.28 11.16ZM11.5 6L7.5 2L3.5 6H6.52C6.54 6.81 6.6 7.54 6.71 8.17L8.65 7.68C8.58 7.2 8.53 6.63 8.52 6H11.5ZM21.5 6L17.5 2L13.5 6H16.49C16.39 9.68 15.21 10.75 13.95 11.88C13.45 12.32 12.94 12.8 12.5 13.43C12.16 12.94 11.77 12.55 11.37 12.19L9.96 13.6C10.89 14.45 11.5 15.14 11.5 17V22H13.5V17C13.5 14.98 14.21 14.34 15.29 13.37C16.67 12.13 18.37 10.59 18.49 6H21.5V6Z" fill="white" fillOpacity="1" />
+        </svg>
+    )
+}
+export const FusionIcon = () => {
+    return (
+        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.3" d="M6.76001 9L12.5 13.47L18.24 9L12.5 4.53L6.76001 9Z" fill="white" fillOpacity="1" />
+            <path d="M19.87 12.8L12.49 18.54L5.12 12.81L3.5 14.07L12.5 21.07L21.5 14.07L19.87 12.8ZM12.5 2L3.5 9L5.13 10.27L12.5 16L19.86 10.27L21.5 9L12.5 2ZM12.5 13.47L6.76 9L12.5 4.53L18.24 9L12.5 13.47Z" fill="white" fillOpacity="1" />
+        </svg>
+    )
+}
+export const BattalionIcon = () => {
+    return (
+        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.3" d="M13.5 11.07L15.5 9.87V4H13.5V11.07Z" fill="white" fillOpacity="1" />
+            <path opacity="0.3" d="M9.5 4V9.87L11.5 11.07V4H9.5Z" fill="white" fillOpacity="1" />
+            <path d="M17.5 10.43V2H7.5V10.43C7.5 10.78 7.68 11.11 7.99 11.29L12.17 13.8L11.18 16.14L7.77 16.43L10.36 18.67L9.57 22L12.5 20.23L15.43 22L14.65 18.67L17.24 16.43L13.83 16.14L12.84 13.8L17.02 11.29C17.32 11.11 17.5 10.79 17.5 10.43ZM11.5 11.07L9.5 9.87V4H11.5V11.07ZM15.5 9.87L13.5 11.07V4H15.5V9.87Z" fill="white" fillOpacity="1" />
+        </svg>
+    )
+}
+export const StoreIcon = () => {
+    return (
+        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.3" d="M5.5 15.5H9.5V19.5H5.5V15.5ZM12.5 5.84L10.57 9H14.43L12.5 5.84Z" fill="white" fillOpacity="1" />
+            <path d="M12.5 2L7 11H18L12.5 2ZM12.5 5.84L14.43 9H10.56L12.5 5.84ZM18 13C15.51 13 13.5 15.01 13.5 17.5C13.5 19.99 15.51 22 18 22C20.49 22 22.5 19.99 22.5 17.5C22.5 15.01 20.49 13 18 13ZM18 20C16.62 20 15.5 18.88 15.5 17.5C15.5 16.12 16.62 15 18 15C19.38 15 20.5 16.12 20.5 17.5C20.5 18.88 19.38 20 18 20ZM11.5 13.5H3.5V21.5H11.5V13.5ZM9.5 19.5H5.5V15.5H9.5V19.5Z" fill="white" fillOpacity="1" />
+        </svg>
+    )
+}
+export const MarketplaceIcon = () => {
+    return (
+        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.3" d="M12.5 4C8.09 4 4.5 7.59 4.5 12C4.5 16.41 8.09 20 12.5 20C16.91 20 20.5 16.41 20.5 12C20.5 7.59 16.91 4 12.5 4ZM14.51 14.01L7 17.5L10.49 9.99L18 6.5L14.51 14.01Z" fill="white" fillOpacity="1" />
+            <path d="M12.5 2C6.98 2 2.5 6.48 2.5 12C2.5 17.52 6.98 22 12.5 22C18.02 22 22.5 17.52 22.5 12C22.5 6.48 18.02 2 12.5 2ZM12.5 20C8.09 20 4.5 16.41 4.5 12C4.5 7.59 8.09 4 12.5 4C16.91 4 20.5 7.59 20.5 12C20.5 16.41 16.91 20 12.5 20ZM7 17.5L14.51 14.01L18 6.5L10.49 9.99L7 17.5ZM12.5 10.9C13.11 10.9 13.6 11.39 13.6 12C13.6 12.61 13.11 13.1 12.5 13.1C11.89 13.1 11.4 12.61 11.4 12C11.4 11.39 11.89 10.9 12.5 10.9Z" fill="white" fillOpacity="1" />
+        </svg>
+    )
+}
