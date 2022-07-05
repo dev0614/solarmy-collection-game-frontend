@@ -1,0 +1,177 @@
+.main-page {
+    position: relative;
+    .page-bg {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+    }
+}
+
+header {
+    position: absolute;
+    z-index: 99;
+    padding: 24px;
+    width: calc(100% - 48px);
+    .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .header-control {
+        display: flex;
+        align-items: center;
+        .user-badge {
+            background: #1f1f1f;
+            border-radius: 16px;
+            width: 70px;
+            height: 70px;
+            border: 1px solid #1f1f1f;
+            overflow: hidden;
+            position: relative;
+            margin-right: 4px;
+            img {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                object-fit: cover;
+            }
+            &:hover {
+                border-color: rgba(255, 255, 255, 0.34);
+            }
+        }
+        .username-box {
+            height: 54px;
+            width: 312px;
+            padding: 8px 16px 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1f1f1f;
+            border-radius: 16px;
+            p {
+                font-weight: 500;
+                font-size: 20px;
+                line-height: 158%;
+                letter-spacing: 1px;
+                color: #ffffff;
+            }
+            label {
+                font-style: normal;
+                font-weight: 500;
+                font-size: 17px;
+                line-height: 143%;
+                color: #fff;
+                opacity: 0.6;
+                display: flex;
+                align-items: center;
+                svg {
+                    margin-right: 8px;
+                }
+            }
+        }
+    }
+}
+.btn-back {
+    display: flex;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .btn-body {
+        padding: 22px 12px;
+        background-color: $back-color;
+        border-radius: 16px;
+    }
+    span {
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 118%;
+        display: flex;
+        align-items: center;
+        letter-spacing: 1px;
+        color: #ffffff;
+        margin-left: 12px;
+    }
+}
+.btn-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: #fff;
+    border-radius: 50%;
+}
+button.special-effect {
+    border: none;
+    background-color: transparent;
+    margin-right: 4px;
+    margin-left: 4px;
+    width: 48px;
+    top: 72px;
+}
+button.btn-balance {
+    width: 236px;
+    height: 72px;
+    border: none;
+    background-color: transparent;
+    border-radius: 16px;
+    position: relative;
+    // margin: -2px;
+    &::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90.14deg, #14a054 0.54%, #1a3341 50.22%, #1f1f20 71%, #0e409b 102.42%);
+        left: 0;
+        top: 0;
+        border-radius: 16px;
+    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .content {
+        background-color: #1f1f1f;
+        position: relative;
+        height: 70px;
+        width: 234px;
+        border-radius: 16px;
+        img {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        p {
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 158%;
+            text-align: right;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: absolute;
+            right: 24px;
+            top: 8px;
+            color: #ffffff;
+        }
+        h5 {
+            position: absolute;
+            right: 24px;
+            bottom: 8px;
+            font-weight: 500;
+            font-size: 15px;
+            line-height: 160%;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+    }
+}
