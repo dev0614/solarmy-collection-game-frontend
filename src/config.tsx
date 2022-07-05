@@ -5,7 +5,7 @@ export const ADMINS = [
     "FePFmE1CbbTkiKg4K9A41dQcXfhPqLSJrEBcdXwBj3aa",
     "A8rgsJecHutEamvb7e8p1a14LQH3vGRPr796CDaESMeu"
 ]
-export const LIVE_URL = "https://superpotato-raffle.herokuapp.com/"
+export const LIVE_URL = "https://solarmy.herokuapp.com/"
 
 export const GLOBAL_AUTHORITY_SEED = "global-authority";
 export const TREASURY_WALLET = new PublicKey('BEQZXkjg1BzY5349FXGPgvsbySWw5R7zjEC4xQhzmQR5');
