@@ -8,6 +8,7 @@
         height: 100%;
         object-fit: cover;
         z-index: 0;
+        pointer-events: none;
     }
 }
 
@@ -185,7 +186,7 @@ button.btn-balance {
     transform: translateX(-50%);
     border-radius: 24px;
     background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
     padding: 0 24px;
     .menu-content {
         display: flex;
