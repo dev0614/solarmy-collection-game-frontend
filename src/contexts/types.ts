@@ -1,45 +1,30 @@
 import * as anchor from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
 
+export const GLOBAL_AUTHORITY_SEED = "global-authority";
+
+export const STAKING_PROGRAM_ID = new PublicKey("6xPmEQRrwmZC1GxL8J5ZE6CEFZdgoMj7fGrDPXxAJpEs");
+export const AMMO_TOKEN_MINT = new PublicKey("H3rmqbVz8NTCkGABeue3yc9PgioL2i1RPrQM45itdKMu");
+export const AMMO_TOKEN_DECIMAL = 1_000_000_000;
+
+export const USER_POOL_SIZE = 5648;     // 8 + 5640
+
 export interface GlobalPool {
-    superAdmin: PublicKey,
+    // 8 + 40
+    superAdmin: PublicKey,          // 32
+    totalStakedCount: anchor.BN,    // 8
 }
 
-export interface CollectionPool {
-    count: anchor.BN,
-    collections: PublicKey[],
+export interface StakedData {
+    mint: PublicKey,            // 32
+    stakedTime: anchor.BN,      // 8
+    lockTime: anchor.BN,        // 8
+    rewardAmount: anchor.BN,    // 8
 }
 
-export interface RafflePool {
-    raffleKey: string;
-    creator: PublicKey,
-    nftMint: PublicKey,
-    count: anchor.BN,
-    noRepeat: anchor.BN,
-    maxEntrants: anchor.BN,
-    startTimestamp: anchor.BN,
-    endTimestamp: anchor.BN,
-    ticketPriceSol: anchor.BN,
-    claimed: anchor.BN,
-    winnerIndex: anchor.BN,
-    winner: PublicKey,
-    entrants: PublicKey[],
-}
-
-export interface RaffleDetailType {
-    nftMint: string,
-    raffleKey: string,
-    image: string,
-    name: string,
-    collectionName: string,
-    collectionId: string,
-    maxEntrants: number,
-    endTimestamp: number,
-    ticketPriceSol: number,
-    winner: string,
-    count: number,
-    creator: string,
-    twitter: string,
-    raffleId: string,
-    raffleStatus: number
+export interface UserPool {
+    // 8 + 5640
+    owner: PublicKey,               // 32
+    stakedCount: anchor.BN,         // 8
+    staking: StakedData[],          // 56 * 100
 }

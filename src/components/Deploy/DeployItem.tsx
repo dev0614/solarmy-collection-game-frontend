@@ -132,7 +132,11 @@ export default function DeployItem(props: {
                                     alt=""
                                 />
                                 <span className="deploy-icon">
-                                    <DeployIcon />
+                                    <span
+                                        style={{ transform: showStake ? "rotate(90deg)" : "rotate(0)" }}>
+
+                                        <DeployIcon />
+                                    </span>
                                 </span>
                             </div>
                         </div>

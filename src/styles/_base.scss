@@ -395,6 +395,9 @@ button {
                     justify-content: center;
                     border-radius: 16px;
                     background-color: #0059f7;
+                    span {
+                        transition: all 0.2s;
+                    }
                 }
             }
         }
