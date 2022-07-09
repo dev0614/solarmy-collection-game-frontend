@@ -9,7 +9,7 @@ import Menu from "../../components/Menu";
 import { MarketplaceIcon } from "../../components/svgIcons";
 import { MainPage } from "../../components/Widget";
 import { CREATOR_2D_ADDRESS, LIVE_URL } from "../../config";
-import { getMetadata, solConnection } from "../../contexts/utils";
+import { solConnection } from "../../contexts/utils";
 import { DeployItemType } from "../../contexts/types";
 import { getNftMetaData, getUserPoolInfo } from "../../contexts/transaction_staking";
 import { PublicKey } from "@solana/web3.js";
@@ -53,17 +53,17 @@ export default function DeployPage() {
             const uris = await Promise.all(promiseData);
 
             for (let i = 0; i < count; i++) {
+                const now = new Date().getDate() / 1000;
                 list.push({
                     nftMint: data.staking[i].mint,
                     uri: uris[i],
-                    status: "active",
-                    stakedTime: new Date().getTime(),
-                    lockTime: new Date().getTime(),
+                    status: now > data.staking[i].lockTime ? "complete" : "active",
+                    stakedTime: data.staking[i].stakedTime,
+                    lockTime: data.staking[i].lockTime,
                     duration: data.staking[i].duration
                 })
             }
             setStakedNfts(list);
-            // console.log(data, "===> staked data")
         }
     }
 
@@ -112,13 +112,15 @@ export default function DeployPage() {
                                 className="symbol"
                             />
                             <p>Soldiers Deployed&nbsp;
-                                <span>
-                                    {unstakedNfts &&
-                                        <>
-                                            {stakedNfts?.length}/{stakedNfts ? (stakedNfts?.length + unstakedNfts?.length) : unstakedNfts?.length}
-                                        </>
-                                    }
-                                </span>
+                                {!isLoading &&
+                                    <span>
+                                        {unstakedNfts &&
+                                            <>
+                                                {stakedNfts?.length}/{stakedNfts ? (stakedNfts?.length + unstakedNfts?.length) : unstakedNfts?.length}
+                                            </>
+                                        }
+                                    </span>
+                                }
                             </p>
                         </div>
                         <div className="content-right">
@@ -146,6 +148,9 @@ export default function DeployPage() {
                                     uri={item.uri}
                                     update={() => updatePage()}
                                     status={item.status}
+                                    duration={item.duration}
+                                    lockTime={item.lockTime}
+                                    stakedTime={item.stakedTime}
                                 />
                             ))}
                             {unstakedNfts && unstakedNfts.length !== 0 && unstakedNfts.map((item, key) => (
@@ -165,16 +170,3 @@ export default function DeployPage() {
         </>
     )
 }
-
-// <DeployItem
-//     id={877}
-//     status="complete"
-// />
-// <DeployItem
-//     id={877}
-//     status="active"
-// />
-// <DeployItem
-//     id={877}
-//     status="reverse"
-// />

@@ -504,6 +504,9 @@ button {
                 background: rgba(255, 255, 255, 0.06);
                 transition: all 0.3s;
             }
+            &:disabled {
+                pointer-events: none;
+            }
         }
         &.btn-claim {
             color: #292929;

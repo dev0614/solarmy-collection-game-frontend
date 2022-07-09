@@ -1,11 +1,12 @@
+import { useEffect, useState } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 import { ClickAwayListener } from "@mui/material";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
-import { useEffect, useState } from "react";
 import { DEPLOY_LEVEL } from "../../config";
-import { stakeNFT } from "../../contexts/transaction_staking";
-import ClipLoader from "react-spinners/ClipLoader";
+import { stakeNFT, withdrawNft } from "../../contexts/transaction_staking";
 import { DeployIcon, HiveIcon, MissionActiveIcon, MissionCompletedIcon, MissionReverseIcon } from "../svgIcons";
+import moment from "moment";
 
 export default function DeployItem(props: {
     status?: "reverse" | "active" | "complete",
@@ -21,9 +22,10 @@ export default function DeployItem(props: {
     const [level, setLevel] = useState(1);
     const [levelId, setLevelId] = useState(0);
     const [showStake, setShowStake] = useState(false);
-    const [isStakeLoading, setIsStakeLoading] = useState(false);
     const [nftId, setNftId] = useState(1);
     const [image, setImage] = useState("");
+    const [isStakeLoading, setIsStakeLoading] = useState(false);
+    const [isDelistLoading, setIsDelistLoading] = useState(false);
 
     const wallet = useWallet();
     const handleLevel = (level: number, id: number) => {
@@ -38,18 +40,16 @@ export default function DeployItem(props: {
     }
 
     const getNftData = async () => {
-        if (props.status === "reverse") {
-            await fetch(props.uri)
-                .then(resp =>
-                    resp.json()
-                ).then((json) => {
-                    setNftId(json?.name.split("#")[1]);
-                    setImage(json?.image)
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
-        }
+        await fetch(props.uri)
+            .then(resp =>
+                resp.json()
+            ).then((json) => {
+                setNftId(json?.name.split("#")[1]);
+                setImage(json?.image)
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
 
     const onOutClick = () => {
@@ -66,6 +66,14 @@ export default function DeployItem(props: {
         }
     }
 
+    const onDelist = async () => {
+        if (!wallet.publicKey) return;
+        try {
+            await withdrawNft(wallet, new PublicKey(nftMint), () => setIsDelistLoading(true), () => setIsDelistLoading(false), () => props.update())
+        } catch (error) {
+            console.log(error)
+        }
+    }
     useEffect(() => {
         getNftData();
     }, [])
@@ -128,22 +136,38 @@ export default function DeployItem(props: {
                                     <div className="deploy-active-view">
                                         <div className="top">
                                             <h4>Deployed days</h4>
-                                            <p>7/10</p>
+                                            {props.duration && props.stakedTime &&
+                                                <p>{parseInt(moment(new Date().getTime()).format("D")) - parseInt(moment(props.stakedTime * 1000).format("D"))}/{props.duration}</p>
+                                            }
                                         </div>
                                         <div className="processbar">
-                                            <span className="process" style={{ width: "70%" }}></span>
+                                            {props.duration && props.stakedTime &&
+                                                <span
+                                                    className="process"
+                                                    style={{ width: `${(parseInt(moment(new Date().getTime()).format("D")) - parseInt(moment(props.stakedTime * 1000).format("D")) / props.duration)}%` }}
+                                                >
+                                                </span>
+                                            }
                                         </div>
                                         <div className="bottom">
                                             <h5>AMMO Rewards</h5>
-                                            <p>1350 + 270 Bonus</p>
+                                            <p>{DEPLOY_LEVEL.find((x) => x.value === props.duration)?.showOption}</p>
                                         </div>
                                     </div>
                                 }
                             </div>
                             <div className="deploy-action-right">
                                 {props.status === "active" &&
-                                    <button className="btn-delist">
-                                        delist
+                                    <button
+                                        className="btn-delist"
+                                        disabled={isDelistLoading}
+                                        onClick={onDelist}
+                                    >
+                                        {isDelistLoading ?
+                                            <ClipLoader size={30} color="#fff" />
+                                            :
+                                            <>delist</>
+                                        }
                                     </button>
                                 }
                                 {props.status === "complete" &&

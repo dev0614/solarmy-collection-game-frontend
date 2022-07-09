@@ -7,7 +7,9 @@ export const DEPLOY_LEVEL = [
         id: 0,
         value: 1,
         title: "1 DAY",
-        option: "90 AMMO"
+        option: "90 AMMO",
+        showOption: "90"
+
     },
     {
         id: 1,
