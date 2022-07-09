@@ -270,8 +270,8 @@ export type Staking = {
                         "type": "i64"
                     },
                     {
-                        "name": "rewardAmount",
-                        "type": "u64"
+                        "name": "duration",
+                        "type": "i64"
                     }
                 ]
             }
@@ -598,8 +598,8 @@ export const IDL: Staking = {
                         "type": "i64"
                     },
                     {
-                        "name": "rewardAmount",
-                        "type": "u64"
+                        "name": "duration",
+                        "type": "i64"
                     }
                 ]
             }

@@ -332,6 +332,7 @@ button {
     gap: 24px;
     flex-wrap: wrap;
     margin-top: 24px;
+    padding-bottom: 160px;
     // height: calc(100vh - 420px);
     // overflow-y: auto;
     // position: relative;
@@ -346,7 +347,6 @@ button {
         background: rgb(255 255 255 / 12%);
         border-radius: 0;
     }
-    padding-bottom: 40px;
 }
 .deploy-item {
     width: calc(50% - 44px);
@@ -646,6 +646,9 @@ button {
             color: #ffffff;
             padding: 12px 0;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             &.btn-item-deploy {
                 margin-right: 6px;
                 border-color: #0059f7;
@@ -662,6 +665,9 @@ button {
                     transition: all 0.3s;
                 }
             }
+            &:disabled {
+                pointer-events: none;
+            }
         }
     }
     .option-dec {
@@ -670,7 +676,7 @@ button {
         bottom: 0;
         white-space: nowrap;
         font-weight: 500;
-        font-size: 20px;
+        font-size: 16px;
         line-height: 158%;
         letter-spacing: 1px;
         color: rgba(255, 255, 255, 0.6);

@@ -19,7 +19,7 @@ export interface StakedData {
     mint: PublicKey,            // 32
     stakedTime: anchor.BN,      // 8
     lockTime: anchor.BN,        // 8
-    rewardAmount: anchor.BN,    // 8
+    duration: anchor.BN,    // 8
 }
 
 export interface UserPool {
@@ -27,4 +27,14 @@ export interface UserPool {
     owner: PublicKey,               // 32
     stakedCount: anchor.BN,         // 8
     staking: StakedData[],          // 56 * 100
+}
+
+export interface DeployItemType {
+    nftMint: string,
+    id?: number,
+    uri: string,
+    status: "reverse" | "complete" | "active",
+    stakedTime?: number,
+    lockTime?: number,
+    duration?: number
 }

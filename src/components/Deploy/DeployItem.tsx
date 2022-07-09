@@ -1,17 +1,31 @@
 import { ClickAwayListener } from "@mui/material";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey } from "@solana/web3.js";
 import { useEffect, useState } from "react";
 import { DEPLOY_LEVEL } from "../../config";
+import { stakeNFT } from "../../contexts/transaction_staking";
+import ClipLoader from "react-spinners/ClipLoader";
 import { DeployIcon, HiveIcon, MissionActiveIcon, MissionCompletedIcon, MissionReverseIcon } from "../svgIcons";
 
 export default function DeployItem(props: {
-    id?: string | number,
-    status?: "reverse" | "active" | "complete"
+    status?: "reverse" | "active" | "complete",
+    nftMint: string,
+    uri: string,
+    update: Function,
+    stakedTime?: number,
+    lockTime?: number
+    duration?: number
 }) {
+    const { nftMint } = props;
     const [actionState, setActionState] = useState(false);
     const [level, setLevel] = useState(1);
     const [levelId, setLevelId] = useState(0);
     const [showStake, setShowStake] = useState(false);
+    const [isStakeLoading, setIsStakeLoading] = useState(false);
+    const [nftId, setNftId] = useState(1);
+    const [image, setImage] = useState("");
 
+    const wallet = useWallet();
     const handleLevel = (level: number, id: number) => {
         setLevel(level);
         setLevelId(id)
@@ -23,14 +37,38 @@ export default function DeployItem(props: {
         setShowStake(true);
     }
 
+    const getNftData = async () => {
+        if (props.status === "reverse") {
+            await fetch(props.uri)
+                .then(resp =>
+                    resp.json()
+                ).then((json) => {
+                    setNftId(json?.name.split("#")[1]);
+                    setImage(json?.image)
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        }
+    }
+
     const onOutClick = () => {
         setShowStake(false);
         setActionState(false)
     }
 
+    const onStake = async () => {
+        if (!wallet.publicKey) return;
+        try {
+            await stakeNFT(wallet, new PublicKey(nftMint), level, () => setIsStakeLoading(true), () => setIsStakeLoading(false), () => props.update());
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
-        console.log(level)
-    }, [level])
+        getNftData();
+    }, [])
     return (
 
         <ClickAwayListener onClickAway={() => onOutClick()}>
@@ -40,14 +78,14 @@ export default function DeployItem(props: {
                         <div className="media">
                             {/* eslint-disable-next-line */}
                             <img
-                                src="https://www.arweave.net/OD60d-CtASSWysjmYQqcCDkFPkbb1B6So_EWMEpxVdU?ext=png"
+                                src={image}
                                 alt=""
                             />
                         </div>
                         <div className={`item-box ${props.status === "reverse" ? "no-right" : ""}`}>
                             <div className="content">
                                 <div className="content-header">
-                                    <p className="id">{props.id ? "#" + props.id : ""}</p>
+                                    <p className="id">{nftId ? "#" + nftId : ""}</p>
                                     {props.status === "reverse" &&
                                         <div className="status">
                                             <span className="icon">
@@ -121,7 +159,7 @@ export default function DeployItem(props: {
                         <div className="media">
                             {/* eslint-disable-next-line */}
                             <img
-                                src="https://www.arweave.net/OD60d-CtASSWysjmYQqcCDkFPkbb1B6So_EWMEpxVdU?ext=png"
+                                src={image}
                                 alt=""
                             />
                             <div className="media-overlay">
@@ -134,7 +172,6 @@ export default function DeployItem(props: {
                                 <span className="deploy-icon">
                                     <span
                                         style={{ transform: showStake ? "rotate(90deg)" : "rotate(0)" }}>
-
                                         <DeployIcon />
                                     </span>
                                 </span>
@@ -160,8 +197,24 @@ export default function DeployItem(props: {
                                 </div>
                                 :
                                 <div className="stepper-action">
-                                    <button className="btn-item-deploy">deploy</button>
-                                    <button className="btn-item-cancel" onClick={() => setShowStake(false)}>cancel</button>
+                                    <button
+                                        className="btn-item-deploy"
+                                        disabled={isStakeLoading}
+                                        onClick={onStake}
+                                    >
+                                        {isStakeLoading ?
+                                            <ClipLoader size={30} color="#fff" />
+                                            :
+                                            <>deploy</>
+                                        }
+                                    </button>
+                                    <button
+                                        className="btn-item-cancel"
+                                        onClick={() => setShowStake(false)}
+                                        disabled={isStakeLoading}
+                                    >
+                                        cancel
+                                    </button>
                                 </div>
                             }
                             <p className="option-dec">
