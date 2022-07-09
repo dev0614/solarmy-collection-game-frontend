@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { WalletModalProvider, WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { BattalionIcon, DashboardIcon, DeployIcon, DeveloperIcon, FusionIcon, LeaderboardIcon, MarketplaceIcon, StoreIcon } from "./svgIcons";
 
 export default function Menu() {
@@ -39,10 +40,14 @@ export default function Menu() {
                     </ul>
                 </div>
                 <div className="wallet-status">
-                    <button className="btn-wallet">
+                    {/* <button className="btn-wallet">
                         <DeveloperIcon />
                         <span>connected</span>
-                    </button>
+                    </button> */}
+
+                    <WalletModalProvider>
+                        <WalletMultiButton />
+                    </WalletModalProvider>
                 </div>
             </div>
         </div>

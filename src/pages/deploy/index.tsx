@@ -1,14 +1,84 @@
-import { NextSeo } from "next-seo";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { NextSeo } from "next-seo";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { getParsedNftAccountsByOwner } from "@nfteyez/sol-rayz";
 import DeployItem from "../../components/Deploy/DeployItem";
 import Header from "../../components/Header";
 import Menu from "../../components/Menu";
 import { MarketplaceIcon } from "../../components/svgIcons";
 import { MainPage } from "../../components/Widget";
-import { LIVE_URL } from "../../config";
+import { CREATOR_2D_ADDRESS, LIVE_URL } from "../../config";
+import { solConnection } from "../../contexts/utils";
+import { DeployItemType } from "../../contexts/types";
+import { getNftMetaData, getUserPoolInfo } from "../../contexts/transaction_staking";
+import { PublicKey } from "@solana/web3.js";
 
 export default function DeployPage() {
+    const wallet = useWallet();
+    const [isLoading, setIsLoading] = useState(false);
+    const [unstakedNfts, setUnstakedNfts] = useState<DeployItemType[]>();
+    const [stakedNfts, setStakedNfts] = useState<DeployItemType[]>();
 
+    const getUnstakedData = async () => {
+        if (!wallet.publicKey) return;
+        const nftList = await getParsedNftAccountsByOwner({ publicAddress: wallet.publicKey.toBase58(), connection: solConnection });
+        if (nftList.length !== 0) {
+            let list: DeployItemType[] = [];
+            for (let item of nftList) {
+                if (item.data.creators[0].address === CREATOR_2D_ADDRESS)
+                    list.push({
+                        nftMint: item?.mint,
+                        uri: item?.data?.uri,
+                        status: "reverse",
+                        stakedTime: new Date().getTime(),
+                        lockTime: new Date().getTime(),
+                        duration: 0
+                    })
+            }
+            setUnstakedNfts(list);
+        }
+    }
+    const getStakedData = async () => {
+        if (!wallet.publicKey) return;
+        const data = await getUserPoolInfo(wallet);
+        if (data) {
+            const count = data.stakedCount;
+            let list: DeployItemType[] = [];
+            let promiseData: any = [];
+            for (let i = 0; i < count; i++) {
+                const promise = getNftMetaData(new PublicKey(data.staking[i].mint));
+                promiseData.push(promise);
+            }
+            const uris = await Promise.all(promiseData);
+
+            for (let i = 0; i < count; i++) {
+                const now = new Date().getDate() / 1000;
+                list.push({
+                    nftMint: data.staking[i].mint,
+                    uri: uris[i],
+                    status: now > data.staking[i].lockTime ? "complete" : "active",
+                    stakedTime: data.staking[i].stakedTime,
+                    lockTime: data.staking[i].lockTime,
+                    duration: data.staking[i].duration
+                })
+            }
+            setStakedNfts(list);
+        }
+    }
+
+    const updatePage = async () => {
+        setIsLoading(true);
+        await getUnstakedData();
+        await getStakedData();
+        setIsLoading(false);
+    }
+
+    useEffect(() => {
+        if (wallet.publicKey) {
+            updatePage();
+        }
+    }, [wallet.connected, wallet.publicKey])
     return (
         <>
             <NextSeo
@@ -41,7 +111,17 @@ export default function DeployPage() {
                                 alt=""
                                 className="symbol"
                             />
-                            <p>Soldiers Deployed <span>1/3</span></p>
+                            <p>Soldiers Deployed&nbsp;
+                                {!isLoading &&
+                                    <span>
+                                        {unstakedNfts &&
+                                            <>
+                                                {stakedNfts?.length}/{stakedNfts ? (stakedNfts?.length + unstakedNfts?.length) : unstakedNfts?.length}
+                                            </>
+                                        }
+                                    </span>
+                                }
+                            </p>
                         </div>
                         <div className="content-right">
                             <Link href="/marketplace">
@@ -57,18 +137,33 @@ export default function DeployPage() {
                     </div>
                 </div>
                 <div className="deploy-list">
-                    <DeployItem
-                        id={877}
-                        status="complete"
-                    />
-                    <DeployItem
-                        id={877}
-                        status="active"
-                    />
-                    <DeployItem
-                        id={877}
-                        status="reverse"
-                    />
+                    {isLoading ?
+                        <h1 style={{ color: "#fff" }}>Loding...</h1>
+                        :
+                        <>
+                            {stakedNfts && stakedNfts.length !== 0 && stakedNfts.map((item, key) => (
+                                <DeployItem
+                                    key={key}
+                                    nftMint={item.nftMint}
+                                    uri={item.uri}
+                                    update={() => updatePage()}
+                                    status={item.status}
+                                    duration={item.duration}
+                                    lockTime={item.lockTime}
+                                    stakedTime={item.stakedTime}
+                                />
+                            ))}
+                            {unstakedNfts && unstakedNfts.length !== 0 && unstakedNfts.map((item, key) => (
+                                <DeployItem
+                                    key={key}
+                                    nftMint={item.nftMint}
+                                    uri={item.uri}
+                                    update={() => updatePage()}
+                                    status={item.status}
+                                />
+                            ))}
+                        </>
+                    }
                 </div>
                 <Menu />
             </MainPage>

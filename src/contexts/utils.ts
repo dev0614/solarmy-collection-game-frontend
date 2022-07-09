@@ -264,6 +264,9 @@ export const filterError = (error: any) => {
             case 4001:
                 errorAlert("User Reject the Request")
                 break;
+            case 3007:
+                errorAlert("The given account is owned by a different program than expected")
+                break;
             default:
                 break;
         }

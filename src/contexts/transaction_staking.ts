@@ -1,4 +1,5 @@
 import * as anchor from '@project-serum/anchor';
+import { programs } from "@metaplex/js";
 import {
     Connection,
     PublicKey,
@@ -7,7 +8,7 @@ import {
     Transaction,
 } from '@solana/web3.js';
 
-import { AMMO_TOKEN_DECIMAL, AMMO_TOKEN_MINT, GLOBAL_AUTHORITY_SEED, STAKING_PROGRAM_ID, USER_POOL_SIZE } from './types';
+import { AMMO_TOKEN_DECIMAL, AMMO_TOKEN_MINT, GLOBAL_AUTHORITY_SEED, STAKING_PROGRAM_ID, UserPool, USER_POOL_SIZE } from './types';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { filterError, getAssociatedTokenAccount, getATokenAccountsNeedCreate, getMetadata, getNFTTokenAccount, getOwnerOfNFT, isExistAccount, METAPLEX, solConnection } from './utils';
 import { IDL } from './staking';
@@ -37,32 +38,42 @@ export const initUserPool = async (
     }
 }
 
-
 export const createInitUserPoolTx = async (
     userAddress: PublicKey,
     program: anchor.Program,
 ) => {
-    const [globalAuthority, bump] = await PublicKey.findProgramAddress(
-        [Buffer.from(GLOBAL_AUTHORITY_SEED)],
+    let userPoolKey = await anchor.web3.PublicKey.createWithSeed(
+        userAddress,
+        "user-pool",
         STAKING_PROGRAM_ID,
     );
+    console.log(USER_POOL_SIZE);
+    let ix = SystemProgram.createAccountWithSeed({
+        fromPubkey: userAddress,
+        basePubkey: userAddress,
+        seed: "user-pool",
+        newAccountPubkey: userPoolKey,
+        lamports: await solConnection.getMinimumBalanceForRentExemption(USER_POOL_SIZE),
+        space: USER_POOL_SIZE,
+        programId: STAKING_PROGRAM_ID,
+    });
 
     let tx = new Transaction();
-    tx.add(program.instruction.initialize(
-        bump, {
-        accounts: {
-            admin: userAddress,
-            globalAuthority,
-            systemProgram: SystemProgram.programId,
-            rent: SYSVAR_RENT_PUBKEY,
-        },
-        instructions: [],
-        signers: [],
-    }));
+    console.log('==>initializing user PDA', userPoolKey.toBase58());
+    tx.add(ix);
+    tx.add(program.instruction.initializeUserPool(
+        {
+            accounts: {
+                userPool: userPoolKey,
+                owner: userAddress
+            },
+            instructions: [],
+            signers: []
+        }
+    ));
 
     return tx;
 }
-
 
 export const stakeNFT = async (
     wallet: WalletContextState,
@@ -106,75 +117,6 @@ export const stakeNFT = async (
     }
 }
 
-export const createStakeNftTx = async (
-    mint: PublicKey,
-    userAddress: PublicKey,
-    program: anchor.Program,
-    connection: Connection,
-    duration: number,
-) => {
-    const [globalAuthority, bump] = await PublicKey.findProgramAddress(
-        [Buffer.from(GLOBAL_AUTHORITY_SEED)],
-        STAKING_PROGRAM_ID,
-    );
-
-    let userPoolKey = await anchor.web3.PublicKey.createWithSeed(
-        userAddress,
-        "user-pool",
-        STAKING_PROGRAM_ID,
-    );
-
-    let userTokenAccount = await getAssociatedTokenAccount(userAddress, mint);
-    if (!await isExistAccount(userTokenAccount, connection)) {
-        let accountOfNFT = await getNFTTokenAccount(mint, connection);
-        if (userTokenAccount.toBase58() != accountOfNFT.toBase58()) {
-            let nftOwner = await getOwnerOfNFT(mint, connection);
-            if (nftOwner.toBase58() == userAddress.toBase58()) userTokenAccount = accountOfNFT;
-            else if (nftOwner.toBase58() !== globalAuthority.toBase58()) {
-                throw 'Error: Nft is not owned by user';
-            }
-        }
-    }
-    console.log("NFT = ", mint.toBase58(), userTokenAccount.toBase58());
-
-    let { instructions, destinationAccounts } = await getATokenAccountsNeedCreate(
-        connection,
-        userAddress,
-        globalAuthority,
-        [mint]
-    );
-
-    console.log("Dest NFT Account = ", destinationAccounts[0].toBase58())
-
-    const metadata = await getMetadata(mint);
-
-    console.log("Metadata=", metadata.toBase58());
-
-    let tx = new Transaction();
-
-    if (instructions.length > 0) instructions.map((ix) => tx.add(ix));
-    console.log('==>Staking ...', mint.toBase58(), duration);
-
-    tx.add(program.instruction.stakeNftToPool(
-        bump, new anchor.BN(duration), {
-        accounts: {
-            owner: userAddress,
-            globalAuthority,
-            userPool: userPoolKey,
-            userNftTokenAccount: userTokenAccount,
-            destNftTokenAccount: destinationAccounts[0],
-            nftMint: mint,
-            mintMetadata: metadata,
-            tokenProgram: TOKEN_PROGRAM_ID,
-            tokenMetadataProgram: METAPLEX,
-        },
-        instructions: [],
-        signers: [],
-    }));
-
-    return tx;
-}
-
 export const withdrawNft = async (
     wallet: WalletContextState,
     mint: PublicKey,
@@ -205,7 +147,6 @@ export const withdrawNft = async (
         filterError(error);
     }
 }
-
 
 export const withdrawToken = async (
     wallet: WalletContextState,
@@ -330,4 +271,124 @@ export const createWithdrawTx = async (
     }));
 
     return tx;
+}
+
+export const getUserPoolInfo = async (
+    wallet: WalletContextState,
+) => {
+    if (!wallet.publicKey) return;
+    const userInfo: UserPool | null = await getUserPoolState(wallet);
+    if (userInfo)
+        return {
+            owner: userInfo.owner.toBase58(),
+            stakedCount: userInfo.stakedCount.toNumber(),
+            staking: userInfo.staking.map((info) => {
+                return {
+                    mint: info.mint.toBase58(),
+                    stakedTime: info.stakedTime.toNumber(),
+                    lockTime: info.lockTime.toNumber(),
+                    duration: info.duration.toNumber(),
+                }
+            }),
+        };
+}
+
+
+export const getUserPoolState = async (
+    wallet: WalletContextState,
+): Promise<UserPool | null> => {
+    if (!wallet.publicKey) return null;
+    let userAddress: PublicKey = wallet.publicKey;
+    let cloneWindow: any = window;
+    let provider = new anchor.AnchorProvider(solConnection, cloneWindow['solana'], anchor.AnchorProvider.defaultOptions())
+    const program = new anchor.Program(IDL as anchor.Idl, STAKING_PROGRAM_ID, provider);
+    let userPoolKey = await anchor.web3.PublicKey.createWithSeed(
+        userAddress,
+        "user-pool",
+        STAKING_PROGRAM_ID,
+    );
+    try {
+        let userPoolState = await program.account.userPool.fetch(userPoolKey);
+        return userPoolState as unknown as UserPool;
+    } catch {
+        return null;
+    }
+}
+
+
+export const createStakeNftTx = async (
+    mint: PublicKey,
+    userAddress: PublicKey,
+    program: anchor.Program,
+    connection: Connection,
+    duration: number,
+) => {
+    const [globalAuthority, bump] = await PublicKey.findProgramAddress(
+        [Buffer.from(GLOBAL_AUTHORITY_SEED)],
+        STAKING_PROGRAM_ID,
+    );
+
+    let userPoolKey = await anchor.web3.PublicKey.createWithSeed(
+        userAddress,
+        "user-pool",
+        STAKING_PROGRAM_ID,
+    );
+
+    let userTokenAccount = await getAssociatedTokenAccount(userAddress, mint);
+    if (!await isExistAccount(userTokenAccount, connection)) {
+        let accountOfNFT = await getNFTTokenAccount(mint, connection);
+        if (userTokenAccount.toBase58() != accountOfNFT.toBase58()) {
+            let nftOwner = await getOwnerOfNFT(mint, connection);
+            if (nftOwner.toBase58() == userAddress.toBase58()) userTokenAccount = accountOfNFT;
+            else if (nftOwner.toBase58() !== globalAuthority.toBase58()) {
+                throw 'Error: Nft is not owned by user';
+            }
+        }
+    }
+    console.log("NFT = ", mint.toBase58(), userTokenAccount.toBase58());
+
+    let { instructions, destinationAccounts } = await getATokenAccountsNeedCreate(
+        connection,
+        userAddress,
+        globalAuthority,
+        [mint]
+    );
+
+    console.log("Dest NFT Account = ", destinationAccounts[0].toBase58())
+
+    const metadata = await getMetadata(mint);
+
+    console.log("Metadata=", metadata.toBase58());
+
+    let tx = new Transaction();
+
+    if (instructions.length > 0) instructions.map((ix) => tx.add(ix));
+    console.log('==>Staking ...', mint.toBase58(), duration);
+
+    tx.add(program.instruction.stakeNftToPool(
+        bump, new anchor.BN(duration), {
+        accounts: {
+            owner: userAddress,
+            globalAuthority,
+            userPool: userPoolKey,
+            userNftTokenAccount: userTokenAccount,
+            destNftTokenAccount: destinationAccounts[0],
+            nftMint: mint,
+            mintMetadata: metadata,
+            tokenProgram: TOKEN_PROGRAM_ID,
+            tokenMetadataProgram: METAPLEX,
+        },
+        instructions: [],
+        signers: [],
+    }));
+
+    return tx;
+}
+
+
+export const getNftMetaData = async (nftMintPk: PublicKey) => {
+    let { metadata: { Metadata } } = programs;
+    let metadataAccount = await Metadata.getPDA(nftMintPk);
+    const metadata = await Metadata.load(solConnection, metadataAccount);
+    return metadata.data.data.uri;
 }
