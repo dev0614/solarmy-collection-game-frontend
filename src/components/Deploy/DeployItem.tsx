@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ClickAwayListener, Skeleton } from "@mui/material";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -6,8 +7,6 @@ import { PublicKey } from "@solana/web3.js";
 import { DAY_LENGTH, DEPLOY_LEVEL } from "../../config";
 import { stakeNFT, withdrawNft } from "../../contexts/transaction_staking";
 import { DeployIcon, HiveIcon, MissionActiveIcon, MissionCompletedIcon, MissionReverseIcon } from "../svgIcons";
-import moment from "moment";
-import { useRouter } from "next/router";
 import { DeployDenseItemSkeleton, DeployItemSkeleton } from "../SkeletonComponents/DeploySkeletons";
 
 export default function DeployItem(props: {
@@ -21,6 +20,7 @@ export default function DeployItem(props: {
 }) {
     const router = useRouter();
     const { nftMint } = props;
+    const wallet = useWallet();
     const [actionState, setActionState] = useState(false);
     const [level, setLevel] = useState(1);
     const [levelId, setLevelId] = useState(0);
@@ -32,7 +32,6 @@ export default function DeployItem(props: {
     const [view, setView] = useState<any>("normal");
     const [loading, setLoading] = useState(false);
 
-    const wallet = useWallet();
     const handleLevel = (level: number, id: number) => {
         setLevel(level);
         setLevelId(id)
@@ -90,7 +89,7 @@ export default function DeployItem(props: {
         <ClickAwayListener onClickAway={() => onOutClick()}>
             <>
                 {
-                    view === "normal" ?
+                    view !== "dense" ?
                         (
                             loading ?
                                 <DeployItemSkeleton />
