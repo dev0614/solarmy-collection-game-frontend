@@ -16,6 +16,7 @@ import { PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import { Dialog } from "@mui/material";
 import { ClipLoader } from "react-spinners";
+import { DeployItemSkeleton } from "../../components/SkeletonComponents/DeploySkeletons";
 
 export default function DeployPage() {
     const wallet = useWallet();
@@ -43,6 +44,8 @@ export default function DeployPage() {
                         })
             }
             setUnstakedNfts(list);
+        } else {
+            setUnstakedNfts([]);
         }
     }
 
@@ -60,7 +63,7 @@ export default function DeployPage() {
             const uris = await Promise.all(promiseData);
 
             for (let i = 0; i < count; i++) {
-                const now = new Date().getDate() / 1000;
+                const now = new Date().getTime() / 1000;
                 list.push({
                     nftMint: data.staking[i].mint,
                     uri: uris[i],
@@ -71,6 +74,8 @@ export default function DeployPage() {
                 })
             }
             setStakedNfts(list);
+        } else {
+            setStakedNfts([]);
         }
     }
 
@@ -84,7 +89,11 @@ export default function DeployPage() {
     useEffect(() => {
         if (wallet.publicKey) {
             updatePage();
+        } else {
+            setStakedNfts([]);
+            setUnstakedNfts([]);
         }
+        // eslint-disable-next-line
     }, [wallet.connected, wallet.publicKey])
     return (
         <>
@@ -129,7 +138,11 @@ export default function DeployPage() {
                                     </span>
                                 }
                             </p>
-                            <button className="deploy-all" onClick={() => setIsModal(true)}>
+                            <button
+                                className="deploy-all"
+                                onClick={() => setIsModal(true)}
+                                disabled={unstakedNfts.length === 0}
+                            >
                                 deploy all
                             </button>
                         </div>
@@ -158,7 +171,13 @@ export default function DeployPage() {
                 </div>
                 <div className={router?.query?.view === "dense" ? "deploy-list deploy-list-dense" : "deploy-list"}>
                     {isLoading ?
-                        <h1 style={{ color: "#fff" }}>Loding...</h1>
+                        <>
+                            <DeployItemSkeleton />
+                            <DeployItemSkeleton />
+                            <DeployItemSkeleton />
+                            <DeployItemSkeleton />
+                        </>
+                        // <h1 style={{ color: "#fff" }}>Loding...</h1>
                         :
                         <>
                             {stakedNfts && stakedNfts.length !== 0 && stakedNfts.map((item, key) => (

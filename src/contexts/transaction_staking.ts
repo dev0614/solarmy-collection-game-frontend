@@ -4,16 +4,16 @@ import {
     Connection,
     PublicKey,
     SystemProgram,
-    SYSVAR_RENT_PUBKEY,
     Transaction,
 } from '@solana/web3.js';
 
-import { AMMO_TOKEN_DECIMAL, AMMO_TOKEN_MINT, DeployItemType, GLOBAL_AUTHORITY_SEED, STAKING_PROGRAM_ID, UserPool, USER_POOL_SIZE } from './types';
+import { DeployItemType, UserPool } from './types';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { filterError, getAssociatedTokenAccount, getATokenAccountsNeedCreate, getMetadata, getNFTTokenAccount, getOwnerOfNFT, isExistAccount, METAPLEX, solConnection } from './utils';
 import { IDL } from './staking';
 import { successAlert } from '../components/toastGroup';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { AMMO_TOKEN_DECIMAL, AMMO_TOKEN_MINT, GLOBAL_AUTHORITY_SEED, STAKING_PROGRAM_ID, USER_POOL_SIZE } from '../config';
 
 
 export const initUserPool = async (
@@ -74,7 +74,6 @@ export const createInitUserPoolTx = async (
 
     return tx;
 }
-
 
 export const stakeAllNFT = async (
     wallet: WalletContextState,

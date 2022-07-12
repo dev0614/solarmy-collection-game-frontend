@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
-import { ClickAwayListener } from "@mui/material";
+import { ClickAwayListener, Skeleton } from "@mui/material";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
-import { DEPLOY_LEVEL } from "../../config";
+import { DAY_LENGTH, DEPLOY_LEVEL } from "../../config";
 import { stakeNFT, withdrawNft } from "../../contexts/transaction_staking";
 import { DeployIcon, HiveIcon, MissionActiveIcon, MissionCompletedIcon, MissionReverseIcon } from "../svgIcons";
 import moment from "moment";
 import { useRouter } from "next/router";
+import { DeployDenseItemSkeleton, DeployItemSkeleton } from "../SkeletonComponents/DeploySkeletons";
 
 export default function DeployItem(props: {
     status?: "reverse" | "active" | "complete",
@@ -29,6 +30,7 @@ export default function DeployItem(props: {
     const [isStakeLoading, setIsStakeLoading] = useState(false);
     const [isDelistLoading, setIsDelistLoading] = useState(false);
     const [view, setView] = useState<any>("normal");
+    const [loading, setLoading] = useState(false);
 
     const wallet = useWallet();
     const handleLevel = (level: number, id: number) => {
@@ -43,16 +45,18 @@ export default function DeployItem(props: {
     }
 
     const getNftData = async () => {
+        setLoading(true);
         await fetch(props.uri)
             .then(resp =>
                 resp.json()
             ).then((json) => {
                 setNftId(json?.name.split("#")[1]);
-                setImage(json?.image)
+                setImage(json.image)
             })
             .catch((error) => {
                 console.log(error);
             })
+        setLoading(false);
     }
 
     const onOutClick = () => {
@@ -79,288 +83,372 @@ export default function DeployItem(props: {
     }
     useEffect(() => {
         getNftData();
-        setView(router?.query?.view)
+        setView(router?.query?.view);
+        // eslint-disable-next-line
     }, [router])
     return (
         <ClickAwayListener onClickAway={() => onOutClick()}>
-            {
-                view === "normal" ?
+            <>
+                {
+                    view === "normal" ?
+                        (
+                            loading ?
+                                <DeployItemSkeleton />
+                                :
 
-                    <div className="deploy-item" >
-                        {!actionState ?
-                            <div className="item-content">
-                                <div className="media">
-                                    {/* eslint-disable-next-line */}
-                                    <img
-                                        src={image}
-                                        alt=""
-                                    />
-                                </div>
-                                <div className={`item-box ${props.status === "reverse" ? "no-right" : ""}`}>
-                                    <div className="content">
-                                        <div className="content-header">
-                                            <p className="id">{nftId ? "#" + nftId : ""}</p>
-                                            {props.status === "reverse" &&
-                                                <div className="status">
-                                                    <span className="icon">
-                                                        <MissionReverseIcon />
-                                                    </span>
-                                                    <span>
-                                                        Reverse
-                                                    </span>
-                                                </div>
-                                            }
-                                            {props.status === "active" &&
-                                                <div className="status">
-                                                    <span className="icon">
-                                                        <MissionActiveIcon />
-                                                    </span>
-                                                    <span>
-                                                        Active Mission
-                                                    </span>
-                                                </div>
-                                            }
-                                            {props.status === "complete" &&
-                                                <div className="status">
-                                                    <span className="icon">
-                                                        <MissionCompletedIcon />
-                                                    </span>
-                                                    <span>
-                                                        Mission Completed
-                                                    </span>
-                                                </div>
-                                            }
-                                        </div>
-                                        {props.status === "reverse" &&
-                                            <div className="item-action">
-                                                <button className="btn-deploy" onClick={() => setActionState(true)}>
-                                                    deploy
-                                                </button>
+                                <div className="deploy-item" >
+                                    {!actionState ?
+                                        <div className="item-content">
+                                            <div className="media">
+                                                {image !== "" ?
+                                                    // eslint-disable-next-line
+                                                    <img
+                                                        src={image}
+                                                        alt=""
+                                                    />
+                                                    :
+                                                    <Skeleton variant="rectangular" animation="wave" width={164} height={164} sx={{ borderRadius: "16px" }} />
+                                                }
                                             </div>
-                                        }
-                                        {(props.status === "active" || props.status === "complete") &&
-                                            <div className="deploy-active-view">
-                                                <div className="top">
-                                                    <h4>Deployed days</h4>
-                                                    {props.duration && props.stakedTime &&
-                                                        <p>{parseInt(moment(new Date().getTime()).format("D")) - parseInt(moment(props.stakedTime * 1000).format("D"))}/{props.duration}</p>
+                                            <div className={`item-box ${props.status === "reverse" ? "no-right" : ""}`}>
+                                                <div className="content">
+                                                    <div className="content-header">
+                                                        <p className="id">{nftId ? "#" + nftId : ""}</p>
+                                                        {props.status === "reverse" &&
+                                                            <div className="status">
+                                                                <span className="icon">
+                                                                    <MissionReverseIcon />
+                                                                </span>
+                                                                <span>
+                                                                    Reverse
+                                                                </span>
+                                                            </div>
+                                                        }
+                                                        {props.status === "active" &&
+                                                            <div className="status">
+                                                                <span className="icon">
+                                                                    <MissionActiveIcon />
+                                                                </span>
+                                                                <span>
+                                                                    Active Mission
+                                                                </span>
+                                                            </div>
+                                                        }
+                                                        {props.status === "complete" &&
+                                                            <div className="status">
+                                                                <span className="icon">
+                                                                    <MissionCompletedIcon />
+                                                                </span>
+                                                                <span>
+                                                                    Mission Completed
+                                                                </span>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                    {props.status === "reverse" &&
+                                                        <div className="item-action">
+                                                            <button className="btn-deploy" onClick={() => setActionState(true)}>
+                                                                deploy
+                                                            </button>
+                                                        </div>
+                                                    }
+                                                    {(props.status === "active" || props.status === "complete") &&
+                                                        <div className="deploy-active-view">
+                                                            <div className="top">
+                                                                <h4>Deployed days</h4>
+                                                                {props.duration && props.stakedTime &&
+                                                                    <p>{props.duration < Math.floor((new Date().getTime() / 1000 - props.stakedTime) / DAY_LENGTH) ? props.duration : Math.floor((new Date().getTime() / 1000 - props.stakedTime) / DAY_LENGTH)}/{props.duration}</p>
+                                                                }
+                                                            </div>
+                                                            <div className="processbar">
+                                                                {props.duration && props.stakedTime &&
+                                                                    <span
+                                                                        className="process"
+                                                                        style={{ width: `${((new Date().getTime() / 1000 - props.stakedTime) / DAY_LENGTH / props.duration * 100)}%` }}
+                                                                    >
+                                                                    </span>
+                                                                }
+                                                            </div>
+                                                            <div className="bottom">
+                                                                <h5>AMMO Rewards</h5>
+                                                                <p>{DEPLOY_LEVEL.find((x) => x.value === props.duration)?.showOption}</p>
+                                                            </div>
+                                                        </div>
                                                     }
                                                 </div>
-                                                <div className="processbar">
-                                                    {props.duration && props.stakedTime &&
-                                                        <span
-                                                            className="process"
-                                                            style={{ width: `${(parseInt(moment(new Date().getTime()).format("D")) - parseInt(moment(props.stakedTime * 1000).format("D")) / props.duration)}%` }}
+                                                <div className="deploy-action-right">
+                                                    {props.status === "active" &&
+                                                        <button
+                                                            className="btn-delist"
+                                                            disabled={isDelistLoading}
+                                                            onClick={onDelist}
                                                         >
-                                                        </span>
+                                                            {isDelistLoading ?
+                                                                <ClipLoader size={30} color="#fff" />
+                                                                :
+                                                                <>delist</>
+                                                            }
+                                                        </button>
+                                                    }
+                                                    {props.status === "complete" &&
+                                                        <button
+                                                            className="btn-claim"
+                                                            disabled={isDelistLoading}
+                                                            onClick={onDelist}
+                                                        >
+                                                            {isDelistLoading ?
+                                                                <ClipLoader size={30} color="#fff" />
+                                                                :
+                                                                <>claim</>
+                                                            }
+                                                        </button>
                                                     }
                                                 </div>
-                                                <div className="bottom">
-                                                    <h5>AMMO Rewards</h5>
-                                                    <p>{DEPLOY_LEVEL.find((x) => x.value === props.duration)?.showOption}</p>
+                                            </div>
+                                        </div>
+                                        :
+                                        <div className="item-content">
+                                            <div className="media">
+                                                {image !== "" ?
+                                                    // eslint-disable-next-line
+                                                    <img
+                                                        src={image}
+                                                        alt=""
+                                                    />
+                                                    :
+                                                    <Skeleton variant="rectangular" animation="wave" width={48} height={48} sx={{ borderRadius: "4.8px" }} />
+                                                }
+                                                <div className="media-overlay">
+                                                    {/* eslint-disable-next-line */}
+                                                    <img
+                                                        src="/img/deploy-item-pattern.svg"
+                                                        className="pattern"
+                                                        alt=""
+                                                    />
+                                                    <span className="deploy-icon">
+                                                        <span
+                                                            style={{ transform: showStake ? "rotate(90deg)" : "rotate(0)" }}>
+                                                            <DeployIcon />
+                                                        </span>
+                                                    </span>
                                                 </div>
                                             </div>
-                                        }
-                                    </div>
-                                    <div className="deploy-action-right">
-                                        {props.status === "active" &&
-                                            <button
-                                                className="btn-delist"
-                                                disabled={isDelistLoading}
-                                                onClick={onDelist}
-                                            >
-                                                {isDelistLoading ?
-                                                    <ClipLoader size={30} color="#fff" />
+                                            <div className="set-deploy-item">
+                                                <h5>Stake Solider</h5>
+                                                {!showStake ?
+                                                    <div className="stepper">
+                                                        <div className="stepper-option">
+                                                            {DEPLOY_LEVEL.map((item, key) => (
+                                                                <button
+                                                                    className={`btn-step ${item.value === level ? "hovered" : ""}`}
+                                                                    onClick={() => handleShowStake(item.value, item.id)}
+                                                                    onMouseEnter={() => handleLevel(item.value, item.id)}
+                                                                    style={{ left: key * 72 }}
+                                                                    key={key}
+                                                                >
+                                                                    {item.value}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
                                                     :
-                                                    <>delist</>
+                                                    <div className="stepper-action">
+                                                        <button
+                                                            className="btn-item-deploy"
+                                                            disabled={isStakeLoading}
+                                                            onClick={onStake}
+                                                        >
+                                                            {isStakeLoading ?
+                                                                <ClipLoader size={30} color="#fff" />
+                                                                :
+                                                                <>deploy</>
+                                                            }
+                                                        </button>
+                                                        <button
+                                                            className="btn-item-cancel"
+                                                            onClick={() => setShowStake(false)}
+                                                            disabled={isStakeLoading}
+                                                        >
+                                                            cancel
+                                                        </button>
+                                                    </div>
                                                 }
-                                            </button>
-                                        }
-                                        {props.status === "complete" &&
-                                            <button className="btn-claim">
-                                                claim
-                                            </button>
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                            :
-                            <div className="item-content">
-                                <div className="media">
-                                    {/* eslint-disable-next-line */}
-                                    <img
-                                        src={image}
-                                        alt=""
-                                    />
-                                    <div className="media-overlay">
-                                        {/* eslint-disable-next-line */}
-                                        <img
-                                            src="/img/deploy-item-pattern.svg"
-                                            className="pattern"
-                                            alt=""
-                                        />
-                                        <span className="deploy-icon">
-                                            <span
-                                                style={{ transform: showStake ? "rotate(90deg)" : "rotate(0)" }}>
-                                                <DeployIcon />
-                                            </span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="set-deploy-item">
-                                    <h5>Stake Solider</h5>
-                                    {!showStake ?
-                                        <div className="stepper">
-                                            <div className="stepper-option">
-                                                {DEPLOY_LEVEL.map((item, key) => (
-                                                    <button
-                                                        className={`btn-step ${item.value === level ? "hovered" : ""}`}
-                                                        onClick={() => handleShowStake(item.value, item.id)}
-                                                        onMouseEnter={() => handleLevel(item.value, item.id)}
-                                                        style={{ left: key * 72 }}
-                                                        key={key}
-                                                    >
-                                                        {item.value}
-                                                    </button>
-                                                ))}
+                                                <p className="option-dec">
+                                                    {DEPLOY_LEVEL[levelId].title} = <span><HiveIcon /> {DEPLOY_LEVEL[levelId].option}</span>
+                                                </p>
                                             </div>
                                         </div>
-                                        :
-                                        <div className="stepper-action">
-                                            <button
-                                                className="btn-item-deploy"
-                                                disabled={isStakeLoading}
-                                                onClick={onStake}
-                                            >
-                                                {isStakeLoading ?
-                                                    <ClipLoader size={30} color="#fff" />
-                                                    :
-                                                    <>deploy</>
-                                                }
-                                            </button>
-                                            <button
-                                                className="btn-item-cancel"
-                                                onClick={() => setShowStake(false)}
-                                                disabled={isStakeLoading}
-                                            >
-                                                cancel
-                                            </button>
-                                        </div>
-                                    }
-                                    <p className="option-dec">
-                                        {DEPLOY_LEVEL[levelId].title} = <span><HiveIcon /> {DEPLOY_LEVEL[levelId].option}</span>
-                                    </p>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                    :
-                    <div className="deploy-item-dense">
-
-                        <div className={actionState ? "deploy-dense-content active-item" : "deploy-dense-content"}>
-                            {!actionState ?
-                                <div className="content">
-                                    {/* eslint-disable-next-line */}
-                                    <img
-                                        src={image}
-                                        className="thumb"
-                                        alt=""
-                                    />
-                                    <p className="nft-id">#{nftId}</p>
-
-                                    {props.status === "reverse" &&
-                                        <div className="status">
-                                            <span className="icon">
-                                                <MissionReverseIcon />
-                                            </span>
-                                            <span>
-                                                Reverse
-                                            </span>
-                                        </div>
-                                    }
-                                    {props.status === "active" &&
-                                        <div className="status">
-                                            <span className="icon">
-                                                <MissionActiveIcon />
-                                            </span>
-                                            <span>
-                                                Active Mission
-                                            </span>
-                                        </div>
-                                    }
-                                    {props.status === "complete" &&
-                                        <div className="status">
-                                            <span className="icon">
-                                                <MissionCompletedIcon />
-                                            </span>
-                                            <span>
-                                                Mission Completed
-                                            </span>
-                                        </div>
                                     }
                                 </div>
+                        )
+                        :
+                        (
+                            loading ?
+                                <DeployDenseItemSkeleton />
                                 :
-                                <div className="content">
-                                    <span className="deploy-icon">
-                                        <span
-                                            style={{ transform: showStake ? "rotate(90deg)" : "rotate(0)" }}>
-                                            <DeployIcon />
-                                        </span>
-                                    </span>
-                                    {!showStake ?
-                                        <div className="stepper">
-                                            <div className="stepper-option">
-                                                {DEPLOY_LEVEL.map((item, key) => (
-                                                    <button
-                                                        className={`btn-step ${item.value === level ? "hovered" : ""}`}
-                                                        onClick={() => handleShowStake(item.value, item.id)}
-                                                        onMouseEnter={() => handleLevel(item.value, item.id)}
-                                                        style={{ left: key * 72 }}
-                                                        key={key}
-                                                    >
-                                                        {item.value}
-                                                    </button>
-                                                ))}
+
+                                <div className="deploy-item-dense">
+                                    <div className={actionState ? "deploy-dense-content active-item" : "deploy-dense-content"}>
+                                        {!actionState ?
+                                            <div className="content">
+                                                {/* eslint-disable-next-line */}
+                                                <img
+                                                    src={image}
+                                                    className="thumb"
+                                                    alt=""
+                                                />
+                                                <p className="nft-id">#{nftId}</p>
+                                                <div className="status-box">
+                                                    {props.status === "reverse" &&
+                                                        <div className="status">
+                                                            <span className="icon">
+                                                                <MissionReverseIcon />
+                                                            </span>
+                                                            <span>
+                                                                Reverse
+                                                            </span>
+                                                        </div>
+                                                    }
+                                                    {props.status === "active" &&
+                                                        <div className="status">
+                                                            <span className="icon">
+                                                                <MissionActiveIcon />
+                                                            </span>
+                                                            <span>
+                                                                Active Mission
+                                                            </span>
+                                                        </div>
+                                                    }
+                                                    {props.status === "complete" &&
+                                                        <div className="status">
+                                                            <span className="icon">
+                                                                <MissionCompletedIcon />
+                                                            </span>
+                                                            <span>
+                                                                Mission Completed
+                                                            </span>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                {(props.status === "active" || props.status === "complete") &&
+                                                    <div className="deploy-active-view">
+                                                        <div className="top">
+                                                            <h4>Deployed days</h4>
+                                                        </div>
+                                                        <div className="processbar">
+                                                            {props.duration && props.stakedTime &&
+                                                                <span
+                                                                    className="process"
+                                                                    style={{ width: `${((new Date().getTime() / 1000 - props.stakedTime) / DAY_LENGTH / props.duration * 100)}%` }}
+                                                                >
+                                                                </span>
+                                                            }
+                                                        </div>
+                                                        <div className="bottom">
+                                                            {props.duration && props.stakedTime &&
+                                                                <p className="days">{props.duration < Math.floor((new Date().getTime() / 1000 - props.stakedTime) / DAY_LENGTH) ? props.duration : Math.floor((new Date().getTime() / 1000 - props.stakedTime) / DAY_LENGTH)}/{props.duration}</p>
+                                                            }
+                                                            <h5>AMMO</h5>
+                                                            <p>{DEPLOY_LEVEL.find((x) => x.value === props.duration)?.showOption}</p>
+                                                        </div>
+                                                    </div>
+                                                }
                                             </div>
-                                        </div>
-                                        :
-                                        <div className="dense-action-group">
-                                            <button
-                                                className="btn-item-deploy"
-                                                disabled={isStakeLoading}
-                                                onClick={onStake}
-                                            >
-                                                {isStakeLoading ?
-                                                    <ClipLoader size={20} color="#fff" />
+                                            :
+                                            <div className="content">
+                                                <span className="deploy-icon">
+                                                    <span
+                                                        style={{ transform: showStake ? "rotate(90deg)" : "rotate(0)" }}>
+                                                        <DeployIcon />
+                                                    </span>
+                                                </span>
+                                                {!showStake ?
+                                                    <div className="stepper">
+                                                        <div className="stepper-option">
+                                                            {DEPLOY_LEVEL.map((item, key) => (
+                                                                <button
+                                                                    className={`btn-step ${item.value === level ? "hovered" : ""}`}
+                                                                    onClick={() => handleShowStake(item.value, item.id)}
+                                                                    onMouseEnter={() => handleLevel(item.value, item.id)}
+                                                                    style={{ left: key * 72 }}
+                                                                    key={key}
+                                                                >
+                                                                    {item.value}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
                                                     :
-                                                    <>deploy</>
+                                                    <div className="dense-action-group">
+                                                        <button
+                                                            className="btn-item-deploy"
+                                                            disabled={isStakeLoading}
+                                                            onClick={onStake}
+                                                        >
+                                                            {isStakeLoading ?
+                                                                <ClipLoader size={20} color="#fff" />
+                                                                :
+                                                                <>deploy</>
+                                                            }
+                                                        </button>
+                                                        <button
+                                                            className="btn-item-cancel"
+                                                            onClick={() => setShowStake(false)}
+                                                            disabled={isStakeLoading}
+                                                        >
+                                                            cancel
+                                                        </button>
+                                                    </div>
                                                 }
-                                            </button>
-                                            <button
-                                                className="btn-item-cancel"
-                                                onClick={() => setShowStake(false)}
-                                                disabled={isStakeLoading}
-                                            >
-                                                cancel
-                                            </button>
-                                        </div>
-                                    }
 
-                                    <p className="option-dec">
-                                        {DEPLOY_LEVEL[levelId].title} = <span><HiveIcon /> {DEPLOY_LEVEL[levelId].option}</span>
-                                    </p>
+                                                <p className="option-dec">
+                                                    {DEPLOY_LEVEL[levelId].title} = <span><HiveIcon /> {DEPLOY_LEVEL[levelId].option}</span>
+                                                </p>
+                                            </div>
+                                        }
+                                        {!actionState ?
+                                            <>
+                                                {props.status === "active" &&
+                                                    <button
+                                                        className="btn btn-delist"
+                                                        disabled={isDelistLoading}
+                                                        onClick={onDelist}
+                                                    >
+                                                        {isDelistLoading ?
+                                                            <ClipLoader size={20} color="#fff" />
+                                                            :
+                                                            <>delist</>
+                                                        }
+                                                    </button>
+                                                }
+                                                {props.status === "complete" &&
+                                                    <button
+                                                        className="btn btn-claim"
+                                                        disabled={isDelistLoading}
+                                                        onClick={onDelist}
+                                                    >
+                                                        {isDelistLoading ?
+                                                            <ClipLoader size={20} color="#fff" />
+                                                            :
+                                                            <>claim</>
+                                                        }
+                                                    </button>
+                                                }
+
+                                                {props.status === "reverse" &&
+                                                    <button className="btn btn-delist" onClick={() => setActionState(true)}>
+                                                        deploy
+                                                    </button>
+                                                }
+                                            </>
+                                            :
+                                            <p className="deny-name">Stake Solider</p>
+                                        }
+                                    </div>
                                 </div>
-                            }
-                            {!actionState ?
-                                <button className="btn btn-delist" onClick={() => setActionState(true)}>
-                                    deploy
-                                </button>
-                                :
-                                <p className="deny-name">Stake Solider</p>
-                            }
-                        </div>
-                    </div>
-            }
-        </ClickAwayListener>
+                        )
+                }
+            </>
+        </ClickAwayListener >
     )
 }
