@@ -307,21 +307,45 @@ export default function DeployItem(props: {
                                             <DeployIcon />
                                         </span>
                                     </span>
-                                    <div className="stepper">
-                                        <div className="stepper-option">
-                                            {DEPLOY_LEVEL.map((item, key) => (
-                                                <button
-                                                    className={`btn-step ${item.value === level ? "hovered" : ""}`}
-                                                    onClick={() => handleShowStake(item.value, item.id)}
-                                                    onMouseEnter={() => handleLevel(item.value, item.id)}
-                                                    style={{ left: key * 72 }}
-                                                    key={key}
-                                                >
-                                                    {item.value}
-                                                </button>
-                                            ))}
+                                    {!showStake ?
+                                        <div className="stepper">
+                                            <div className="stepper-option">
+                                                {DEPLOY_LEVEL.map((item, key) => (
+                                                    <button
+                                                        className={`btn-step ${item.value === level ? "hovered" : ""}`}
+                                                        onClick={() => handleShowStake(item.value, item.id)}
+                                                        onMouseEnter={() => handleLevel(item.value, item.id)}
+                                                        style={{ left: key * 72 }}
+                                                        key={key}
+                                                    >
+                                                        {item.value}
+                                                    </button>
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
+                                        :
+                                        <div className="dense-action-group">
+                                            <button
+                                                className="btn-item-deploy"
+                                                disabled={isStakeLoading}
+                                                onClick={onStake}
+                                            >
+                                                {isStakeLoading ?
+                                                    <ClipLoader size={20} color="#fff" />
+                                                    :
+                                                    <>deploy</>
+                                                }
+                                            </button>
+                                            <button
+                                                className="btn-item-cancel"
+                                                onClick={() => setShowStake(false)}
+                                                disabled={isStakeLoading}
+                                            >
+                                                cancel
+                                            </button>
+                                        </div>
+                                    }
+
                                     <p className="option-dec">
                                         {DEPLOY_LEVEL[levelId].title} = <span><HiveIcon /> {DEPLOY_LEVEL[levelId].option}</span>
                                     </p>

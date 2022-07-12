@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { NextSeo } from "next-seo";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useWallet, WalletContextState } from "@solana/wallet-adapter-react";
 import { getParsedNftAccountsByOwner } from "@nfteyez/sol-rayz";
 import DeployItem from "../../components/Deploy/DeployItem";
 import Header from "../../components/Header";
 import Menu from "../../components/Menu";
-import { MarketplaceIcon } from "../../components/svgIcons";
+import { CloseTwoTone, DeployIcon, HiveIcon, MarketplaceIcon } from "../../components/svgIcons";
 import { MainPage } from "../../components/Widget";
-import { CREATOR_2D_ADDRESS, LIVE_URL } from "../../config";
+import { CREATOR_2D_ADDRESS, DEPLOY_LEVEL, LIVE_URL } from "../../config";
 import { solConnection } from "../../contexts/utils";
 import { DeployItemType } from "../../contexts/types";
-import { getNftMetaData, getUserPoolInfo } from "../../contexts/transaction_staking";
+import { getNftMetaData, getUserPoolInfo, stakeAllNFT } from "../../contexts/transaction_staking";
 import { PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
+import { Dialog } from "@mui/material";
+import { ClipLoader } from "react-spinners";
 
 export default function DeployPage() {
     const wallet = useWallet();
@@ -21,6 +23,7 @@ export default function DeployPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [unstakedNfts, setUnstakedNfts] = useState<DeployItemType[]>([]);
     const [stakedNfts, setStakedNfts] = useState<DeployItemType[]>([]);
+    const [isModal, setIsModal] = useState(false);
 
     const getUnstakedData = async () => {
         if (!wallet.publicKey) return;
@@ -42,6 +45,7 @@ export default function DeployPage() {
             setUnstakedNfts(list);
         }
     }
+
     const getStakedData = async () => {
         if (!wallet.publicKey) return;
         const data = await getUserPoolInfo(wallet);
@@ -125,6 +129,9 @@ export default function DeployPage() {
                                     </span>
                                 }
                             </p>
+                            <button className="deploy-all" onClick={() => setIsModal(true)}>
+                                deploy all
+                            </button>
                         </div>
                         <div className="content-right">
                             <Link href="https://magiceden.io/marketplace/2d_soldiers">
@@ -134,7 +141,7 @@ export default function DeployPage() {
                             </Link>
                             <div className="view-switch">
                                 <button
-                                    className={router?.query.view === "normal" ? "active" : ""}
+                                    className={router?.query.view === "dense" ? "" : "active"}
                                     onClick={() => router.push("/deploy?view=normal")}
                                 >
                                     normal view
@@ -178,8 +185,132 @@ export default function DeployPage() {
                         </>
                     }
                 </div>
+                <DeployAllModal
+                    wallet={wallet}
+                    unstakedNfts={unstakedNfts}
+                    updatePage={updatePage}
+                    opened={isModal}
+                    close={() => setIsModal(false)}
+                />
                 <Menu />
             </MainPage>
         </>
+    )
+}
+
+const DeployAllModal = (props: {
+    wallet: WalletContextState,
+    unstakedNfts: DeployItemType[],
+    updatePage: Function,
+    opened: boolean,
+    close: Function
+}) => {
+    const { wallet, unstakedNfts, updatePage } = props;
+    const [isAllLoading, setIsAllLoading] = useState(false);
+    const [levelId, setLevelId] = useState(0);
+    const [showStake, setShowStake] = useState(false);
+
+    const [level, setLevel] = useState(1);
+
+    const handleLevel = (level: number, id: number) => {
+        setLevel(level);
+        setLevelId(id)
+    }
+    const update = () => {
+        props.updatePage();
+        props.close();
+    }
+    const onDeployAll = async () => {
+        try {
+            await stakeAllNFT(wallet, unstakedNfts, level, () => setIsAllLoading(true), () => setIsAllLoading(false), () => update());
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleShowStake = (level: number, id: number) => {
+        setLevel(level);
+        setLevelId(id);
+        setShowStake(true);
+    }
+
+    return (
+        <Dialog
+            open={props.opened}
+            onClose={() => props.close()}
+        >
+            <div className="deploy-all-modal">
+                <button className="close-modal" onClick={() => props.close()}>
+                    <CloseTwoTone />
+                </button>
+                <div className="item-content">
+                    <div className="media">
+                        {/* eslint-disable-next-line */}
+                        <img
+                            src="https://img-cdn.magiceden.dev/rs:fill:170:170:0:0/plain/https://dl.airtable.com/.attachmentThumbnails/ddd168539ea9d10a77a9c921639ca3d7/f9862567"
+                            alt=""
+                        />
+                        <div className="media-overlay">
+                            {/* eslint-disable-next-line */}
+                            <img
+                                src="/img/deploy-item-pattern.svg"
+                                className="pattern"
+                                alt=""
+                            />
+                            <span className="deploy-icon">
+                                <span
+                                    style={{ transform: showStake ? "rotate(90deg)" : "rotate(0)" }}>
+                                    <DeployIcon />
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div className="set-deploy-item">
+                        <h5>Stake all Soliders</h5>
+                        {!showStake ?
+                            <div className="stepper">
+                                <div className="stepper-option">
+                                    {DEPLOY_LEVEL.map((item, key) => (
+                                        <button
+                                            className={`btn-step ${item.value === level ? "hovered" : ""}`}
+                                            onClick={() => handleShowStake(item.value, item.id)}
+                                            onMouseEnter={() => handleLevel(item.value, item.id)}
+                                            style={{ left: key * 72 }}
+                                            key={key}
+                                        >
+                                            {item.value}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                            :
+                            <div className="stepper-action">
+                                <button
+                                    className="btn-item-deploy"
+                                    disabled={isAllLoading}
+                                    onClick={onDeployAll}
+                                >
+                                    {isAllLoading ?
+                                        <ClipLoader size={30} color="#fff" />
+                                        :
+                                        <>deploy all</>
+                                    }
+                                </button>
+                                <button
+                                    className="btn-item-cancel"
+                                    onClick={() => setShowStake(false)}
+                                    disabled={isAllLoading}
+                                >
+                                    cancel
+                                </button>
+                            </div>
+                        }
+                        <p className="option-dec">
+                            {DEPLOY_LEVEL[levelId].title} = <span><HiveIcon /> {DEPLOY_LEVEL[levelId].option}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </Dialog>
     )
 }

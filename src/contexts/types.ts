@@ -3,7 +3,7 @@ import { PublicKey } from '@solana/web3.js';
 
 export const GLOBAL_AUTHORITY_SEED = "global-authority";
 
-export const STAKING_PROGRAM_ID = new PublicKey("Tox32NCKN8AkaChEKwjF39vh5cTZyAR1W9vupuUzbdp");
+export const STAKING_PROGRAM_ID = new PublicKey("6xPmEQRrwmZC1GxL8J5ZE6CEFZdgoMj7fGrDPXxAJpEs");
 export const AMMO_TOKEN_MINT = new PublicKey("H3rmqbVz8NTCkGABeue3yc9PgioL2i1RPrQM45itdKMu");
 export const AMMO_TOKEN_DECIMAL = 1_000_000_000;
 
