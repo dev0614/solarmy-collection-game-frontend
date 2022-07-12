@@ -270,6 +270,11 @@ export const filterError = (error: any) => {
             default:
                 break;
         }
-        return errorCode
+    }
+    if (error?.code === 4001) {
+        errorAlert("User rejected the request.")
+    }
+    if (error?.code === -32603) {
+        errorAlert("Something went wrong.")
     }
 }

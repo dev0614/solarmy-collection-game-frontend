@@ -1,7 +1,19 @@
+import { PublicKey } from "@solana/web3.js";
 
 export const NETWORK = "devnet"; //mainnet-beta | devnet
 export const LIVE_URL = "https://solarmy.herokuapp.com/";
-export const CREATOR_2D_ADDRESS = "G42V1DfQKKHrxxfdjDrRphPStZx5Jqu2JwShfN3WoKmK";
+export const CREATOR_2D_ADDRESS = "C3t2xtqA2NFTDqs1SJgcHxyaNqCE4JYnT9EqRySVXYfK";
+
+export const GLOBAL_AUTHORITY_SEED = "global-authority";
+
+export const STAKING_PROGRAM_ID = new PublicKey("ERhUcUHS64zRDzuY3Wj18KGxqp7TzwY2eDoXGMRfJKth");
+export const AMMO_TOKEN_MINT = new PublicKey("H3rmqbVz8NTCkGABeue3yc9PgioL2i1RPrQM45itdKMu");
+export const AMMO_TOKEN_DECIMAL = 1_000_000_000;
+
+export const USER_POOL_SIZE = 5648;     // 8 + 5640
+
+export const DAY_LENGTH = 100 //86400
+// export const DAY_LENGTH = 60 * 60 * 24 //86400
 export const DEPLOY_LEVEL = [
     {
         id: 0,

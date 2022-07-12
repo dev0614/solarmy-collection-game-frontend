@@ -155,3 +155,8 @@
 .Calendar {
     z-index: 120 !important;
 }
+.MuiDialog-paper {
+    max-width: max-content !important;
+    border-radius: 24px !important;
+    background-color: transparent !important;
+}

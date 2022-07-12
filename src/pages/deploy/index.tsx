@@ -1,24 +1,30 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { NextSeo } from "next-seo";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useWallet, WalletContextState } from "@solana/wallet-adapter-react";
 import { getParsedNftAccountsByOwner } from "@nfteyez/sol-rayz";
 import DeployItem from "../../components/Deploy/DeployItem";
 import Header from "../../components/Header";
 import Menu from "../../components/Menu";
-import { MarketplaceIcon } from "../../components/svgIcons";
+import { CloseTwoTone, DeployIcon, HiveIcon, MarketplaceIcon } from "../../components/svgIcons";
 import { MainPage } from "../../components/Widget";
-import { CREATOR_2D_ADDRESS, LIVE_URL } from "../../config";
+import { CREATOR_2D_ADDRESS, DEPLOY_LEVEL, LIVE_URL } from "../../config";
 import { solConnection } from "../../contexts/utils";
 import { DeployItemType } from "../../contexts/types";
-import { getNftMetaData, getUserPoolInfo } from "../../contexts/transaction_staking";
+import { getNftMetaData, getUserPoolInfo, stakeAllNFT } from "../../contexts/transaction_staking";
 import { PublicKey } from "@solana/web3.js";
+import { useRouter } from "next/router";
+import { Dialog } from "@mui/material";
+import { ClipLoader } from "react-spinners";
+import { DeployItemSkeleton } from "../../components/SkeletonComponents/DeploySkeletons";
 
 export default function DeployPage() {
     const wallet = useWallet();
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-    const [unstakedNfts, setUnstakedNfts] = useState<DeployItemType[]>();
-    const [stakedNfts, setStakedNfts] = useState<DeployItemType[]>();
+    const [unstakedNfts, setUnstakedNfts] = useState<DeployItemType[]>([]);
+    const [stakedNfts, setStakedNfts] = useState<DeployItemType[]>([]);
+    const [isModal, setIsModal] = useState(false);
 
     const getUnstakedData = async () => {
         if (!wallet.publicKey) return;
@@ -26,19 +32,23 @@ export default function DeployPage() {
         if (nftList.length !== 0) {
             let list: DeployItemType[] = [];
             for (let item of nftList) {
-                if (item.data.creators[0].address === CREATOR_2D_ADDRESS)
-                    list.push({
-                        nftMint: item?.mint,
-                        uri: item?.data?.uri,
-                        status: "reverse",
-                        stakedTime: new Date().getTime(),
-                        lockTime: new Date().getTime(),
-                        duration: 0
-                    })
+                if (item.data?.creators)
+                    if (item.data?.creators[0].address === CREATOR_2D_ADDRESS)
+                        list.push({
+                            nftMint: item?.mint,
+                            uri: item?.data?.uri,
+                            status: "reverse",
+                            stakedTime: new Date().getTime(),
+                            lockTime: new Date().getTime(),
+                            duration: 0
+                        })
             }
             setUnstakedNfts(list);
+        } else {
+            setUnstakedNfts([]);
         }
     }
+
     const getStakedData = async () => {
         if (!wallet.publicKey) return;
         const data = await getUserPoolInfo(wallet);
@@ -53,7 +63,7 @@ export default function DeployPage() {
             const uris = await Promise.all(promiseData);
 
             for (let i = 0; i < count; i++) {
-                const now = new Date().getDate() / 1000;
+                const now = new Date().getTime() / 1000;
                 list.push({
                     nftMint: data.staking[i].mint,
                     uri: uris[i],
@@ -64,6 +74,8 @@ export default function DeployPage() {
                 })
             }
             setStakedNfts(list);
+        } else {
+            setStakedNfts([]);
         }
     }
 
@@ -77,7 +89,11 @@ export default function DeployPage() {
     useEffect(() => {
         if (wallet.publicKey) {
             updatePage();
+        } else {
+            setStakedNfts([]);
+            setUnstakedNfts([]);
         }
+        // eslint-disable-next-line
     }, [wallet.connected, wallet.publicKey])
     return (
         <>
@@ -122,23 +138,46 @@ export default function DeployPage() {
                                     </span>
                                 }
                             </p>
+                            <button
+                                className="deploy-all"
+                                onClick={() => setIsModal(true)}
+                                disabled={unstakedNfts.length === 0}
+                            >
+                                deploy all
+                            </button>
                         </div>
                         <div className="content-right">
-                            <Link href="/marketplace">
-                                <a>
+                            <Link href="https://magiceden.io/marketplace/2d_soldiers">
+                                <a target="_blank" title="MagicEden">
                                     Marketplace <MarketplaceIcon />
                                 </a>
                             </Link>
                             <div className="view-switch">
-                                <button className="active">normal view</button>
-                                <button className="">dense view</button>
+                                <button
+                                    className={router?.query.view === "dense" ? "" : "active"}
+                                    onClick={() => router.push("/deploy?view=normal")}
+                                >
+                                    normal view
+                                </button>
+                                <button
+                                    className={router?.query.view === "dense" ? "active" : ""}
+                                    onClick={() => router.push("/deploy?view=dense")}
+                                >
+                                    dense view
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="deploy-list">
+                <div className={router?.query?.view === "dense" ? "deploy-list deploy-list-dense" : "deploy-list"}>
                     {isLoading ?
-                        <h1 style={{ color: "#fff" }}>Loding...</h1>
+                        <>
+                            <DeployItemSkeleton />
+                            <DeployItemSkeleton />
+                            <DeployItemSkeleton />
+                            <DeployItemSkeleton />
+                        </>
+                        // <h1 style={{ color: "#fff" }}>Loding...</h1>
                         :
                         <>
                             {stakedNfts && stakedNfts.length !== 0 && stakedNfts.map((item, key) => (
@@ -165,8 +204,132 @@ export default function DeployPage() {
                         </>
                     }
                 </div>
+                <DeployAllModal
+                    wallet={wallet}
+                    unstakedNfts={unstakedNfts}
+                    updatePage={updatePage}
+                    opened={isModal}
+                    close={() => setIsModal(false)}
+                />
                 <Menu />
             </MainPage>
         </>
+    )
+}
+
+const DeployAllModal = (props: {
+    wallet: WalletContextState,
+    unstakedNfts: DeployItemType[],
+    updatePage: Function,
+    opened: boolean,
+    close: Function
+}) => {
+    const { wallet, unstakedNfts, updatePage } = props;
+    const [isAllLoading, setIsAllLoading] = useState(false);
+    const [levelId, setLevelId] = useState(0);
+    const [showStake, setShowStake] = useState(false);
+
+    const [level, setLevel] = useState(1);
+
+    const handleLevel = (level: number, id: number) => {
+        setLevel(level);
+        setLevelId(id)
+    }
+    const update = () => {
+        props.updatePage();
+        props.close();
+    }
+    const onDeployAll = async () => {
+        try {
+            await stakeAllNFT(wallet, unstakedNfts, level, () => setIsAllLoading(true), () => setIsAllLoading(false), () => update());
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleShowStake = (level: number, id: number) => {
+        setLevel(level);
+        setLevelId(id);
+        setShowStake(true);
+    }
+
+    return (
+        <Dialog
+            open={props.opened}
+            onClose={() => props.close()}
+        >
+            <div className="deploy-all-modal">
+                <button className="close-modal" onClick={() => props.close()}>
+                    <CloseTwoTone />
+                </button>
+                <div className="item-content">
+                    <div className="media">
+                        {/* eslint-disable-next-line */}
+                        <img
+                            src="https://img-cdn.magiceden.dev/rs:fill:170:170:0:0/plain/https://dl.airtable.com/.attachmentThumbnails/ddd168539ea9d10a77a9c921639ca3d7/f9862567"
+                            alt=""
+                        />
+                        <div className="media-overlay">
+                            {/* eslint-disable-next-line */}
+                            <img
+                                src="/img/deploy-item-pattern.svg"
+                                className="pattern"
+                                alt=""
+                            />
+                            <span className="deploy-icon">
+                                <span
+                                    style={{ transform: showStake ? "rotate(90deg)" : "rotate(0)" }}>
+                                    <DeployIcon />
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div className="set-deploy-item">
+                        <h5>Stake all Soliders</h5>
+                        {!showStake ?
+                            <div className="stepper">
+                                <div className="stepper-option">
+                                    {DEPLOY_LEVEL.map((item, key) => (
+                                        <button
+                                            className={`btn-step ${item.value === level ? "hovered" : ""}`}
+                                            onClick={() => handleShowStake(item.value, item.id)}
+                                            onMouseEnter={() => handleLevel(item.value, item.id)}
+                                            style={{ left: key * 72 }}
+                                            key={key}
+                                        >
+                                            {item.value}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                            :
+                            <div className="stepper-action">
+                                <button
+                                    className="btn-item-deploy"
+                                    disabled={isAllLoading}
+                                    onClick={onDeployAll}
+                                >
+                                    {isAllLoading ?
+                                        <ClipLoader size={30} color="#fff" />
+                                        :
+                                        <>deploy all</>
+                                    }
+                                </button>
+                                <button
+                                    className="btn-item-cancel"
+                                    onClick={() => setShowStake(false)}
+                                    disabled={isAllLoading}
+                                >
+                                    cancel
+                                </button>
+                            </div>
+                        }
+                        <p className="option-dec">
+                            {DEPLOY_LEVEL[levelId].title} = <span><HiveIcon /> {DEPLOY_LEVEL[levelId].option}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </Dialog>
     )
 }

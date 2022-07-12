@@ -4,16 +4,16 @@ import {
     Connection,
     PublicKey,
     SystemProgram,
-    SYSVAR_RENT_PUBKEY,
     Transaction,
 } from '@solana/web3.js';
 
-import { AMMO_TOKEN_DECIMAL, AMMO_TOKEN_MINT, GLOBAL_AUTHORITY_SEED, STAKING_PROGRAM_ID, UserPool, USER_POOL_SIZE } from './types';
+import { DeployItemType, UserPool } from './types';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { filterError, getAssociatedTokenAccount, getATokenAccountsNeedCreate, getMetadata, getNFTTokenAccount, getOwnerOfNFT, isExistAccount, METAPLEX, solConnection } from './utils';
 import { IDL } from './staking';
 import { successAlert } from '../components/toastGroup';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { AMMO_TOKEN_DECIMAL, AMMO_TOKEN_MINT, GLOBAL_AUTHORITY_SEED, STAKING_PROGRAM_ID, USER_POOL_SIZE } from '../config';
 
 
 export const initUserPool = async (
@@ -75,6 +75,65 @@ export const createInitUserPoolTx = async (
     return tx;
 }
 
+export const stakeAllNFT = async (
+    wallet: WalletContextState,
+    nfts: DeployItemType[],
+    duration: number,
+    startLoading: Function,
+    closeLoading: Function,
+    updatePage: Function
+) => {
+    if (!wallet.publicKey) return;
+    let userAddress: PublicKey = wallet.publicKey;
+    let cloneWindow: any = window;
+    let provider = new anchor.AnchorProvider(solConnection, cloneWindow['solana'], anchor.AnchorProvider.defaultOptions())
+    const program = new anchor.Program(IDL as anchor.Idl, STAKING_PROGRAM_ID, provider);
+    try {
+        startLoading();
+        let transactions: Transaction[] = [];
+        for (let i = 0; i < nfts.length; i++) {
+            const tx = await createStakeNftTx(new PublicKey(nfts[i].nftMint), userAddress, program, solConnection, duration);
+            console.log(tx)
+            if (tx)
+                transactions.push(tx);
+        }
+        if (transactions.length !== 0) {
+            let { blockhash } = await provider.connection.getRecentBlockhash("confirmed");
+            transactions.forEach((transaction) => {
+                transaction.feePayer = (wallet.publicKey as PublicKey);
+                transaction.recentBlockhash = blockhash;
+            });
+            if (wallet.signAllTransactions !== undefined) {
+                const signedTransactions = await wallet.signAllTransactions(transactions);
+
+                let signatures = await Promise.all(
+                    signedTransactions.map((transaction) =>
+                        provider.connection.sendRawTransaction(transaction.serialize(), {
+                            skipPreflight: true,
+                            maxRetries: 3,
+                            preflightCommitment: 'confirmed',
+                        })
+                    )
+                );
+                await Promise.all(
+                    signatures.map((signature) =>
+                        provider.connection.confirmTransaction(signature, "finalized")
+                    )
+                );
+                closeLoading();
+                successAlert("Transaction is confirmed!");
+                updatePage();
+            }
+        } else {
+            closeLoading();
+        }
+
+    } catch (error) {
+        closeLoading();
+        filterError(error);
+        console.log(error);
+    }
+}
 export const stakeNFT = async (
     wallet: WalletContextState,
     mint: PublicKey,
