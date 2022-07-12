@@ -13,12 +13,14 @@ import { solConnection } from "../../contexts/utils";
 import { DeployItemType } from "../../contexts/types";
 import { getNftMetaData, getUserPoolInfo } from "../../contexts/transaction_staking";
 import { PublicKey } from "@solana/web3.js";
+import { useRouter } from "next/router";
 
 export default function DeployPage() {
     const wallet = useWallet();
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-    const [unstakedNfts, setUnstakedNfts] = useState<DeployItemType[]>();
-    const [stakedNfts, setStakedNfts] = useState<DeployItemType[]>();
+    const [unstakedNfts, setUnstakedNfts] = useState<DeployItemType[]>([]);
+    const [stakedNfts, setStakedNfts] = useState<DeployItemType[]>([]);
 
     const getUnstakedData = async () => {
         if (!wallet.publicKey) return;
@@ -26,15 +28,16 @@ export default function DeployPage() {
         if (nftList.length !== 0) {
             let list: DeployItemType[] = [];
             for (let item of nftList) {
-                if (item.data.creators[0].address === CREATOR_2D_ADDRESS)
-                    list.push({
-                        nftMint: item?.mint,
-                        uri: item?.data?.uri,
-                        status: "reverse",
-                        stakedTime: new Date().getTime(),
-                        lockTime: new Date().getTime(),
-                        duration: 0
-                    })
+                if (item.data?.creators)
+                    if (item.data?.creators[0].address === CREATOR_2D_ADDRESS)
+                        list.push({
+                            nftMint: item?.mint,
+                            uri: item?.data?.uri,
+                            status: "reverse",
+                            stakedTime: new Date().getTime(),
+                            lockTime: new Date().getTime(),
+                            duration: 0
+                        })
             }
             setUnstakedNfts(list);
         }
@@ -124,19 +127,29 @@ export default function DeployPage() {
                             </p>
                         </div>
                         <div className="content-right">
-                            <Link href="/marketplace">
-                                <a>
+                            <Link href="https://magiceden.io/marketplace/2d_soldiers">
+                                <a target="_blank" title="MagicEden">
                                     Marketplace <MarketplaceIcon />
                                 </a>
                             </Link>
                             <div className="view-switch">
-                                <button className="active">normal view</button>
-                                <button className="">dense view</button>
+                                <button
+                                    className={router?.query.view === "normal" ? "active" : ""}
+                                    onClick={() => router.push("/deploy?view=normal")}
+                                >
+                                    normal view
+                                </button>
+                                <button
+                                    className={router?.query.view === "dense" ? "active" : ""}
+                                    onClick={() => router.push("/deploy?view=dense")}
+                                >
+                                    dense view
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="deploy-list">
+                <div className={router?.query?.view === "dense" ? "deploy-list deploy-list-dense" : "deploy-list"}>
                     {isLoading ?
                         <h1 style={{ color: "#fff" }}>Loding...</h1>
                         :

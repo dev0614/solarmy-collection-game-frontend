@@ -347,6 +347,9 @@ button {
         background: rgb(255 255 255 / 12%);
         border-radius: 0;
     }
+    &.deploy-list-dense {
+        gap: 12px;
+    }
 }
 .deploy-item {
     width: calc(50% - 44px);
@@ -689,6 +692,177 @@ button {
         span {
             display: flex;
             align-items: center;
+        }
+    }
+}
+.deploy-item-dense {
+    background: #292929;
+    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.4), inset 0px 1px 0px #383838;
+    border-radius: 16px;
+    width: 100%;
+    .deploy-dense-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px;
+        .content {
+            display: flex;
+            align-items: center;
+            position: relative;
+            img.thumb {
+                width: 48px;
+                height: 48px;
+                border-radius: 4.8px;
+            }
+            p.nft-id {
+                font-weight: 600;
+                font-size: 20px;
+                line-height: 118%;
+                letter-spacing: 1px;
+                font-family: $font-second;
+                color: #ffffff;
+                margin-left: 24px;
+                margin-right: 12px;
+                width: 64px;
+            }
+            .status {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                padding: 0px 16px 0px 4px;
+                gap: 8px;
+                height: 32px;
+                background: rgba(255, 255, 255, 0.16);
+                border-radius: 100px;
+                span.icon {
+                    width: 24px;
+                    height: 24px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: #ffffff;
+                    border-radius: 100px;
+                }
+                span {
+                    font-weight: 500;
+                    font-size: 15px;
+                    line-height: 160%;
+                    letter-spacing: 1px;
+                    color: #ffffff;
+                }
+            }
+        }
+        .btn.btn-delist {
+            width: 116px;
+            height: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.34);
+            border-radius: 100px;
+            background-color: transparent;
+            font-weight: 600;
+            font-size: 15px;
+            line-height: 160%;
+            /* identical to box height, or 24px */
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-family: $font-second;
+            color: #ffffff;
+        }
+        &.active-item {
+            .stepper {
+                border-radius: 100px;
+                background-color: #1f1f1f;
+                margin-top: 14px;
+                height: 64px;
+                width: 288px;
+                margin-left: 18px;
+                position: absolute;
+                top: -19px;
+                left: 54px;
+                .stepper-option {
+                    display: flex;
+                    align-items: center;
+                    position: relative;
+                    button.btn-step {
+                        width: 60px;
+                        height: 60px;
+                        font-family: $font-second;
+                        font-style: normal;
+                        font-weight: 600;
+                        font-size: 22.5px;
+                        line-height: 160%;
+                        text-align: center;
+                        letter-spacing: 1.5px;
+                        text-transform: uppercase;
+                        border: none;
+                        background-color: transparent;
+                        color: #ffffff;
+                        border-radius: 50%;
+                        position: absolute;
+                        top: 2px;
+                        &:last-child {
+                            margin-right: 0;
+                        }
+                        &:hover {
+                            background-color: #fff;
+                            color: #1f1f1f;
+                            width: 72px;
+                            height: 72px;
+                            margin-top: -6px;
+                            border: 6px solid #1f1f1f;
+                        }
+                        &.hovered {
+                            background-color: #fff;
+                            color: #1f1f1f;
+                            width: 72px;
+                            height: 72px;
+                            margin-top: -6px;
+                            border: 6px solid #1f1f1f;
+                        }
+                    }
+                }
+            }
+
+            span.deploy-icon {
+                transition: all 0.2s;
+                width: 52px;
+                height: 52px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 16px;
+                background-color: #0059f7;
+                span {
+                    transition: all 0.2s;
+                }
+            }
+            p.deny-name {
+                font-weight: 500;
+                font-size: 20px;
+                line-height: 158%;
+                letter-spacing: 1px;
+                font-family: $font-second;
+                color: #ffffff;
+            }
+            p.option-dec {
+                margin-left: 320px;
+                font-weight: 500;
+                font-size: 20px;
+                line-height: 158%;
+                letter-spacing: 1px;
+                color: rgba(255, 255, 255, 0.6);
+                font-family: $font-second;
+                display: flex;
+                align-items: center;
+                span {
+                    font-weight: 500;
+                    font-size: 20px;
+                    line-height: 158%;
+                    letter-spacing: 1px;
+                    display: flex;
+                    align-items: center;
+                    color: #ffffff;
+                }
+            }
         }
     }
 }

@@ -1,7 +1,6 @@
-
 export const NETWORK = "devnet"; //mainnet-beta | devnet
 export const LIVE_URL = "https://solarmy.herokuapp.com/";
-export const CREATOR_2D_ADDRESS = "G42V1DfQKKHrxxfdjDrRphPStZx5Jqu2JwShfN3WoKmK";
+export const CREATOR_2D_ADDRESS = "C3t2xtqA2NFTDqs1SJgcHxyaNqCE4JYnT9EqRySVXYfK";
 export const DEPLOY_LEVEL = [
     {
         id: 0,
