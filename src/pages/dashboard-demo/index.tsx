@@ -16,7 +16,7 @@ export default function DashboardPage() {
                 description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus et massa massa. Ut mollis posuere risus, convallis laoreet felis pulvinar condimentum. Nam ac lectus ex."
                 openGraph={{
                     url: `${LIVE_URL}`,
-                    title: 'Deploy | 2D Solarmy NFT Staking',
+                    title: 'Solarmy | 2D, 3D Solider',
                     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus et massa massa. Ut mollis posuere risus, convallis laoreet felis pulvinar condimentum. Nam ac lectus ex.',
                     images: [
                         {
