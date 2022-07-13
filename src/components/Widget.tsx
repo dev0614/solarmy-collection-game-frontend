@@ -43,12 +43,12 @@ export const Badge = (props: {
     )
 }
 
-export const TopSolider = (props: {
+export const TopSoldier = (props: {
     title: string,
     image: string
 }) => {
     return (
-        <div className="top-solider">
+        <div className="top-soldier">
             {/* eslint-disable-next-line */}
             <img
                 src={props.image}
@@ -82,7 +82,7 @@ export const LeaderboardState = (props: {
                 </button>
             </div>
             <div className="dashboard-tabs">
-                <button className={topTab === "soldier" ? "btn-tab active" : "btn-tab"} onClick={() => setTopTab("soldier")}>top solider</button>
+                <button className={topTab === "soldier" ? "btn-tab active" : "btn-tab"} onClick={() => setTopTab("soldier")}>top soldier</button>
                 <button className={topTab === "collection" ? "btn-tab active" : "btn-tab"} onClick={() => setTopTab("collection")}>top collection</button>
             </div>
             <div className="dashboard-tabs">

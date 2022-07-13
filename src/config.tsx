@@ -119,21 +119,21 @@ export const TOPPLAYER2D = [
     },
     {
         rate: 11,
-        rateFormat: "11st",
+        rateFormat: "11th",
         userName: "QuickTrigger",
         userAddress: "7TSu5dSRbnbxRgYb1bwwAELyP5bWWugRCug8vqg1UL7V",
         points: 10450
     },
     {
         rate: 12,
-        rateFormat: "12nd",
+        rateFormat: "12th",
         userName: "QuickTrigger",
         userAddress: "QuickTrigger",
         points: 3290
     },
     {
         rate: 13,
-        rateFormat: "13rd",
+        rateFormat: "13th",
         userName: "Primal_Hunber",
         userAddress: "QuickTrigger",
         points: 3290
@@ -258,5 +258,92 @@ export const WALLET_NFTS = [
         points: 1002,
         image: "https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://www.arweave.net/k_sNcVnVUhZOpdLzcwllVKH2uUlz8U90AaiM-86W_Lg?ext=png",
         collection: "2d"
+    },
+]
+
+export const POSITION_TABLE_DATA = [
+    {
+        label: "1",
+        content:
+            <p>
+                X AMMO + Elite Grade Loot Box&nbsp;
+                <span>
+                    {/* eslint-disable-next-line */}
+                    <img
+                        src="/img/badge/special-forces-lgx28.png"
+                        alt=""
+                    />
+                </span>
+            </p>
+    },
+    {
+        label: "2-3",
+        content:
+            <p>
+                X AMMO + Company Grade Loot Box&nbsp;
+                <span>
+                    {/* eslint-disable-next-line */}
+                    <img
+                        src="/img/badge/ltx28.png "
+                        alt=""
+                    />
+                </span>
+            </p>
+    },
+    {
+        label: "4-10",
+        content:
+            <p>
+                X AMMO + Field Grade Loot Box&nbsp;
+                <span>
+                    {/* eslint-disable-next-line */}
+                    <img
+                        src="/img/badge/sergeantx28.png"
+                        alt=""
+                    />
+                </span>
+            </p>
+    },
+    {
+        label: "11-50",
+        content:
+            <p>
+                X AMMO&nbsp;
+                <span>
+                    {/* eslint-disable-next-line */}
+                    <img
+                        src="/img/badge/fusing-loverx28.png"
+                        alt=""
+                    />
+                </span>
+            </p>
+    },
+    {
+        label: "51-100",
+        content:
+            <p>
+                X AMMO&nbsp;
+                <span>
+                    {/* eslint-disable-next-line */}
+                    <img
+                        src="/img/badge/mint-editionsx28.png"
+                        alt=""
+                    />
+                </span>
+            </p>
+    },
+    {
+        label: "101-300",
+        content:
+            <p>
+                X AMMO&nbsp;
+                <span>
+                    {/* eslint-disable-next-line */}
+                    <img
+                        src="/img/badge/fusion-expertx28.png"
+                        alt=""
+                    />
+                </span>
+            </p>
     },
 ]

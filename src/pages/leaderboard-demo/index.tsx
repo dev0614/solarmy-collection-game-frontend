@@ -1,15 +1,14 @@
 import { useWallet } from "@solana/wallet-adapter-react";
 import moment from "moment";
-import { NextSeo } from "next-seo";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { NextSeo } from "next-seo";
 import Header from "../../components/Header";
 import Menu from "../../components/Menu";
-import { Badge, BattalionDashboardBox, LeaderboardState, MainPage, TopSolider } from "../../components/Widget";
-import { LIVE_URL, TOPPLAYER2D, TOPPLAYER3D } from "../../config";
+import { AddCircleTwoTone } from "../../components/svgIcons";
+import { MainPage } from "../../components/Widget";
+import { LIVE_URL, POSITION_TABLE_DATA, TOPPLAYER2D, TOPPLAYER3D } from "../../config";
 
 export default function DashboardPage() {
-    const router = useRouter();
     const wallet = useWallet();
 
     const [topTab, setTopTab] = useState("soldier");
@@ -26,11 +25,11 @@ export default function DashboardPage() {
     return (
         <>
             <NextSeo
-                title="Solarmy | 2D, 3D Solider"
+                title="Leaderboard | 2D, 3D Soldier"
                 description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus et massa massa. Ut mollis posuere risus, convallis laoreet felis pulvinar condimentum. Nam ac lectus ex."
                 openGraph={{
                     url: `${LIVE_URL}`,
-                    title: 'Deploy | 2D Solarmy NFT Staking',
+                    title: 'Leaderboard | 2D Solarmy NFT Staking',
                     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus et massa massa. Ut mollis posuere risus, convallis laoreet felis pulvinar condimentum. Nam ac lectus ex.',
                     images: [
                         {
@@ -47,10 +46,10 @@ export default function DashboardPage() {
             <Header />
             <MainPage>
                 <div className="leaderboard">
-                    <div className="col-full">
-                        <div className="dashboard-box">
+                    <div className="left">
+                        <div className="dashboard-box" style={{ boxShadow: "none" }}>
                             <div className="dashboard-tabs">
-                                <button className={topTab === "soldier" ? "btn-tab active" : "btn-tab"} onClick={() => setTopTab("soldier")}>top solider</button>
+                                <button className={topTab === "soldier" ? "btn-tab active" : "btn-tab"} onClick={() => setTopTab("soldier")}>top soldier</button>
                                 <button className={topTab === "collection" ? "btn-tab active" : "btn-tab"} onClick={() => setTopTab("collection")}>top collection</button>
                             </div>
                             <div className="dashboard-tabs">
@@ -58,24 +57,69 @@ export default function DashboardPage() {
                                 <button className={subTab === "3d" ? "btn-tab active" : "btn-tab"} onClick={() => setSubTab("3d")}>3d</button>
                             </div>
                             <p className="dashboard-updated-time" style={{ textAlign: "left" }}>{moment("2022-7-10").fromNow()}</p>
-                            <div className="dashboard-list-table">
-                                <div className="table-header">
+                            <div className="dashboard-list-table scrollbar">
+                                <div className="table-header" style={{ paddingBottom: 4 }}>
                                     <div className="th"></div>
                                     <div className="th">Playername</div>
                                     <div className="th">Points</div>
                                 </div>
-                                <div className="table-tbody">
-                                    {tableData.map((item, key) => (
-                                        <div className={item.userAddress === wallet.publicKey?.toBase58() ? "tr highlight" : "tr"} key={key}>
-                                            <div className="td">{item.rateFormat}</div>
-                                            <div className="td">{item.userName}</div>
-                                            <div className="td">{item.points}</div>
+                                <div className="tbody">
+                                    <div className="table-tbody">
+                                        {tableData.map((item, key) => (
+                                            <div className={item.userAddress === wallet.publicKey?.toBase58() ? "tr highlight" : "tr"} key={key}>
+                                                <div className="td">{item.rateFormat}</div>
+                                                <div className="td">{item.userName}</div>
+                                                <div className="td">{item.points}</div>
+                                            </div>
+                                        ))}
+                                        <div className="you-content">
+                                            <div className="tr highlight you">
+                                                <div className="td">{"18th"}</div>
+                                                <div className="td">{"You"}</div>
+                                                <div className="td">{848}</div>
+                                            </div>
                                         </div>
-                                    ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
+                    </div>
+                    <div className="right">
+                        {/* Top Soldier 2D/3D Box */}
+                        <div className="top-soldier-box">
+                            <div className="title-header">
+                                <h2>Top Soldier <span><button className="btn-icon"><AddCircleTwoTone /></button></span> {subTab === "2d" ? "2D" : "3D"}</h2>
+                            </div>
+                            <div className="banner">
+                                {/* eslint-disable-next-line */}
+                                <img
+                                    src={subTab === "2d" ? "/img/leaderboard-banner-2d.png" : "/img/leaderboard-banner-3d.png"}
+                                    alt=""
+                                />
+                            </div>
+                            <p className="banner-description">
+                                {subTab === "2d" &&
+                                    <>By toggling between leaderboards, this widget will change to show players the rules of the leaderboards, the reward list and what they will earn for each sub category. Lastly when the leaderboard ends.</>
+                                }
+                                {subTab === "3d" &&
+                                    <>By toggling between leaderboards, this widget will change to show players the rules of the leaderboards, the reward list and what they will earn for each sub category. Lastly when the leaderboard ends.</>
+                                }
+                            </p>
+                            <div className="position-table">
+                                <div className="tr">
+                                    <div className="td">Position</div>
+                                    <div className="td">Ammo + Rewards</div>
+                                </div>
+                                {POSITION_TABLE_DATA.map((item, key) => (
+                                    <div className="tr" key={key}>
+                                        <div className="td">{item.label}</div>
+                                        <div className="td">
+                                            {item.content}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </MainPage>
