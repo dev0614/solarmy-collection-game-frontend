@@ -1049,6 +1049,39 @@ button.deploy-all {
         color: rgba(255, 255, 255, 0.34);
     }
 }
+button.claim-all {
+    padding: 12px 24px;
+    gap: 10px;
+    width: 144px;
+    height: 48px;
+    background: transparent;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 160%;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    width: 160px;
+    text-align: center;
+    color: #fff;
+    margin-left: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.34);
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+        transition: all 0.3s;
+        width: 220px;
+        background-color: rgb(255, 255, 255, 0.06);
+    }
+    &:disabled {
+        pointer-events: none;
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        background-color: transparent;
+        color: rgba(255, 255, 255, 0.34);
+    }
+}
 .deploy-all-modal {
     background-color: #292929;
     width: 684px;
