@@ -315,7 +315,7 @@ const DeployAllModal = (props: {
                         </div>
                     </div>
                     <div className="set-deploy-item">
-                        <h5>Stake all Soliders</h5>
+                        <h5>Stake all Soldiers</h5>
                         {!showStake ?
                             <div className="stepper">
                                 <div className="stepper-option">

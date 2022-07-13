@@ -3,7 +3,7 @@ import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import Header from "../../components/Header";
 import Menu from "../../components/Menu";
-import { Badge, BattalionDashboardBox, LeaderboardState, MainPage, TopSolider } from "../../components/Widget";
+import { Badge, BattalionDashboardBox, LeaderboardState, MainPage, TopSoldier } from "../../components/Widget";
 import { LIVE_URL } from "../../config";
 
 export default function DashboardPage() {
@@ -12,11 +12,11 @@ export default function DashboardPage() {
     return (
         <>
             <NextSeo
-                title="Solarmy | 2D, 3D Solider"
+                title="Solarmy | 2D, 3D Soldier"
                 description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus et massa massa. Ut mollis posuere risus, convallis laoreet felis pulvinar condimentum. Nam ac lectus ex."
                 openGraph={{
                     url: `${LIVE_URL}`,
-                    title: 'Solarmy | 2D, 3D Solider',
+                    title: 'Solarmy | 2D, 3D Soldier',
                     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus et massa massa. Ut mollis posuere risus, convallis laoreet felis pulvinar condimentum. Nam ac lectus ex.',
                     images: [
                         {
@@ -35,12 +35,12 @@ export default function DashboardPage() {
                 <div className="dashboard">
                     <div className="col-4">
                         <Badge title="Sergeant" />
-                        <TopSolider
-                            title="Top 2D solider"
+                        <TopSoldier
+                            title="Top 2D soldier"
                             image="https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://www.arweave.net/k_sNcVnVUhZOpdLzcwllVKH2uUlz8U90AaiM-86W_Lg?ext=png"
                         />
-                        <TopSolider
-                            title="Top 3D solider"
+                        <TopSoldier
+                            title="Top 3D soldier"
                             image="https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://www.arweave.net/vjOPZwRMR-NNavdQFaAHBzsH7fs4nMGi3rAYupugozA?ext=png"
                         />
                     </div>

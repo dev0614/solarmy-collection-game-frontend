@@ -339,17 +339,32 @@ button {
     // position: relative;
     &::-webkit-scrollbar {
         width: 4px;
+        border-radius: 4px;
     }
     &::-webkit-scrollbar-thumb {
         background: rgb(255 255 255 / 47%);
-        border-radius: 0;
+        border-radius: 4px;
     }
     &::-webkit-scrollbar-track {
         background: rgb(255 255 255 / 12%);
-        border-radius: 0;
+        border-radius: 4px;
     }
     &.deploy-list-dense {
         gap: 12px;
+    }
+}
+.scrollbar {
+    &::-webkit-scrollbar {
+        width: 4px;
+        border-radius: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: rgb(255 255 255 / 47%);
+        border-radius: 4px;
+    }
+    &::-webkit-scrollbar-track {
+        background: rgb(255 255 255 / 12%);
+        border-radius: 4px;
     }
 }
 .deploy-item {
@@ -1250,5 +1265,116 @@ button.claim-all {
 .leaderboard {
     margin-right: 24px;
     margin-left: 24px;
-    gap: 24px;
+    display: flex;
+    .left {
+        width: calc(100% - 590px);
+        margin-right: 24px;
+        overflow: hidden;
+        background: #292929;
+        border-radius: 24px;
+        box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.4), inset 0px 1px 0px #383838;
+
+        .dashboard-box {
+            padding: 24px;
+            position: relative;
+        }
+        .dashboard-list-table {
+            max-height: calc(100vh - 460px);
+            overflow: auto;
+            padding-right: 12px;
+        }
+        .you-content {
+            background-color: #292929;
+            width: calc(100% - 64px);
+            position: absolute;
+            bottom: 0;
+        }
+        .you.tr {
+            &::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: -54px;
+                width: calc(100%);
+                height: 54px;
+                background: linear-gradient(180deg, rgba(41, 41, 41, 0) 0%, #292929 100%);
+            }
+        }
+    }
+    .right {
+        width: 566px;
+        .top-soldier-box {
+            background: #292929;
+            box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.4), inset 0px 1px 0px #383838;
+            border-radius: 24px;
+            padding: 24px;
+            .title-header {
+                font-weight: 600;
+                font-size: 24px;
+                line-height: 118%;
+                letter-spacing: 1px;
+                color: #ffffff;
+                h2 {
+                    white-space: nowrap;
+                    display: flex;
+                    align-items: center;
+                    font-family: $font-second;
+                }
+                .btn-icon {
+                    border: none;
+                    background-color: transparent;
+                }
+            }
+            .banner {
+                margin-top: 12px;
+                margin-bottom: 12px;
+                img {
+                    width: 100%;
+                    border-radius: 24px;
+                }
+            }
+            p.banner-description {
+                font-family: "Oxanium";
+                font-style: normal;
+                font-weight: 500;
+                font-size: 17px;
+                line-height: 143%;
+                letter-spacing: 1px;
+                font-family: $font-second;
+                color: #ffffff;
+            }
+            .position-table {
+                margin-top: 16px;
+                .tr {
+                    background: rgba(255, 255, 255, 0.06);
+                    border-radius: 16px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 8px 16px;
+                    margin-bottom: 4px;
+                    .td {
+                        font-weight: 600;
+                        font-size: 12px;
+                        line-height: 165%;
+                        letter-spacing: 0.02em;
+                        font-family: $font-second;
+                        color: #ffffff;
+                        p {
+                            display: flex;
+                            align-items: center;
+                            span {
+                                margin-left: 4px;
+                                display: flex;
+                                align-items: center;
+                                img {
+                                    border-radius: 4px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

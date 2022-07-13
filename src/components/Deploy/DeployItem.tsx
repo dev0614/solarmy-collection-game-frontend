@@ -233,7 +233,7 @@ export default function DeployItem(props: {
                                                 </div>
                                             </div>
                                             <div className="set-deploy-item">
-                                                <h5>Stake Solider</h5>
+                                                <h5>Stake Soldier</h5>
                                                 {!showStake ?
                                                     <div className="stepper">
                                                         <div className="stepper-option">
@@ -441,7 +441,7 @@ export default function DeployItem(props: {
                                                 }
                                             </>
                                             :
-                                            <p className="deny-name">Stake Solider</p>
+                                            <p className="deny-name">Stake Soldier</p>
                                         }
                                     </div>
                                 </div>
