@@ -48,29 +48,36 @@ export const DEPLOY_LEVEL = [
 
 export const TOPPLAYER2D = [
     {
-        rank: 1,
-        rankFormat: "1st",
+        rate: 1,
+        rateFormat: "1st",
         userName: "QuickTrigger",
         userAddress: "7TSu5dSRbnbxRgYb1bwwAELyP5bWWugRCug8vqg1UL7V",
         points: 10450
     },
     {
-        rank: 2,
-        rankFormat: "2nd",
+        rate: 2,
+        rateFormat: "2nd",
         userName: "Primal_Hunber",
         userAddress: "Fe4KejEc1pgo6MxjfRGYL1u5qMpYN7FMxPKYjbrdsFFE",
         points: 3290
     },
     {
-        rank: 3,
-        rankFormat: "3rd",
+        rate: 3,
+        rateFormat: "3rd",
         userName: "You",
         userAddress: "2qT3LnqwJizZ3niuLi6Mhn9KxtCQVeisHQ4DoqYceL6c",
         points: 3290
     },
     {
-        rank: 4,
-        rankFormat: "4th",
+        rate: 4,
+        rateFormat: "4th",
+        userName: "Tip'n'Run",
+        userAddress: "GCJ8aa9RrnCdkhcECYABM1usfzJvqLBuyJHfUz6DW1UE",
+        points: 3290
+    },
+    {
+        rate: 5,
+        rateFormat: "5th",
         userName: "Tip'n'Run",
         userAddress: "GCJ8aa9RrnCdkhcECYABM1usfzJvqLBuyJHfUz6DW1UE",
         points: 3290
@@ -78,31 +85,66 @@ export const TOPPLAYER2D = [
 ];
 export const TOPPLAYER3D = [
     {
-        rank: 1,
-        rankFormat: "1st",
+        rate: 1,
+        rateFormat: "1st",
         userName: "QuickTrigger",
         userAddress: "7TSu5dSRbnbxRgYb1bwwAELyP5bWWugRCug8vqg1UL7V",
         points: 10450
     },
     {
-        rank: 2,
-        rankFormat: "2nd",
+        rate: 2,
+        rateFormat: "2nd",
         userName: "You",
         userAddress: "2qT3LnqwJizZ3niuLi6Mhn9KxtCQVeisHQ4DoqYceL6c",
         points: 3290
     },
     {
-        rank: 3,
-        rankFormat: "3rd",
+        rate: 3,
+        rateFormat: "3rd",
         userName: "Primal_Hunber",
         userAddress: "Fe4KejEc1pgo6MxjfRGYL1u5qMpYN7FMxPKYjbrdsFFE",
         points: 3290
     },
     {
-        rank: 4,
-        rankFormat: "4th",
+        rate: 4,
+        rateFormat: "4th",
+        userName: "Tip'n'Run",
+        userAddress: "GCJ8aa9RrnCdkhcECYABM1usfzJvqLBuyJHfUz6DW1UE",
+        points: 3290
+    },
+    {
+        rate: 5,
+        rateFormat: "5th",
         userName: "Tip'n'Run",
         userAddress: "GCJ8aa9RrnCdkhcECYABM1usfzJvqLBuyJHfUz6DW1UE",
         points: 3290
     }
 ];
+
+export const WALLET_NFTS = [
+    {
+        points: 1000,
+        image: "https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://www.arweave.net/vjOPZwRMR-NNavdQFaAHBzsH7fs4nMGi3rAYupugozA?ext=png",
+        collection: "3d"
+    },
+    {
+        points: 1001,
+        image: "https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://www.arweave.net/RhlEy5Q0z5OF_7IwIFAykMWfL94uM2ZrqrY6z0Gt4OE?ext=png",
+        collection: "3d"
+    },
+    {
+        points: 1002,
+        image: "https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://www.arweave.net/k_sNcVnVUhZOpdLzcwllVKH2uUlz8U90AaiM-86W_Lg?ext=png",
+        collection: "2d"
+    },
+    {
+        points: 1001,
+        image: "https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://www.arweave.net/RhlEy5Q0z5OF_7IwIFAykMWfL94uM2ZrqrY6z0Gt4OE?ext=png",
+        collection: "3d"
+    },
+    {
+        points: 1002,
+        image: "https://img-cdn.magiceden.dev/rs:fill:400:400:0:0/plain/https://www.arweave.net/k_sNcVnVUhZOpdLzcwllVKH2uUlz8U90AaiM-86W_Lg?ext=png",
+        collection: "2d"
+    },
+]
