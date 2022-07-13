@@ -57,15 +57,15 @@ export const TOPPLAYER2D = [
     {
         rate: 2,
         rateFormat: "2nd",
-        userName: "Primal_Hunber",
-        userAddress: "Fe4KejEc1pgo6MxjfRGYL1u5qMpYN7FMxPKYjbrdsFFE",
+        userName: "You",
+        userAddress: "2qT3LnqwJizZ3niuLi6Mhn9KxtCQVeisHQ4DoqYceL6c",
         points: 3290
     },
     {
         rate: 3,
         rateFormat: "3rd",
-        userName: "You",
-        userAddress: "2qT3LnqwJizZ3niuLi6Mhn9KxtCQVeisHQ4DoqYceL6c",
+        userName: "Primal_Hunber",
+        userAddress: "Fe4KejEc1pgo6MxjfRGYL1u5qMpYN7FMxPKYjbrdsFFE",
         points: 3290
     },
     {
@@ -81,7 +81,63 @@ export const TOPPLAYER2D = [
         userName: "Tip'n'Run",
         userAddress: "GCJ8aa9RrnCdkhcECYABM1usfzJvqLBuyJHfUz6DW1UE",
         points: 3290
-    }
+    },
+    {
+        rate: 6,
+        rateFormat: "16th",
+        userName: "QuickTrigger",
+        userAddress: "7TSu5dSRbnbxRgYb1bwwAELyP5bWWugRCug8vqg1UL7V",
+        points: 10450
+    },
+    {
+        rate: 7,
+        rateFormat: "7th",
+        userName: "QuickTrigger",
+        userAddress: "GCJ8aa9RrnCdkhcECYABM1usfzJvqLBuyJHfUz6DW1UE",
+        points: 3290
+    },
+    {
+        rate: 8,
+        rateFormat: "8th",
+        userName: "Primal_Hunber",
+        userAddress: "Fe4KejEc1pgo6MxjfRGYL1u5qMpYN7FMxPKYjbrdsFFE",
+        points: 3290
+    },
+    {
+        rate: 9,
+        rateFormat: "9th",
+        userName: "Tip'n'Run",
+        userAddress: "GCJ8aa9RrnCdkhcECYABM1usfzJvqLBuyJHfUz6DW1UE",
+        points: 3290
+    },
+    {
+        rate: 10,
+        rateFormat: "10th",
+        userName: "Tip'n'Run",
+        userAddress: "GCJ8aa9RrnCdkhcECYABM1usfzJvqLBuyJHfUz6DW1UE",
+        points: 3290
+    },
+    {
+        rate: 11,
+        rateFormat: "11st",
+        userName: "QuickTrigger",
+        userAddress: "7TSu5dSRbnbxRgYb1bwwAELyP5bWWugRCug8vqg1UL7V",
+        points: 10450
+    },
+    {
+        rate: 12,
+        rateFormat: "12nd",
+        userName: "QuickTrigger",
+        userAddress: "QuickTrigger",
+        points: 3290
+    },
+    {
+        rate: 13,
+        rateFormat: "13rd",
+        userName: "Primal_Hunber",
+        userAddress: "QuickTrigger",
+        points: 3290
+    },
 ];
 export const TOPPLAYER3D = [
     {
@@ -118,7 +174,63 @@ export const TOPPLAYER3D = [
         userName: "Tip'n'Run",
         userAddress: "GCJ8aa9RrnCdkhcECYABM1usfzJvqLBuyJHfUz6DW1UE",
         points: 3290
-    }
+    },
+    {
+        rate: 6,
+        rateFormat: "16th",
+        userName: "QuickTrigger",
+        userAddress: "7TSu5dSRbnbxRgYb1bwwAELyP5bWWugRCug8vqg1UL7V",
+        points: 10450
+    },
+    {
+        rate: 7,
+        rateFormat: "7th",
+        userName: "QuickTrigger",
+        userAddress: "GCJ8aa9RrnCdkhcECYABM1usfzJvqLBuyJHfUz6DW1UE",
+        points: 3290
+    },
+    {
+        rate: 8,
+        rateFormat: "8th",
+        userName: "Primal_Hunber",
+        userAddress: "Fe4KejEc1pgo6MxjfRGYL1u5qMpYN7FMxPKYjbrdsFFE",
+        points: 3290
+    },
+    {
+        rate: 9,
+        rateFormat: "9th",
+        userName: "Tip'n'Run",
+        userAddress: "GCJ8aa9RrnCdkhcECYABM1usfzJvqLBuyJHfUz6DW1UE",
+        points: 3290
+    },
+    {
+        rate: 10,
+        rateFormat: "10th",
+        userName: "Tip'n'Run",
+        userAddress: "GCJ8aa9RrnCdkhcECYABM1usfzJvqLBuyJHfUz6DW1UE",
+        points: 3290
+    },
+    {
+        rate: 11,
+        rateFormat: "11st",
+        userName: "QuickTrigger",
+        userAddress: "7TSu5dSRbnbxRgYb1bwwAELyP5bWWugRCug8vqg1UL7V",
+        points: 10450
+    },
+    {
+        rate: 12,
+        rateFormat: "12nd",
+        userName: "QuickTrigger",
+        userAddress: "QuickTrigger",
+        points: 3290
+    },
+    {
+        rate: 13,
+        rateFormat: "13rd",
+        userName: "Primal_Hunber",
+        userAddress: "QuickTrigger",
+        points: 3290
+    },
 ];
 
 export const WALLET_NFTS = [

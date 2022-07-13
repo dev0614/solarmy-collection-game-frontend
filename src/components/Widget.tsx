@@ -1,7 +1,7 @@
 import { WalletContextState } from "@solana/wallet-adapter-react"
 import moment from "moment"
 import { NextRouter } from "next/router"
-import { useEffect, useLayoutEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { TOPPLAYER2D, TOPPLAYER3D, WALLET_NFTS } from "../config"
 import { ArrowRightTwoTone, InfoTwoTone } from "./svgIcons"
 
@@ -96,7 +96,7 @@ export const LeaderboardState = (props: {
                     <div className="th">Points</div>
                 </div>
                 <div className="table-tbody">
-                    {tableData.map((item, key) => (
+                    {tableData.slice(0, 5).map((item, key) => (
                         <div className={item.userAddress === props.wallet.publicKey?.toBase58() ? "tr highlight" : "tr"} key={key}>
                             <div className="td">{item.rateFormat}</div>
                             <div className="td">{item.userName}</div>
@@ -132,7 +132,7 @@ export const BattalionDashboardBox = (props: {
                     {WALLET_NFTS.map((item, key) => (
                         (topTab === "all" || topTab === item.collection) &&
                         <div className="nft-media" key={key}>
-                            {/* eslint-diable-next-line */}
+                            {/* eslint-disable-next-line */}
                             <img
                                 src={item.image}
                                 style={{ width: "100%" }}
