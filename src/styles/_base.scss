@@ -1200,3 +1200,15 @@ button.deploy-all {
         }
     }
 }
+
+/*======= Dashboard Page =======*/
+.dashboard {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: 24px;
+    margin-left: 24px;
+    gap: 24px;
+}
+.col-4 {
+    width: calc(33.33% - 16px);
+}

@@ -44,4 +44,65 @@ export const DEPLOY_LEVEL = [
         option: "3150 $AMMO (90 per day + 450 bonus)",
         showOption: "2700 + 450 Bonus"
     },
-]
+];
+
+export const TOPPLAYER2D = [
+    {
+        rank: 1,
+        rankFormat: "1st",
+        userName: "QuickTrigger",
+        userAddress: "7TSu5dSRbnbxRgYb1bwwAELyP5bWWugRCug8vqg1UL7V",
+        points: 10450
+    },
+    {
+        rank: 2,
+        rankFormat: "2nd",
+        userName: "Primal_Hunber",
+        userAddress: "Fe4KejEc1pgo6MxjfRGYL1u5qMpYN7FMxPKYjbrdsFFE",
+        points: 3290
+    },
+    {
+        rank: 3,
+        rankFormat: "3rd",
+        userName: "You",
+        userAddress: "2qT3LnqwJizZ3niuLi6Mhn9KxtCQVeisHQ4DoqYceL6c",
+        points: 3290
+    },
+    {
+        rank: 4,
+        rankFormat: "4th",
+        userName: "Tip'n'Run",
+        userAddress: "GCJ8aa9RrnCdkhcECYABM1usfzJvqLBuyJHfUz6DW1UE",
+        points: 3290
+    }
+];
+export const TOPPLAYER3D = [
+    {
+        rank: 1,
+        rankFormat: "1st",
+        userName: "QuickTrigger",
+        userAddress: "7TSu5dSRbnbxRgYb1bwwAELyP5bWWugRCug8vqg1UL7V",
+        points: 10450
+    },
+    {
+        rank: 2,
+        rankFormat: "2nd",
+        userName: "You",
+        userAddress: "2qT3LnqwJizZ3niuLi6Mhn9KxtCQVeisHQ4DoqYceL6c",
+        points: 3290
+    },
+    {
+        rank: 3,
+        rankFormat: "3rd",
+        userName: "Primal_Hunber",
+        userAddress: "Fe4KejEc1pgo6MxjfRGYL1u5qMpYN7FMxPKYjbrdsFFE",
+        points: 3290
+    },
+    {
+        rank: 4,
+        rankFormat: "4th",
+        userName: "Tip'n'Run",
+        userAddress: "GCJ8aa9RrnCdkhcECYABM1usfzJvqLBuyJHfUz6DW1UE",
+        points: 3290
+    }
+];

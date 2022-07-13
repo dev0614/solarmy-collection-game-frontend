@@ -90,6 +90,16 @@ export const stakeAllNFT = async (
     const program = new anchor.Program(IDL as anchor.Idl, STAKING_PROGRAM_ID, provider);
     try {
         startLoading();
+        let userPoolKey = await anchor.web3.PublicKey.createWithSeed(
+            userAddress,
+            "user-pool",
+            STAKING_PROGRAM_ID,
+        );
+
+        let poolAccount = await solConnection.getAccountInfo(userPoolKey);
+        if (poolAccount === null || poolAccount.data === null) {
+            await initUserPool(wallet);
+        }
         let transactions: Transaction[] = [];
         for (let i = 0; i < nfts.length; i++) {
             const tx = await createStakeNftTx(new PublicKey(nfts[i].nftMint), userAddress, program, solConnection, duration);

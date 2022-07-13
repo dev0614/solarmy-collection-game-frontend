@@ -1,18 +1,26 @@
 import { useRouter } from "next/router";
 import { ArrowBackIosTwoTone, DiscordIcon, EditTwoTone } from "./svgIcons";
 
-export default function Header() {
+export default function Header(props: {
+    back?: {
+        backUrl: "/dashboard",
+        title: "Deploy"
+    },
+
+}) {
     const router = useRouter();
     return (
         <header>
             <div className="header-content">
                 <div className="back-link">
-                    <button className="btn-back" onClick={() => router.push("/dashboard")}>
-                        <div className="btn-body">
-                            <ArrowBackIosTwoTone />
-                        </div>
-                        <span>Deploy</span>
-                    </button>
+                    {props.back &&
+                        <button className="btn-back" onClick={() => router.push(props.back ? props.back.backUrl : "/")}>
+                            <div className="btn-body">
+                                <ArrowBackIosTwoTone />
+                            </div>
+                            <span>{props.back.title}</span>
+                        </button>
+                    }
                 </div>
                 <div className="header-control">
                     <div className="user-badge">
