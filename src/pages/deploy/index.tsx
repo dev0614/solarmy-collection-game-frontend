@@ -11,7 +11,7 @@ import { MainPage } from "../../components/Widget";
 import { CREATOR_2D_ADDRESS, DEPLOY_LEVEL, LIVE_URL } from "../../config";
 import { solConnection } from "../../contexts/utils";
 import { DeployItemType } from "../../contexts/types";
-import { getNftMetaData, getUserPoolInfo, stakeAllNFT } from "../../contexts/transaction_staking";
+import { claimAllNFT, getNftMetaData, getUserPoolInfo, stakeAllNFT } from "../../contexts/transaction_staking";
 import { PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import { Dialog } from "@mui/material";
@@ -25,6 +25,7 @@ export default function DeployPage() {
     const [unstakedNfts, setUnstakedNfts] = useState<DeployItemType[]>([]);
     const [stakedNfts, setStakedNfts] = useState<DeployItemType[]>([]);
     const [isModal, setIsModal] = useState(false);
+    const [isClaimAllLoading, setIsClaimAllLoading] = useState(false);
 
     const getUnstakedData = async () => {
         if (!wallet.publicKey) return;
@@ -46,6 +47,23 @@ export default function DeployPage() {
             setUnstakedNfts(list);
         } else {
             setUnstakedNfts([]);
+        }
+    }
+
+    const onClaimAll = async () => {
+        let nfts = stakedNfts;
+        let completedNfts: PublicKey[] = [];
+        for (let nft of nfts) {
+            if (nft.status === "complete") {
+                completedNfts.push(new PublicKey(nft.nftMint));
+            }
+        }
+        if (completedNfts.length !== 0) {
+            try {
+                await claimAllNFT(wallet, completedNfts, () => setIsClaimAllLoading(true), () => setIsClaimAllLoading(false), () => updatePage());
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 
@@ -74,6 +92,7 @@ export default function DeployPage() {
                 })
             }
             setStakedNfts(list);
+            console.log(list)
         } else {
             setStakedNfts([]);
         }
@@ -144,6 +163,17 @@ export default function DeployPage() {
                                 disabled={unstakedNfts.length === 0}
                             >
                                 deploy all
+                            </button>
+                            <button
+                                className="claim-all"
+                                onClick={() => onClaimAll()}
+                                disabled={isClaimAllLoading}
+                            >
+                                {isClaimAllLoading ?
+                                    <ClipLoader size={20} color="#fff" />
+                                    :
+                                    <>claim all</>
+                                }
                             </button>
                         </div>
                         <div className="content-right">

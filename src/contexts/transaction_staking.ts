@@ -144,6 +144,7 @@ export const stakeAllNFT = async (
         console.log(error);
     }
 }
+
 export const stakeNFT = async (
     wallet: WalletContextState,
     mint: PublicKey,
@@ -214,6 +215,65 @@ export const withdrawNft = async (
         console.log(error);
         closeLoading();
         filterError(error);
+    }
+}
+
+
+export const claimAllNFT = async (
+    wallet: WalletContextState,
+    nfts: PublicKey[],
+    startLoading: Function,
+    closeLoading: Function,
+    updatePage: Function
+) => {
+    if (!wallet.publicKey) return;
+    let userAddress: PublicKey = wallet.publicKey;
+    let cloneWindow: any = window;
+    let provider = new anchor.AnchorProvider(solConnection, cloneWindow['solana'], anchor.AnchorProvider.defaultOptions())
+    const program = new anchor.Program(IDL as anchor.Idl, STAKING_PROGRAM_ID, provider);
+    try {
+        startLoading();
+        let transactions: Transaction[] = [];
+        for (let i = 0; i < nfts.length; i++) {
+            const tx = await createWithdrawNftTx(nfts[i], userAddress, program, solConnection);
+            if (tx)
+                transactions.push(tx);
+        }
+        if (transactions.length !== 0) {
+            let { blockhash } = await provider.connection.getRecentBlockhash("confirmed");
+            transactions.forEach((transaction) => {
+                transaction.feePayer = (wallet.publicKey as PublicKey);
+                transaction.recentBlockhash = blockhash;
+            });
+            if (wallet.signAllTransactions !== undefined) {
+                const signedTransactions = await wallet.signAllTransactions(transactions);
+
+                let signatures = await Promise.all(
+                    signedTransactions.map((transaction) =>
+                        provider.connection.sendRawTransaction(transaction.serialize(), {
+                            skipPreflight: true,
+                            maxRetries: 3,
+                            preflightCommitment: 'confirmed',
+                        })
+                    )
+                );
+                await Promise.all(
+                    signatures.map((signature) =>
+                        provider.connection.confirmTransaction(signature, "finalized")
+                    )
+                );
+                closeLoading();
+                successAlert("Transaction is confirmed!");
+                updatePage();
+            }
+        } else {
+            closeLoading();
+        }
+
+    } catch (error) {
+        closeLoading();
+        filterError(error);
+        console.log(error);
     }
 }
 
