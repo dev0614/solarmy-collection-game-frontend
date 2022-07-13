@@ -3,6 +3,8 @@ import Link from "next/link";
 import { NextSeo } from "next-seo";
 import { useWallet, WalletContextState } from "@solana/wallet-adapter-react";
 import { getParsedNftAccountsByOwner } from "@nfteyez/sol-rayz";
+import { Dialog } from "@mui/material";
+import { ClipLoader } from "react-spinners";
 import DeployItem from "../../components/Deploy/DeployItem";
 import Header from "../../components/Header";
 import Menu from "../../components/Menu";
@@ -14,8 +16,6 @@ import { DeployItemType } from "../../contexts/types";
 import { claimAllNFT, getNftMetaData, getUserPoolInfo, stakeAllNFT } from "../../contexts/transaction_staking";
 import { PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
-import { Dialog } from "@mui/material";
-import { ClipLoader } from "react-spinners";
 import { DeployItemSkeleton } from "../../components/SkeletonComponents/DeploySkeletons";
 
 export default function DeployPage() {

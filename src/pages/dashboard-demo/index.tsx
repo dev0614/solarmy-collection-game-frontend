@@ -1,10 +1,14 @@
+import { useWallet } from "@solana/wallet-adapter-react";
 import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
 import Header from "../../components/Header";
 import Menu from "../../components/Menu";
-import { Badge, LeaderboardState, MainPage, TopSolider } from "../../components/Widget";
+import { Badge, BattalionDashboardBox, LeaderboardState, MainPage, TopSolider } from "../../components/Widget";
 import { LIVE_URL } from "../../config";
 
 export default function DashboardPage() {
+    const router = useRouter();
+    const wallet = useWallet();
     return (
         <>
             <NextSeo
@@ -41,11 +45,11 @@ export default function DashboardPage() {
                         />
                     </div>
                     <div className="col-4">
-                        <LeaderboardState />
+                        <LeaderboardState router={router} wallet={wallet} />
 
                     </div>
                     <div className="col-4">
-                        <Badge title="Sergeant" />
+                        <BattalionDashboardBox router={router} />
 
                     </div>
                 </div>
