@@ -30,3 +30,9 @@ export interface DeployItemType {
     lockTime?: number,
     duration?: number
 }
+
+export interface AttributeType {
+    attribute: "Head" | "Head Accessories" | "L Arm" | "R Arm" | "Torso" | "Legs" | "Background" | "",
+    name: string,
+    rarityPoints: string
+}

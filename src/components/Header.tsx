@@ -3,8 +3,8 @@ import { ArrowBackIosTwoTone, DiscordIcon, EditTwoTone } from "./svgIcons";
 
 export default function Header(props: {
     back?: {
-        backUrl: "/dashboard",
-        title: "Deploy"
+        backUrl: string,
+        title: string
     },
 
 }) {

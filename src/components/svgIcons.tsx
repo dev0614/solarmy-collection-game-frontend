@@ -460,3 +460,50 @@ export const AddCircleTwoTone = () => {
         </svg>
     )
 }
+export const AmmoDeplyIcon = () => {
+    return (
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_1493_67623)">
+                <path d="M47.5 29.5312C47.5 36.0007 44.8894 40.4599 40.689 43.323C36.4607 46.2051 30.574 47.5 24 47.5C17.426 47.5 11.5393 46.2051 7.31105 43.323C3.11055 40.4599 0.5 36.0007 0.5 29.5312C0.5 23.0263 3.14205 15.7475 7.42781 10.0972C11.7164 4.44324 17.585 0.5 24 0.5C30.415 0.5 36.2836 4.44324 40.5722 10.0972C44.858 15.7475 47.5 23.0263 47.5 29.5312Z" fill="url(#paint0_linear_1493_67623)" stroke="url(#paint1_linear_1493_67623)" />
+                <path d="M19.0597 11.9548C20.8611 7.26506 27.1389 7.26507 28.9403 11.9548L31.8381 19.4991C32.0226 19.9795 32.2689 20.4307 32.57 20.84L37.298 27.2666C40.237 31.2615 37.0981 37.0122 32.3577 36.3175L24.7319 35.1998C24.2463 35.1286 23.7537 35.1286 23.2681 35.1998L15.6423 36.3175C10.9019 37.0122 7.76298 31.2615 10.702 27.2666L15.43 20.84C15.7311 20.4307 15.9774 19.9795 16.1619 19.4991L19.0597 11.9548Z" fill="#2D2D2D" />
+                <path d="M19.0597 11.9548C20.8611 7.26506 27.1389 7.26507 28.9403 11.9548L31.8381 19.4991C32.0226 19.9795 32.2689 20.4307 32.57 20.84L37.298 27.2666C40.237 31.2615 37.0981 37.0122 32.3577 36.3175L24.7319 35.1998C24.2463 35.1286 23.7537 35.1286 23.2681 35.1998L15.6423 36.3175C10.9019 37.0122 7.76298 31.2615 10.702 27.2666L15.43 20.84C15.7311 20.4307 15.9774 19.9795 16.1619 19.4991L19.0597 11.9548Z" fill="url(#paint2_angular_1493_67623)" />
+                <path d="M19.0597 11.9548C20.8611 7.26506 27.1389 7.26507 28.9403 11.9548L31.8381 19.4991C32.0226 19.9795 32.2689 20.4307 32.57 20.84L37.298 27.2666C40.237 31.2615 37.0981 37.0122 32.3577 36.3175L24.7319 35.1998C24.2463 35.1286 23.7537 35.1286 23.2681 35.1998L15.6423 36.3175C10.9019 37.0122 7.76298 31.2615 10.702 27.2666L15.43 20.84C15.7311 20.4307 15.9774 19.9795 16.1619 19.4991L19.0597 11.9548Z" fill="url(#paint3_angular_1493_67623)" />
+            </g>
+            <defs>
+                <linearGradient id="paint0_linear_1493_67623" x1="24" y1="11.8125" x2="24" y2="48" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#2F2F2F" />
+                    <stop offset="1" stopColor="#141414" />
+                </linearGradient>
+                <linearGradient id="paint1_linear_1493_67623" x1="3.37689" y1="5.33333" x2="50.3028" y2="11.5603" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#0EEC73" stop-opacity="0.63" />
+                    <stop offset="0.598958" stopColor="#0059F7" stop-opacity="0" />
+                    <stop offset="1" stopColor="#0059F7" stop-opacity="0.63" />
+                </linearGradient>
+                <radialGradient id="paint2_angular_1493_67623" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(24 24.2812) rotate(90) scale(15.8438)">
+                    <stop stopColor="#F3EDC8" />
+                    <stop offset="0.25" stopColor="#E0CE9C" />
+                    <stop offset="0.484375" stopColor="#C6A562" />
+                    <stop offset="0.755208" stopColor="#D4BC80" />
+                    <stop offset="1" stopColor="#F3EDC8" />
+                </radialGradient>
+                <radialGradient id="paint3_angular_1493_67623" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(24 24.6562) rotate(90) scale(16.0312 16.0313)">
+                    <stop stopColor="#4AF497" />
+                    <stop offset="0.25" stopColor="#0EEC73" />
+                    <stop offset="0.489583" stopColor="#0DDD6C" />
+                    <stop offset="0.760417" stopColor="#0EEC73" />
+                    <stop offset="1" stopColor="#4AF497" />
+                </radialGradient>
+                <clipPath id="clip0_1493_67623">
+                    <rect width="48" height="48" fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+    )
+}
+export const RefreshIcon = () => {
+    return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4C7.58001 4 4.01001 7.58 4.01001 12C4.01001 16.42 7.58001 20 12 20C15.73 20 18.84 17.45 19.73 14H17.65C16.83 16.33 14.61 18 12 18C8.69001 18 6.00001 15.31 6.00001 12C6.00001 8.69 8.69001 6 12 6C13.66 6 15.14 6.69 16.22 7.78L13 11H20V4L17.65 6.35Z" fill="white" fillOpacity="0.6" />
+        </svg>
+    )
+}
