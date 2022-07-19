@@ -12,7 +12,7 @@ import { DeployItemType, UserPool } from './types';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { filterError, getAssociatedTokenAccount, getATokenAccountsNeedCreate, getMetadata, getNFTTokenAccount, getOwnerOfNFT, isExistAccount, METAPLEX, solConnection } from './utils';
 import { IDL } from './staking';
-import { successAlert } from '../components/toastGroup';
+import { errorAlert, successAlert } from '../components/toastGroup';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { AMMO_TOKEN_DECIMAL, AMMO_TOKEN_MINT, GLOBAL_AUTHORITY_SEED, STAKING_PROGRAM_ID, USER_POOL_SIZE, VAULT_SEED } from '../config';
 import { accessUserVault } from './server';
@@ -68,6 +68,8 @@ export const depositToAccount = async (
         }
 
         const tx = await createDepositToAccountTx(userAddress, amount, program, solConnection);
+
+
         const { blockhash } = await solConnection.getRecentBlockhash('confirmed');
         tx.feePayer = userAddress;
         tx.recentBlockhash = blockhash;
@@ -141,10 +143,16 @@ export const getAmmo = async (
         STAKING_PROGRAM_ID,
     );
     let userTokenAccount = await getAssociatedTokenAccount(userVault, AMMO_TOKEN_MINT);
-    let amount = await solConnection.getTokenAccountBalance(userTokenAccount);
-    if (amount.value.uiAmount) {
-        return amount.value.uiAmount
-    } else {
+    console.log(userTokenAccount.toBase58(), "userTokenAccount")
+    try {
+        let amount = await solConnection.getTokenAccountBalance(userTokenAccount);
+        if (amount.value.uiAmount) {
+            return amount.value.uiAmount
+        } else {
+            return 0;
+        }
+    } catch (error) {
+        console.log(error);
         return 0;
     }
 }
