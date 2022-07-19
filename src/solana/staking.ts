@@ -42,12 +42,193 @@ export type Staking = {
                     "isSigner": false
                 },
                 {
+                    "name": "userVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
                     "name": "owner",
                     "isMut": true,
                     "isSigner": true
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "rent",
+                    "isMut": false,
+                    "isSigner": false
                 }
             ],
             "args": []
+        },
+        {
+            "name": "depositToAccount",
+            "accounts": [
+                {
+                    "name": "owner",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "userVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "userTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "destTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "amount",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "withdrawFromAccount",
+            "accounts": [
+                {
+                    "name": "owner",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "userVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "userTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "destTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "bump",
+                    "type": "u8"
+                },
+                {
+                    "name": "amount",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "depositToVault",
+            "accounts": [
+                {
+                    "name": "owner",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "globalAuthority",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "userVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "rewardVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "userTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "bump",
+                    "type": "u8"
+                },
+                {
+                    "name": "amount",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "withdrawFromVault",
+            "accounts": [
+                {
+                    "name": "owner",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "globalAuthority",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "userVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "rewardVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "destTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "globalBump",
+                    "type": "u8"
+                },
+                {
+                    "name": "amount",
+                    "type": "u64"
+                }
+            ]
         },
         {
             "name": "stakeNftToPool",
@@ -143,6 +324,11 @@ export type Staking = {
                     "isSigner": false
                 },
                 {
+                    "name": "userVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
                     "name": "userRewardAccount",
                     "isMut": true,
                     "isSigner": false
@@ -218,6 +404,22 @@ export type Staking = {
                     },
                     {
                         "name": "totalStakedCount",
+                        "type": "u64"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "userVault",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "owner",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "amount",
                         "type": "u64"
                     }
                 ]
@@ -310,16 +512,21 @@ export type Staking = {
         },
         {
             "code": 6006,
+            "name": "InsufficientAccountVault",
+            "msg": "Insufficient Account Token Balance"
+        },
+        {
+            "code": 6007,
             "name": "InvaliedMetadata",
             "msg": "Invalid Metadata Address"
         },
         {
-            "code": 6007,
+            "code": 6008,
             "name": "MetadataCreatorParseError",
             "msg": "Can't Parse The NFT's Creators"
         },
         {
-            "code": 6008,
+            "code": 6009,
             "name": "UnkownOrNotAllowedNFTCollection",
             "msg": "Unknown Collection Or The Collection Is Not Allowed"
         }
@@ -370,12 +577,193 @@ export const IDL: Staking = {
                     "isSigner": false
                 },
                 {
+                    "name": "userVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
                     "name": "owner",
                     "isMut": true,
                     "isSigner": true
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "rent",
+                    "isMut": false,
+                    "isSigner": false
                 }
             ],
             "args": []
+        },
+        {
+            "name": "depositToAccount",
+            "accounts": [
+                {
+                    "name": "owner",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "userVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "userTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "destTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "amount",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "withdrawFromAccount",
+            "accounts": [
+                {
+                    "name": "owner",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "userVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "userTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "destTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "bump",
+                    "type": "u8"
+                },
+                {
+                    "name": "amount",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "depositToVault",
+            "accounts": [
+                {
+                    "name": "owner",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "globalAuthority",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "userVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "rewardVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "userTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "bump",
+                    "type": "u8"
+                },
+                {
+                    "name": "amount",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "withdrawFromVault",
+            "accounts": [
+                {
+                    "name": "owner",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "globalAuthority",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "userVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "rewardVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "destTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "globalBump",
+                    "type": "u8"
+                },
+                {
+                    "name": "amount",
+                    "type": "u64"
+                }
+            ]
         },
         {
             "name": "stakeNftToPool",
@@ -471,6 +859,11 @@ export const IDL: Staking = {
                     "isSigner": false
                 },
                 {
+                    "name": "userVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
                     "name": "userRewardAccount",
                     "isMut": true,
                     "isSigner": false
@@ -546,6 +939,22 @@ export const IDL: Staking = {
                     },
                     {
                         "name": "totalStakedCount",
+                        "type": "u64"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "userVault",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "owner",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "amount",
                         "type": "u64"
                     }
                 ]
@@ -638,16 +1047,21 @@ export const IDL: Staking = {
         },
         {
             "code": 6006,
+            "name": "InsufficientAccountVault",
+            "msg": "Insufficient Account Token Balance"
+        },
+        {
+            "code": 6007,
             "name": "InvaliedMetadata",
             "msg": "Invalid Metadata Address"
         },
         {
-            "code": 6007,
+            "code": 6008,
             "name": "MetadataCreatorParseError",
             "msg": "Can't Parse The NFT's Creators"
         },
         {
-            "code": 6008,
+            "code": 6009,
             "name": "UnkownOrNotAllowedNFTCollection",
             "msg": "Unknown Collection Or The Collection Is Not Allowed"
         }

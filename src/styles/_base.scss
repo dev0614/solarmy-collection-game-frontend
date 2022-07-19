@@ -2870,6 +2870,9 @@ button.claim-all {
                             border: 1px solid rgba(255, 255, 255, 0.34);
                             margin-left: 8px;
                             margin-right: 8px;
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
                             &:hover {
                                 background-color: rgb(255, 255, 255, 0.06);
                             }
@@ -2895,8 +2898,11 @@ button.claim-all {
             border-radius: 24px;
             margin-top: 16px;
             padding: 16px;
+            position: relative;
             .table {
                 margin-bottom: 40px;
+                height: calc(100vh - 420px);
+                overflow: auto;
                 .tr {
                     background: rgba(255, 255, 255, 0.06);
                     border-radius: 16px;
@@ -2913,9 +2919,13 @@ button.claim-all {
                     }
                 }
                 .thead {
+                    position: sticky;
+                    top: 0;
+                    z-index: 3;
                     .tr {
                         display: flex;
                         justify-content: space-between;
+                        background-color: #363636;
                         .td {
                             padding: 8px 16px;
                             &:nth-child(1) {
@@ -3077,5 +3087,16 @@ button.claim-all {
         &:hover {
             box-shadow: 0px 2px 12px #0048c8;
         }
+    }
+}
+
+.coming-soon-sm {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    p {
+        font-size: 28px;
+        color: rgb(255, 255, 255, 0.2);
     }
 }

@@ -36,3 +36,12 @@ export interface AttributeType {
     name: string,
     rarityPoints: string
 }
+
+export interface UserTxType {
+    amount: number,
+    createdAt: number,
+    label: string,
+    name: string,
+    wallet: string,
+    type: string
+}

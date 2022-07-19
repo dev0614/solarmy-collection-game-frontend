@@ -4,6 +4,7 @@ import {
     Connection,
     PublicKey,
     SystemProgram,
+    SYSVAR_RENT_PUBKEY,
     Transaction,
 } from '@solana/web3.js';
 
@@ -13,7 +14,8 @@ import { filterError, getAssociatedTokenAccount, getATokenAccountsNeedCreate, ge
 import { IDL } from './staking';
 import { successAlert } from '../components/toastGroup';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { AMMO_TOKEN_DECIMAL, AMMO_TOKEN_MINT, GLOBAL_AUTHORITY_SEED, STAKING_PROGRAM_ID, USER_POOL_SIZE } from '../config';
+import { AMMO_TOKEN_DECIMAL, AMMO_TOKEN_MINT, GLOBAL_AUTHORITY_SEED, STAKING_PROGRAM_ID, USER_POOL_SIZE, VAULT_SEED } from '../config';
+import { accessUserVault } from './server';
 
 
 export const initUserPool = async (
@@ -38,6 +40,194 @@ export const initUserPool = async (
     }
 }
 
+
+export const depositToAccount = async (
+    wallet: WalletContextState,
+    amount: number,
+    startLoading: Function,
+    closeLoading: Function,
+    updatePage: Function,
+) => {
+
+    if (!wallet.publicKey) return;
+    let userAddress: PublicKey = wallet.publicKey;
+    let cloneWindow: any = window;
+    let provider = new anchor.AnchorProvider(solConnection, cloneWindow['solana'], anchor.AnchorProvider.defaultOptions())
+    const program = new anchor.Program(IDL as anchor.Idl, STAKING_PROGRAM_ID, provider);
+    try {
+        startLoading();
+        let userPoolKey = await anchor.web3.PublicKey.createWithSeed(
+            userAddress,
+            "user-pool",
+            STAKING_PROGRAM_ID,
+        );
+
+        let poolAccount = await solConnection.getAccountInfo(userPoolKey);
+        if (poolAccount === null || poolAccount.data === null) {
+            await initUserPool(wallet);
+        }
+
+        const tx = await createDepositToAccountTx(userAddress, amount, program, solConnection);
+        const { blockhash } = await solConnection.getRecentBlockhash('confirmed');
+        tx.feePayer = userAddress;
+        tx.recentBlockhash = blockhash;
+
+        const txId = await wallet.sendTransaction(tx, solConnection);
+
+        //add to database
+        await accessUserVault(txId);
+
+        await solConnection.confirmTransaction(txId, "finalized");
+        successAlert("Transaction is confirmed!");
+        closeLoading();
+        updatePage();
+    } catch (error) {
+        console.log(error);
+        closeLoading();
+        filterError(error);
+    }
+}
+
+export const withdrawFromAccount = async (
+    wallet: WalletContextState,
+    amount: number,
+    startLoading: Function,
+    closeLoading: Function,
+    updatePage: Function,
+) => {
+
+    if (!wallet.publicKey) return;
+    let userAddress: PublicKey = wallet.publicKey;
+    let cloneWindow: any = window;
+    let provider = new anchor.AnchorProvider(solConnection, cloneWindow['solana'], anchor.AnchorProvider.defaultOptions())
+    const program = new anchor.Program(IDL as anchor.Idl, STAKING_PROGRAM_ID, provider);
+    try {
+        startLoading();
+        let userPoolKey = await anchor.web3.PublicKey.createWithSeed(
+            userAddress,
+            "user-pool",
+            STAKING_PROGRAM_ID,
+        );
+
+        let poolAccount = await solConnection.getAccountInfo(userPoolKey);
+        if (poolAccount === null || poolAccount.data === null) {
+            await initUserPool(wallet);
+        }
+
+        const tx = await createWithdrawFromAccountTx(userAddress, amount, program, solConnection);
+        const { blockhash } = await solConnection.getRecentBlockhash('confirmed');
+        tx.feePayer = userAddress;
+        tx.recentBlockhash = blockhash;
+        const txId = await wallet.sendTransaction(tx, solConnection);
+
+        //add to database
+        await accessUserVault(txId);
+
+        await solConnection.confirmTransaction(txId, "finalized");
+        successAlert("Transaction is confirmed!");
+        closeLoading();
+        updatePage();
+    } catch (error) {
+        console.log(error);
+        closeLoading();
+        filterError(error);
+    }
+}
+export const getAmmo = async (
+    userAddress: PublicKey
+) => {
+    const [userVault, bump] = await PublicKey.findProgramAddress(
+        [Buffer.from(VAULT_SEED), userAddress.toBuffer()],
+        STAKING_PROGRAM_ID,
+    );
+    let userTokenAccount = await getAssociatedTokenAccount(userVault, AMMO_TOKEN_MINT);
+    let amount = await solConnection.getTokenAccountBalance(userTokenAccount);
+    if (amount.value.uiAmount) {
+        return amount.value.uiAmount
+    } else {
+        return 0;
+    }
+}
+
+export const createWithdrawFromAccountTx = async (
+    userAddress: PublicKey,
+    amount: number,
+    program: anchor.Program,
+    connection: Connection,
+) => {
+
+    const [userVault, bump] = await PublicKey.findProgramAddress(
+        [Buffer.from(VAULT_SEED), userAddress.toBuffer()],
+        STAKING_PROGRAM_ID,
+    );
+    let userTokenAccount = await getAssociatedTokenAccount(userVault, AMMO_TOKEN_MINT);
+    let { instructions, destinationAccounts } = await getATokenAccountsNeedCreate(
+        connection,
+        userAddress,
+        userAddress,
+        [AMMO_TOKEN_MINT]
+    );
+
+    let tx = new Transaction();
+    console.log('==>Withdrawing from Account', destinationAccounts[0].toBase58());
+    if (instructions.length > 0) instructions.map((ix) => tx.add(ix));
+    tx.add(program.instruction.withdrawFromAccount(
+        bump, new anchor.BN(amount * AMMO_TOKEN_DECIMAL), {
+        accounts: {
+            owner: userAddress,
+            userVault,
+            userTokenAccount,
+            destTokenAccount: destinationAccounts[0],
+            tokenProgram: TOKEN_PROGRAM_ID,
+
+        },
+        instructions: [],
+        signers: []
+    }
+    ));
+
+    return tx;
+}
+export const createDepositToAccountTx = async (
+    userAddress: PublicKey,
+    amount: number,
+    program: anchor.Program,
+    connection: Connection,
+) => {
+
+    const [userVault, bump] = await PublicKey.findProgramAddress(
+        [Buffer.from(VAULT_SEED), userAddress.toBuffer()],
+        STAKING_PROGRAM_ID,
+    );
+    let userTokenAccount = await getAssociatedTokenAccount(userAddress, AMMO_TOKEN_MINT);
+    let { instructions, destinationAccounts } = await getATokenAccountsNeedCreate(
+        connection,
+        userAddress,
+        userVault,
+        [AMMO_TOKEN_MINT]
+    );
+
+    let tx = new Transaction();
+    console.log('==>Depositing to Account', destinationAccounts[0].toBase58());
+    if (instructions.length > 0) instructions.map((ix) => tx.add(ix));
+    tx.add(program.instruction.depositToAccount(
+        new anchor.BN(amount * AMMO_TOKEN_DECIMAL), {
+        accounts: {
+            owner: userAddress,
+            userVault,
+            userTokenAccount,
+            destTokenAccount: destinationAccounts[0],
+            tokenProgram: TOKEN_PROGRAM_ID,
+
+        },
+        instructions: [],
+        signers: []
+    }
+    ));
+
+    return tx;
+}
+
 export const createInitUserPoolTx = async (
     userAddress: PublicKey,
     program: anchor.Program,
@@ -45,6 +235,11 @@ export const createInitUserPoolTx = async (
     let userPoolKey = await anchor.web3.PublicKey.createWithSeed(
         userAddress,
         "user-pool",
+        STAKING_PROGRAM_ID,
+    );
+
+    const [userVault, bump] = await PublicKey.findProgramAddress(
+        [Buffer.from(VAULT_SEED), userAddress.toBuffer()],
         STAKING_PROGRAM_ID,
     );
     console.log(USER_POOL_SIZE);
@@ -65,7 +260,10 @@ export const createInitUserPoolTx = async (
         {
             accounts: {
                 userPool: userPoolKey,
-                owner: userAddress
+                userVault,
+                owner: userAddress,
+                systemProgram: SystemProgram.programId,
+                rent: SYSVAR_RENT_PUBKEY,
             },
             instructions: [],
             signers: []
