@@ -1,22 +1,32 @@
 import '../styles/style.scss'
 import Wallet from '../components/wallet/Wallet'
 import { ToastContainer } from 'react-toastify'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { UserProvider } from '../context/UserProvider';
+import { useRouter } from 'next/router';
 
 function RaffleApp({ Component, pageProps }) {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  useEffect(() => {
+    if (typeof window !== "undefined" && router.pathname !== "/bunker") {
+      localStorage.setItem("last-page", router.asPath)
+    }
+  }, [router])
   return (
     <Wallet>
-      <Component
-        {...pageProps}
-        pageLoading={loading}
-        startLoading={() => setLoading(true)}
-        closeLoading={() => setLoading(false)}
-      />
-      <ToastContainer
-        style={{ fontSize: 15 }}
-        pauseOnFocusLoss={false}
-      />
+      <UserProvider>
+        <Component
+          {...pageProps}
+          pageLoading={loading}
+          startLoading={() => setLoading(true)}
+          closeLoading={() => setLoading(false)}
+        />
+        <ToastContainer
+          style={{ fontSize: 15 }}
+          pauseOnFocusLoss={false}
+        />
+      </UserProvider>
     </Wallet>
   )
 }

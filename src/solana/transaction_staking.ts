@@ -142,8 +142,11 @@ export const getAmmo = async (
     );
     let userTokenAccount = await getAssociatedTokenAccount(userVault, AMMO_TOKEN_MINT);
     let amount = await solConnection.getTokenAccountBalance(userTokenAccount);
-    console.log(amount.value.uiAmount)
-    return amount.value.uiAmount
+    if (amount.value.uiAmount) {
+        return amount.value.uiAmount
+    } else {
+        return 0;
+    }
 }
 
 export const createWithdrawFromAccountTx = async (

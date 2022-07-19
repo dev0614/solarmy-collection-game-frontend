@@ -2,33 +2,26 @@ import { ClickAwayListener } from "@mui/material";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { getUsername, setUserName } from "../contexts/server";
-import { getAmmo } from "../contexts/transaction_staking";
+import { setUserName } from "../solana/server";
 import { ArrowBackIosTwoTone, CheckTwoTone, CloseTwoTone, DiscordIcon, EditTwoTone } from "./svgIcons";
+import { API_URL } from "../config";
+
+import socketIOClient from "socket.io-client";
+import { useUserContext } from "../context/UserProvider";
+const socket = socketIOClient(API_URL);
 
 export default function Header(props: {
     back?: {
-        backUrl: string,
+        backUrl: string | null,
         title: string
     },
 
 }) {
     const router = useRouter();
     const wallet = useWallet();
+    const userData = useUserContext();
     const [isEdit, setIsEdit] = useState(false);
-    const [userName, setName] = useState("");
-    const [userAmmo, setUserAmmo] = useState<number | null>(0);
-    const getName = async () => {
-        if (wallet.publicKey) {
-            const name = await getUsername(wallet.publicKey.toBase58());
-            setName(name)
-        }
-    }
-
-    const updatePage = async () => {
-        getUserAmmo();
-        getName();
-    }
+    const [userName, setName] = useState(userData.userName);
 
     const updateUserName = async () => {
         if (wallet.publicKey) {
@@ -36,30 +29,16 @@ export default function Header(props: {
             setIsEdit(false);
         }
     }
-
-    const getUserAmmo = async () => {
-        if (wallet.publicKey) {
-            const ammo = await getAmmo(wallet.publicKey);
-            setUserAmmo(ammo)
-        }
-    }
-
     useEffect(() => {
-        updatePage();
-    }, [wallet.connected])
+        setName(userData.userName);
+    }, [userData])
 
-
-    useEffect(() => {
-        if (wallet.publicKey) {
-            getName();
-        }
-    }, [wallet.connected])
     return (
         <header>
             <div className="header-content">
                 <div className="back-link">
                     {props.back &&
-                        <button className="btn-back" onClick={() => router.push(props.back ? props.back.backUrl : "/")}>
+                        <button className="btn-back" onClick={() => router.push(props.back?.backUrl ? props.back?.backUrl : "/")}>
                             <div className="btn-body">
                                 <ArrowBackIosTwoTone />
                             </div>
@@ -121,7 +100,7 @@ export default function Header(props: {
                                     className="ammo-icon"
                                     alt=""
                                 />
-                                <p>{userAmmo?.toLocaleString()} $AMMO</p>
+                                <p>{userData.balance.toLocaleString()} $AMMO</p>
                                 <h5>Buy here</h5>
                             </div>
                         </button>

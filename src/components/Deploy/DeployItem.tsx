@@ -5,7 +5,7 @@ import { ClickAwayListener, Skeleton } from "@mui/material";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { DAY_LENGTH, DEPLOY_LEVEL } from "../../config";
-import { stakeNFT, withdrawNft } from "../../contexts/transaction_staking";
+import { stakeNFT, withdrawNft } from "../../solana/transaction_staking";
 import { DeployIcon, HiveIcon, MissionActiveIcon, MissionCompletedIcon, MissionReverseIcon } from "../svgIcons";
 import { DeployDenseItemSkeleton, DeployItemSkeleton } from "../SkeletonComponents/DeploySkeletons";
 

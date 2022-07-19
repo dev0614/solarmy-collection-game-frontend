@@ -28,7 +28,6 @@ export const getUsername = async (
         "wallet": wallet,
     })
         .then((res) => {
-            console.log(res)
             name = res.data
         })
         .catch((error) => {

@@ -1,43 +1,36 @@
-
 import { NextSeo } from "next-seo";
 import Header from "../../components/Header";
-import { LIVE_URL } from "../../config";
+import { API_URL, LIVE_URL } from "../../config";
 import { MainPage } from "../../components/Widget";
 import { AmmoDeplyIcon, RefreshIcon } from "../../components/svgIcons";
 import { useEffect, useState } from "react";
 import moment from "moment";
-import { AttributeType, UserTxType } from "../../contexts/types";
-import { depositToAccount, getAmmo, withdrawFromAccount } from "../../contexts/transaction_staking";
+import { AttributeType } from "../../solana/types";
+import { depositToAccount, withdrawFromAccount } from "../../solana/transaction_staking";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { ClipLoader } from "react-spinners";
-import { getUserTransactions } from "../../contexts/server";
+import socketIOClient from "socket.io-client";
+import { useUserContext } from "../../context/UserProvider";
+import { useRouter } from "next/router";
+const socket = socketIOClient(API_URL);
 
 export default function BunkerPage() {
-    const [depositAmount, setDepositAmount] = useState();
-    const [withdrawAmount, setWithdrawAmount] = useState();
+    const [depositAmount, setDepositAmount] = useState<any>();
+    const [withdrawAmount, setWithdrawAmount] = useState<any>();
     const [inventoryTab, setInventoryTab] = useState("yourInventory");
     const [depositLoading, setDepositLoading] = useState(false);
     const [withdrawLoading, setWithdrawLoading] = useState(false);
-    const [userTxHistory, setUserTxHistory] = useState<UserTxType[]>()
-    const [userAmmo, setUserAmmo] = useState<number | null>(0);
+    const [lastPage, setLastPage] = useState<string | null>("/dashboard");
 
     const wallet = useWallet();
-
-    const getAllTx = async () => {
-        if (!wallet.publicKey) return;
-        try {
-            const data = await getUserTransactions(wallet.publicKey?.toBase58());
-            if (data)
-                setUserTxHistory(data)
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    const router = useRouter();
+    const userData = useUserContext();
+    const { getUserData } = useUserContext();
 
     const onTokenDeposit = async () => {
         if (wallet.publicKey && depositAmount)
             try {
-                await depositToAccount(wallet, parseFloat(depositAmount), () => setDepositLoading(true), () => setDepositLoading(false), () => updatePage());
+                await depositToAccount(wallet, parseFloat(depositAmount), () => setDepositLoading(true), () => setDepositLoading(false), () => getUserData());
             } catch (error) {
                 console.log(error)
             }
@@ -46,28 +39,18 @@ export default function BunkerPage() {
     const onTokenWithdraw = async () => {
         if (wallet.publicKey && withdrawAmount) {
             try {
-                await withdrawFromAccount(wallet, parseFloat(withdrawAmount), () => setWithdrawLoading(true), () => setWithdrawLoading(false), () => updatePage());
+                await withdrawFromAccount(wallet, parseFloat(withdrawAmount), () => setWithdrawLoading(true), () => setWithdrawLoading(false), () => getUserData());
             } catch (error) {
                 console.log(error)
             }
         }
     }
 
-    const updatePage = async () => {
-        getUserAmmo();
-        getAllTx();
-    }
-
-    const getUserAmmo = async () => {
-        if (wallet.publicKey) {
-            const ammo = await getAmmo(wallet.publicKey);
-            setUserAmmo(ammo)
-        }
-    }
-
     useEffect(() => {
-        updatePage();
-    }, [wallet.connected])
+        if (typeof window !== "undefined") {
+            setLastPage(localStorage.getItem("last-page"))
+        }
+    }, [router])
 
     return (
         <>
@@ -90,7 +73,7 @@ export default function BunkerPage() {
                     site_name: 'Solarmy',
                 }}
             />
-            <Header back={{ title: "Bunker", backUrl: "/dashboard" }} />
+            <Header back={{ title: "Bunker", backUrl: lastPage }} />
             <MainPage>
                 <div className="bunker">
                     <div className="left">
@@ -99,9 +82,10 @@ export default function BunkerPage() {
                                 <div className="head">
                                     <div className="balance">
                                         <AmmoDeplyIcon />
-                                        <h5>{userAmmo?.toLocaleString()} $AMMO</h5>
+                                        <h5>{userData.balance?.toLocaleString()} $AMMO</h5>
                                     </div>
-                                    <div className="btn-icon" onClick={() => getAllTx()}>
+                                    <div className="btn-icon">
+                                        {/* <div className="btn-icon" onClick={() => getAllTx()}> */}
                                         <RefreshIcon />
                                     </div>
                                 </div>
@@ -149,7 +133,7 @@ export default function BunkerPage() {
                         </div>
                         <div className="transaction-history">
                             <p>Transaction History</p>
-                            <div className="table">
+                            <div className="table scrollbar" style={{ paddingRight: userData?.userTxs.length > 8 ? 10 : 0 }}>
                                 <div className="thead">
                                     <div className="tr">
                                         <div className="td">Amount</div>
@@ -159,7 +143,7 @@ export default function BunkerPage() {
                                     </div>
                                 </div>
                                 <div className="tbody">
-                                    {userTxHistory && userTxHistory.length !== 0 && userTxHistory.map((item, key) => (
+                                    {userData.userTxs && userData.userTxs.length !== 0 && userData.userTxs.map((item, key) => (
                                         <div className="tr" key={key}>
                                             <div className="td">{item.amount}</div>
                                             <div className="td">{item.type}</div>
@@ -174,29 +158,34 @@ export default function BunkerPage() {
                     <div className="right">
                         <div className="inventory-box">
                             <p>Inventory</p>
-                            <div className="dashboard-tabs">
-                                <button className={inventoryTab === "yourInventory" ? "btn-tab active" : "btn-tab"} onClick={() => setInventoryTab("yourInventory")}>your inventory</button>
-                                <button className={inventoryTab === "fusedParts" ? "btn-tab active" : "btn-tab"} onClick={() => setInventoryTab("fusedParts")}>fused parts</button>
-                            </div>
-                            <div className="inventory-table">
-                                <div className="table">
-                                    <div className="thead">
-                                        <div className="tr">
-                                            <div className="th">Attribute</div>
-                                            <div className="th">Name</div>
-                                            <div className="th">Rarity &#38; Points</div>
+                            <>
+                                {/* <div className="dashboard-tabs">
+                                    <button className={inventoryTab === "yourInventory" ? "btn-tab active" : "btn-tab"} onClick={() => setInventoryTab("yourInventory")}>your inventory</button>
+                                    <button className={inventoryTab === "fusedParts" ? "btn-tab active" : "btn-tab"} onClick={() => setInventoryTab("fusedParts")}>fused parts</button>
+                                </div>
+                                <div className="inventory-table">
+                                    <div className="table">
+                                        <div className="thead">
+                                            <div className="tr">
+                                                <div className="th">Attribute</div>
+                                                <div className="th">Name</div>
+                                                <div className="th">Rarity &#38; Points</div>
+                                            </div>
+                                        </div>
+                                        <div className="tbody">
+                                            {inventoryData.map((item: AttributeType, key: number) => (
+                                                <div className="tr" key={key}>
+                                                    <div className="td">{item.attribute}</div>
+                                                    <div className="td">{item.name}</div>
+                                                    <div className="td">{item.rarityPoints}</div>
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
-                                    <div className="tbody">
-                                        {inventoryData.map((item: AttributeType, key: number) => (
-                                            <div className="tr" key={key}>
-                                                <div className="td">{item.attribute}</div>
-                                                <div className="td">{item.name}</div>
-                                                <div className="td">{item.rarityPoints}</div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
+                                </div> */}
+                            </>
+                            <div className="coming-soon-sm">
+                                <p>Coming soon</p>
                             </div>
                         </div>
                     </div>
