@@ -4,6 +4,8 @@ export const NETWORK = "devnet"; //mainnet-beta | devnet
 export const LIVE_URL = "https://solarmy.herokuapp.com/";
 export const CREATOR_2D_ADDRESS = "C3t2xtqA2NFTDqs1SJgcHxyaNqCE4JYnT9EqRySVXYfK";
 
+export const API_URL = "http://localhost:3002/"
+
 export const GLOBAL_AUTHORITY_SEED = "global-authority";
 
 export const STAKING_PROGRAM_ID = new PublicKey("ERhUcUHS64zRDzuY3Wj18KGxqp7TzwY2eDoXGMRfJKth");

@@ -2815,6 +2815,14 @@ button.claim-all {
                     }
                     .btn-icon {
                         background-color: transparent;
+                        cursor: pointer;
+                        &:hover {
+                            svg {
+                                * {
+                                    fill-opacity: 1 !important;
+                                }
+                            }
+                        }
                     }
                 }
                 .input-group {
@@ -2838,8 +2846,12 @@ button.claim-all {
                             line-height: 143%;
                             letter-spacing: 1px;
                             color: #ffffff;
+                            outline: none;
                             &::placeholder {
-                                color: #fff;
+                                // color: #fff;
+                            }
+                            &:focus {
+                                border-color: #fff;
                             }
                         }
                         button {
@@ -3009,6 +3021,61 @@ button.claim-all {
                     }
                 }
             }
+        }
+    }
+}
+.default-input {
+    position: relative;
+    width: calc(100% - 120px);
+    input {
+        border: 1px solid rgba(255, 255, 255, 0.6) !important;
+        background-color: transparent;
+        border-radius: 1000px;
+        padding: 12px 16px;
+        outline: none !important;
+        font-family: "Oxanium";
+        font-style: normal;
+        font-weight: 500;
+        font-size: 17px;
+        line-height: 143%;
+        letter-spacing: 1px;
+        color: #ffffff;
+        position: relative;
+        z-index: 2;
+        width: calc(100% - 32px);
+    }
+    label {
+        font-family: "Oxanium";
+        font-style: normal;
+        font-weight: 500;
+        font-size: 12px !important;
+        line-height: 165% !important;
+        letter-spacing: 1px;
+        color: rgba(255, 255, 255, 0.6) !important;
+        position: absolute;
+        left: 46px;
+        top: -6px;
+        background-color: #1f1f1f !important;
+        padding: 0 8px;
+        z-index: 4;
+        opacity: 1 !important;
+    }
+}
+.name-control {
+    display: flex;
+    align-items: center;
+    button {
+        width: 52px;
+        height: 52px;
+        background-color: #0059f7;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        border: none;
+        margin-left: 8px;
+        &:hover {
+            box-shadow: 0px 2px 12px #0048c8;
         }
     }
 }

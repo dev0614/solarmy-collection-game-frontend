@@ -189,6 +189,7 @@ button.btn-balance {
     backdrop-filter: blur(20px);
     padding: 0 24px;
     z-index: 999;
+    min-width: 846px;
     .menu-content {
         display: flex;
         align-items: center;
