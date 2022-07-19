@@ -40,7 +40,7 @@ export function UserProvider(props: { children: ReactNode }) {
 
     useEffect(() => {
         getUserData();
-    }, [wallet.connected]);
+    }, [wallet.connected, wallet.publicKey]);
 
     return (
         <UserContext.Provider value={userData}>

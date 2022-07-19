@@ -1,6 +1,6 @@
 import { NextSeo } from "next-seo";
 import Header from "../../components/Header";
-import { API_URL, LIVE_URL } from "../../config";
+import { AMMO_TOKEN_MINT, API_URL, LIVE_URL } from "../../config";
 import { MainPage } from "../../components/Widget";
 import { AmmoDeplyIcon, RefreshIcon } from "../../components/svgIcons";
 import { useEffect, useState } from "react";
@@ -28,12 +28,13 @@ export default function BunkerPage() {
     const { getUserData } = useUserContext();
 
     const onTokenDeposit = async () => {
-        if (wallet.publicKey && depositAmount)
+        if (wallet.publicKey && depositAmount) {
             try {
                 await depositToAccount(wallet, parseFloat(depositAmount), () => setDepositLoading(true), () => setDepositLoading(false), () => getUserData());
             } catch (error) {
                 console.log(error)
             }
+        }
     }
 
     const onTokenWithdraw = async () => {

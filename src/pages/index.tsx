@@ -1,4 +1,6 @@
 import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { DeveloperIcon } from "../components/svgIcons";
 import { LIVE_URL } from "../config";
 
@@ -7,7 +9,11 @@ export default function HomePage(props: {
   closeLoading: Function,
   pageLoading: boolean
 }) {
-
+  const router = useRouter();
+  useEffect(() => {
+    router.push("/deploy");
+    // eslint-disable-next-line
+  }, [])
   return (
     <>
       <NextSeo
