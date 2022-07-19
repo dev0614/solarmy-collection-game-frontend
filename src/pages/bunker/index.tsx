@@ -34,7 +34,7 @@ export default function BunkerPage() {
                     site_name: 'Solarmy',
                 }}
             />
-            <Header back={{ title: "Deploy", backUrl: "/dashboard" }} />
+            <Header back={{ title: "Bunker", backUrl: "/dashboard" }} />
             <MainPage>
                 <div className="bunker">
                     <div className="left">

@@ -20,6 +20,7 @@
     font-size: 15px !important;
     line-height: 20px !important;
     height: 56px !important;
+    white-space: nowrap;
 }
 .wallet-adapter-button:not([disabled]):hover {
     background-color: #5acc74 !important;
