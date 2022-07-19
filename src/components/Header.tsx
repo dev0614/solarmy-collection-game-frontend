@@ -3,6 +3,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { getUsername, setUserName } from "../contexts/server";
+import { getAmmo } from "../contexts/transaction_staking";
 import { ArrowBackIosTwoTone, CheckTwoTone, CloseTwoTone, DiscordIcon, EditTwoTone } from "./svgIcons";
 
 export default function Header(props: {
@@ -16,18 +17,38 @@ export default function Header(props: {
     const wallet = useWallet();
     const [isEdit, setIsEdit] = useState(false);
     const [userName, setName] = useState("");
+    const [userAmmo, setUserAmmo] = useState<number | null>(0);
     const getName = async () => {
         if (wallet.publicKey) {
             const name = await getUsername(wallet.publicKey.toBase58());
             setName(name)
         }
     }
+
+    const updatePage = async () => {
+        getUserAmmo();
+        getName();
+    }
+
     const updateUserName = async () => {
         if (wallet.publicKey) {
             await setUserName(wallet.publicKey.toBase58(), userName);
             setIsEdit(false);
         }
     }
+
+    const getUserAmmo = async () => {
+        if (wallet.publicKey) {
+            const ammo = await getAmmo(wallet.publicKey);
+            setUserAmmo(ammo)
+        }
+    }
+
+    useEffect(() => {
+        updatePage();
+    }, [wallet.connected])
+
+
     useEffect(() => {
         if (wallet.publicKey) {
             getName();
@@ -100,7 +121,7 @@ export default function Header(props: {
                                     className="ammo-icon"
                                     alt=""
                                 />
-                                <p>1,250 $AMMO</p>
+                                <p>{userAmmo?.toLocaleString()} $AMMO</p>
                                 <h5>Buy here</h5>
                             </div>
                         </button>

@@ -4,14 +4,70 @@ import Header from "../../components/Header";
 import { LIVE_URL } from "../../config";
 import { MainPage } from "../../components/Widget";
 import { AmmoDeplyIcon, RefreshIcon } from "../../components/svgIcons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import moment from "moment";
-import { AttributeType } from "../../contexts/types";
+import { AttributeType, UserTxType } from "../../contexts/types";
+import { depositToAccount, getAmmo, withdrawFromAccount } from "../../contexts/transaction_staking";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { ClipLoader } from "react-spinners";
+import { getUserTransactions } from "../../contexts/server";
 
 export default function BunkerPage() {
     const [depositAmount, setDepositAmount] = useState();
     const [withdrawAmount, setWithdrawAmount] = useState();
     const [inventoryTab, setInventoryTab] = useState("yourInventory");
+    const [depositLoading, setDepositLoading] = useState(false);
+    const [withdrawLoading, setWithdrawLoading] = useState(false);
+    const [userTxHistory, setUserTxHistory] = useState<UserTxType[]>()
+    const [userAmmo, setUserAmmo] = useState<number | null>(0);
+
+    const wallet = useWallet();
+
+    const getAllTx = async () => {
+        if (!wallet.publicKey) return;
+        try {
+            const data = await getUserTransactions(wallet.publicKey?.toBase58());
+            if (data)
+                setUserTxHistory(data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const onTokenDeposit = async () => {
+        if (wallet.publicKey && depositAmount)
+            try {
+                await depositToAccount(wallet, parseFloat(depositAmount), () => setDepositLoading(true), () => setDepositLoading(false), () => updatePage());
+            } catch (error) {
+                console.log(error)
+            }
+    }
+
+    const onTokenWithdraw = async () => {
+        if (wallet.publicKey && withdrawAmount) {
+            try {
+                await withdrawFromAccount(wallet, parseFloat(withdrawAmount), () => setWithdrawLoading(true), () => setWithdrawLoading(false), () => updatePage());
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
+    const updatePage = async () => {
+        getUserAmmo();
+        getAllTx();
+    }
+
+    const getUserAmmo = async () => {
+        if (wallet.publicKey) {
+            const ammo = await getAmmo(wallet.publicKey);
+            setUserAmmo(ammo)
+        }
+    }
+
+    useEffect(() => {
+        updatePage();
+    }, [wallet.connected])
 
     return (
         <>
@@ -43,9 +99,9 @@ export default function BunkerPage() {
                                 <div className="head">
                                     <div className="balance">
                                         <AmmoDeplyIcon />
-                                        <h5>1,200 $AMMO</h5>
+                                        <h5>{userAmmo?.toLocaleString()} $AMMO</h5>
                                     </div>
-                                    <div className="btn-icon">
+                                    <div className="btn-icon" onClick={() => getAllTx()}>
                                         <RefreshIcon />
                                     </div>
                                 </div>
@@ -54,20 +110,38 @@ export default function BunkerPage() {
                                         <input
                                             className="input"
                                             value={depositAmount}
+                                            onChange={(e: any) => setDepositAmount(e.target.value)}
                                             placeholder="Amount"
                                         />
-                                        <button className="btn">
-                                            deposit
+                                        <button
+                                            className="btn"
+                                            disabled={depositLoading}
+                                            onClick={onTokenDeposit}
+                                        >
+                                            {depositLoading ?
+                                                <ClipLoader size={15} color="#fff" />
+                                                :
+                                                <>deposit</>
+                                            }
                                         </button>
                                     </div>
                                     <div className="input-form">
                                         <input
                                             className="input"
                                             value={withdrawAmount}
+                                            onChange={(e: any) => setWithdrawAmount(e.target.value)}
                                             placeholder="Amount"
                                         />
-                                        <button className="btn">
-                                            withdraw
+                                        <button
+                                            className="btn"
+                                            disabled={withdrawLoading}
+                                            onClick={onTokenWithdraw}
+                                        >
+                                            {withdrawLoading ?
+                                                <ClipLoader size={15} color="#fff" />
+                                                :
+                                                <>withdraw</>
+                                            }
                                         </button>
                                     </div>
                                 </div>
@@ -85,12 +159,12 @@ export default function BunkerPage() {
                                     </div>
                                 </div>
                                 <div className="tbody">
-                                    {[1, 2, 3, 4, 5].map((item, key) => (
-                                        <div className="tr">
-                                            <div className="td">51000</div>
-                                            <div className="td">Purchase</div>
-                                            <div className="td">Transaction</div>
-                                            <div className="td">{moment().format("DD MMM YYYY")}</div>
+                                    {userTxHistory && userTxHistory.length !== 0 && userTxHistory.map((item, key) => (
+                                        <div className="tr" key={key}>
+                                            <div className="td">{item.amount}</div>
+                                            <div className="td">{item.type}</div>
+                                            <div className="td">{item.label}</div>
+                                            <div className="td">{moment(item.createdAt).format("DD MMM YYYY")}</div>
                                         </div>
                                     ))}
                                 </div>

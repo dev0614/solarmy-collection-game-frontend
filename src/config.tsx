@@ -1,14 +1,16 @@
 import { PublicKey } from "@solana/web3.js";
 
-export const NETWORK = "devnet"; //mainnet-beta | devnet
+//mainnet-beta | devnet
+export const NETWORK = "devnet";
 export const LIVE_URL = "https://solarmy.herokuapp.com/";
 export const CREATOR_2D_ADDRESS = "C3t2xtqA2NFTDqs1SJgcHxyaNqCE4JYnT9EqRySVXYfK";
 
-export const API_URL = "http://localhost:3002/"
+export const API_URL = "https://solarmy-api.herokuapp.com/";
+export const VAULT_SEED = "vault-seed";
 
 export const GLOBAL_AUTHORITY_SEED = "global-authority";
 
-export const STAKING_PROGRAM_ID = new PublicKey("ERhUcUHS64zRDzuY3Wj18KGxqp7TzwY2eDoXGMRfJKth");
+export const STAKING_PROGRAM_ID = new PublicKey("2RbwYVj8gmYf8TRNukd34fGJgT7X4X4K3t6gLGwJkNQD");
 export const AMMO_TOKEN_MINT = new PublicKey("H3rmqbVz8NTCkGABeue3yc9PgioL2i1RPrQM45itdKMu");
 export const AMMO_TOKEN_DECIMAL = 1_000_000_000;
 

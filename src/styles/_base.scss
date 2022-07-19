@@ -2870,6 +2870,9 @@ button.claim-all {
                             border: 1px solid rgba(255, 255, 255, 0.34);
                             margin-left: 8px;
                             margin-right: 8px;
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
                             &:hover {
                                 background-color: rgb(255, 255, 255, 0.06);
                             }
