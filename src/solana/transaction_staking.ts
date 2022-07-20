@@ -526,17 +526,32 @@ export const createWithdrawNftTx = async (
         connection,
         userAddress,
         userAddress,
-        [mint, AMMO_TOKEN_MINT]
+        [mint]
     );
     let userTokenAccount = ret.destinationAccounts[0];
+    console.log(userAddress.toBase58())
     console.log("User NFT = ", mint.toBase58(), userTokenAccount.toBase58());
 
     const [globalAuthority, bump] = await PublicKey.findProgramAddress(
         [Buffer.from(GLOBAL_AUTHORITY_SEED)],
         STAKING_PROGRAM_ID
     );
+
+    const [userVault, userbump] = await PublicKey.findProgramAddress(
+        [Buffer.from(VAULT_SEED), userAddress.toBuffer()],
+        STAKING_PROGRAM_ID,
+    );
+    let ret1 = await getATokenAccountsNeedCreate(
+        connection,
+        userAddress,
+        userVault,
+        [AMMO_TOKEN_MINT]
+    );
     let rewardVault = await getAssociatedTokenAccount(globalAuthority, AMMO_TOKEN_MINT);
     let destNftTokenAccount = await getAssociatedTokenAccount(globalAuthority, mint);
+
+    console.log(globalAuthority.toBase58(), "+++>UserVault");
+    console.log(ret1.destinationAccounts[0].toBase58());
 
     let userPoolKey = await anchor.web3.PublicKey.createWithSeed(
         userAddress,
@@ -547,6 +562,8 @@ export const createWithdrawNftTx = async (
     let tx = new Transaction();
 
     if (ret.instructions.length > 0) ret.instructions.map((ix) => tx.add(ix));
+    if (ret1.instructions.length > 0) ret1.instructions.map((ix) => tx.add(ix));
+
     console.log('==> Withdrawing ... ', mint.toBase58());
 
     tx.add(program.instruction.withdrawNftFromPool(
@@ -558,7 +575,8 @@ export const createWithdrawNftTx = async (
             userNftTokenAccount: userTokenAccount,
             destNftTokenAccount,
             rewardVault,
-            userRewardAccount: ret.destinationAccounts[1],
+            userVault,
+            userRewardAccount: ret1.destinationAccounts[0],
             nftMint: mint,
             tokenProgram: TOKEN_PROGRAM_ID,
         },
