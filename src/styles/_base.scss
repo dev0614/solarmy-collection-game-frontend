@@ -3100,3 +3100,14 @@ button.claim-all {
         color: rgb(255, 255, 255, 0.2);
     }
 }
+
+/*========= STORE PAGE ========= */
+.store-page {
+    max-width: 1440px;
+    margin-right: auto;
+    margin-left: auto;
+    @media (max-width: 1488px) {
+        margin-right: 24px;
+        margin-left: 24px;
+    }
+}
