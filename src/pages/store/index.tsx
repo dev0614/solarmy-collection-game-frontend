@@ -31,11 +31,51 @@ export default function StorePage() {
                     <div className="plan">
                         <div className="plan-content">
                             <div className="plan-media">
-                                {/* eslint-diable-next-line */}
+                                {/* eslint-disable-next-line */}
                                 <img
                                     src="/img/store/field.jpg"
                                     alt=""
                                 />
+                            </div>
+                            <p className="plan-label">Field Grade Loot Create</p>
+                            <p className="plan-descrition"></p>
+                            <div className="plan-ammo">
+                                <span>AMMO</span>
+                                <span>500</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="plan">
+                        <div className="plan-content">
+                            <div className="plan-media">
+                                {/* eslint-disable-next-line */}
+                                <img
+                                    src="/img/store/.jpg"
+                                    alt=""
+                                />
+                            </div>
+                            <p className="plan-label">Field Grade Loot Create</p>
+                            <p className="plan-descrition"></p>
+                            <div className="plan-ammo">
+                                <span>AMMO</span>
+                                <span>500</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="plan">
+                        <div className="plan-content">
+                            <div className="plan-media">
+                                {/* eslint-disable-next-line */}
+                                <img
+                                    src="/img/store/field.jpg"
+                                    alt=""
+                                />
+                            </div>
+                            <p className="plan-label">Field Grade Loot Create</p>
+                            <p className="plan-descrition"></p>
+                            <div className="plan-ammo">
+                                <span>AMMO</span>
+                                <span>500</span>
                             </div>
                         </div>
                     </div>

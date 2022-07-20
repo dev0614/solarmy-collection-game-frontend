@@ -17,6 +17,7 @@ import { claimAllNFT, getNftMetaData, getUserPoolInfo, stakeAllNFT } from "../..
 import { PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import { DeployItemSkeleton } from "../../components/SkeletonComponents/DeploySkeletons";
+import { useUserContext } from "../../context/UserProvider";
 
 export default function DeployPage() {
     const wallet = useWallet();
@@ -26,7 +27,7 @@ export default function DeployPage() {
     const [stakedNfts, setStakedNfts] = useState<DeployItemType[]>([]);
     const [isModal, setIsModal] = useState(false);
     const [isClaimAllLoading, setIsClaimAllLoading] = useState(false);
-
+    const { getUserData } = useUserContext();
     const getUnstakedData = async () => {
         if (!wallet.publicKey) return;
         const nftList = await getParsedNftAccountsByOwner({ publicAddress: wallet.publicKey.toBase58(), connection: solConnection });
@@ -102,6 +103,7 @@ export default function DeployPage() {
         setIsLoading(true);
         await getUnstakedData();
         await getStakedData();
+        getUserData();
         setIsLoading(false);
     }
 
