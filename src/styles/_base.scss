@@ -3110,4 +3110,98 @@ button.claim-all {
         margin-right: 24px;
         margin-left: 24px;
     }
+    display: flex;
+    gap: 24px;
+    .plan {
+        background: #292929;
+        box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.4), inset 0px 1px 0px #383838;
+        border-radius: 24px;
+        width: calc(33.3% - 18px);
+        .plan-content {
+            padding: 16px;
+            .plan-media {
+                img {
+                    width: 100%;
+                    border-radius: 16px;
+                }
+            }
+            p.plan-label {
+                font-family: "Oxanium";
+                font-style: normal;
+                font-weight: 500;
+                font-size: 15px;
+                line-height: 160%;
+                text-align: center;
+                letter-spacing: 1px;
+                color: #ffffff;
+                padding: 4px 0;
+                background-color: rgb(255 255 255 / 16%);
+                border-radius: 30px;
+            }
+            p.plan-description {
+                font-family: "Oxanium";
+                font-style: normal;
+                font-weight: 500;
+                font-size: 15px;
+                line-height: 160%;
+                text-align: center;
+                letter-spacing: 1px;
+                color: #ffffff;
+                margin: 4px 0;
+            }
+            .plan-ammo {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border-top: 1px solid #ffffff99;
+                border-bottom: 1px solid #ffffff99;
+                border-right: 0 solid transparent;
+                border-left: 0 solid transparent;
+                border-style: dashed;
+                padding: 8px 0;
+                span {
+                    &:first-child {
+                        font-family: "Oxanium";
+                        font-style: normal;
+                        font-weight: 500;
+                        font-size: 15px;
+                        line-height: 160%;
+                        letter-spacing: 1px;
+                        color: #ffffff;
+                    }
+                    &:last-child {
+                        font-family: "Oxanium";
+                        font-style: normal;
+                        font-weight: 500;
+                        font-size: 20px;
+                        line-height: 158%;
+                        text-align: right;
+                        letter-spacing: 1px;
+                        color: #ffffff;
+                    }
+                }
+            }
+            button.btn-buy {
+                border-radius: 16px;
+                width: 100%;
+                border: none;
+                background-color: #0059f7;
+                padding: 12px 0;
+                font-family: "Oxanium";
+                font-style: normal;
+                font-weight: 600;
+                font-size: 15px;
+                line-height: 160%;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                color: #ffffff;
+                margin-top: 8px;
+                transition: all 0.3s;
+                &:hover {
+                    box-shadow: 0px 2px 12px #0048c8;
+                    transition: all 0.3s;
+                }
+            }
+        }
+    }
 }

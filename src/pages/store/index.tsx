@@ -38,11 +38,14 @@ export default function StorePage() {
                                 />
                             </div>
                             <p className="plan-label">Field Grade Loot Create</p>
-                            <p className="plan-descrition"></p>
+                            <p className="plan-description">Regular crate with no chance of a transcendental attribute</p>
                             <div className="plan-ammo">
                                 <span>AMMO</span>
                                 <span>500</span>
                             </div>
+                            <button className="btn-buy">
+                                Buy
+                            </button>
                         </div>
                     </div>
                     <div className="plan">
@@ -50,16 +53,19 @@ export default function StorePage() {
                             <div className="plan-media">
                                 {/* eslint-disable-next-line */}
                                 <img
-                                    src="/img/store/.jpg"
+                                    src="/img/store/company.jpg"
                                     alt=""
                                 />
                             </div>
                             <p className="plan-label">Field Grade Loot Create</p>
-                            <p className="plan-descrition"></p>
+                            <p className="plan-description">Guaranteed universal attribute and chance of a transcendental attribute.</p>
                             <div className="plan-ammo">
                                 <span>AMMO</span>
-                                <span>500</span>
+                                <span>1500</span>
                             </div>
+                            <button className="btn-buy">
+                                Buy
+                            </button>
                         </div>
                     </div>
                     <div className="plan">
@@ -67,16 +73,19 @@ export default function StorePage() {
                             <div className="plan-media">
                                 {/* eslint-disable-next-line */}
                                 <img
-                                    src="/img/store/field.jpg"
+                                    src="/img/store/elite.jpg"
                                     alt=""
                                 />
                             </div>
                             <p className="plan-label">Field Grade Loot Create</p>
-                            <p className="plan-descrition"></p>
+                            <p className="plan-description">Guaranteed universal attribute and chance transcendental attribute.</p>
                             <div className="plan-ammo">
                                 <span>AMMO</span>
-                                <span>500</span>
+                                <span>3000</span>
                             </div>
+                            <button className="btn-buy">
+                                Buy
+                            </button>
                         </div>
                     </div>
                 </div>
