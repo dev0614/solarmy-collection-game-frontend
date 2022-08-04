@@ -278,3 +278,7 @@ export const filterError = (error: any) => {
         errorAlert("Something went wrong.")
     }
 }
+
+export const pad = (d: number) => {
+    return (d < 10) ? '0' + d.toString() : d.toString();
+}

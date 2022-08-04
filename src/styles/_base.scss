@@ -10,6 +10,10 @@ body {
     padding: 0;
 }
 
+.box-shadow {
+    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.4), inset 0px 1px 0px #383838;
+}
+
 .page-loading {
     display: flex;
     position: fixed;

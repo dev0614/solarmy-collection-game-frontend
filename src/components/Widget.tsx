@@ -4,7 +4,7 @@ import { NextRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { TOPPLAYER2D, TOPPLAYER3D, WALLET_NFTS } from "../config"
 import { ArrowRightTwoTone, InfoTwoTone } from "./svgIcons"
-
+import { ToggleSwitch } from "./WidgetJs"
 export const MainPage = (props: { children: any }) => {
     return (
         <main className="main-page">
@@ -142,6 +142,18 @@ export const BattalionDashboardBox = (props: {
                     ))}
                 </div>
             </div>
+        </div>
+    )
+}
+
+export const AttributeSetting = () => {
+    return (
+        <div className="attribute-setting">
+            <ToggleSwitch label="Common" id="common" />
+            <ToggleSwitch label="Universal" id="universal" />
+            <ToggleSwitch label="Rare" id="rare" />
+            <ToggleSwitch label="First Class" id="first_class" />
+            <ToggleSwitch label="Transendental" id="transendental" />
         </div>
     )
 }
