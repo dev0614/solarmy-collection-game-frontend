@@ -19,7 +19,7 @@ export default function PlanItem(props: {
     const [loading, setLoading] = useState(false);
     const [modalOpened, setModalOpened] = useState(false);
     const router = useRouter();
-    const [fechedItem, setFechedItem] = useState({
+    const [fetchedItem, setFetchedItem] = useState({
         Atribute: "",
         Atribute_Type: "",
         Points: "",
@@ -32,7 +32,7 @@ export default function PlanItem(props: {
             const data = await depositToVault(wallet, id, () => setLoading(true), () => setLoading(false));
             console.log(data, "===> item data");
             if (data && data.length !== 0) {
-                setFechedItem({
+                setFetchedItem({
                     Atribute: data.Atribute,
                     Atribute_Type: data.Atribute_Type,
                     Points: data.Points,
@@ -92,25 +92,27 @@ export default function PlanItem(props: {
                     <span>AMMO</span>
                     <span>{planContent.price}</span>
                 </div>
-                <button
-                    className="btn-buy"
-                    disabled={loading}
-                    onClick={handleBuy}
-                >
+                {wallet.publicKey &&
+                    <button
+                        className="btn-buy"
+                        disabled={loading}
+                        onClick={handleBuy}
+                    >
 
-                    {loading ?
-                        <ClipLoader size={18} color="#fff" />
-                        :
-                        <>Buy</>
-                    }
-                </button>
+                        {loading ?
+                            <ClipLoader size={18} color="#fff" />
+                            :
+                            <>Buy</>
+                        }
+                    </button>
+                }
             </div>
             <PurchasedModal
                 opened={modalOpened}
                 onClose={() => setModalOpened(false)}
                 title={planContent.label}
                 router={router}
-                fechedItem={fechedItem}
+                fetchedItem={fetchedItem}
             />
         </div>
     )
@@ -121,9 +123,9 @@ export const PurchasedModal = (props: {
     onClose: Function,
     title: string,
     router: NextRouter,
-    fechedItem: any
+    fetchedItem: any
 }) => {
-    const { opened, onClose, title, router, fechedItem } = props;
+    const { opened, onClose, title, router, fetchedItem } = props;
     return (
         <Dialog
             open={opened}
@@ -136,11 +138,11 @@ export const PurchasedModal = (props: {
                     <div className="media-box">
                         {/* eslint-disable-next-line */}
                         <img
-                            src={fechedItem.URL}
+                            src={fetchedItem.URL}
                             alt=""
                         />
-                        <p className="attribute-name">{fechedItem.Atribute}</p>
-                        <h5 className="attribute-points">{fechedItem.Rarity} {fechedItem.Points}</h5>
+                        <p className="attribute-name">{fetchedItem.Atribute_Type}: {fetchedItem.Atribute}</p>
+                        <h5 className="attribute-points">{fetchedItem.Rarity} {fetchedItem.Points}</h5>
                     </div>
                 </div>
                 <div className="button-group">
