@@ -21,6 +21,11 @@ export interface UserPool {
     staking: StakedData[],          // 56 * 100
 }
 
+export interface UserVault {
+    owner: PublicKey,               // 32
+    amount: anchor.BN,         // 8
+}
+
 export interface DeployItemType {
     nftMint: string,
     id?: number,
@@ -44,4 +49,13 @@ export interface UserTxType {
     name: string,
     wallet: string,
     type: string
+}
+
+export interface PlanFetched {
+    Atribute: string,
+    Atribute_Type: string,
+    Points: string,
+    Rarity: string,
+    URL: string,
+    _id: string
 }

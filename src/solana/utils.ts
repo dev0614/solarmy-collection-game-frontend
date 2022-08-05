@@ -253,12 +253,15 @@ export const filterError = (error: any) => {
                 errorAlert("Insufficient Reward Token Balance")
                 break;
             case 6006:
-                errorAlert("Invalid Metadata Address")
+                errorAlert("Insufficient Account Token Balance")
                 break;
             case 6007:
-                errorAlert("Can't Parse The NFT's Creators")
+                errorAlert("Invalid Metadata Address")
                 break;
             case 6008:
+                errorAlert("Can't Parse The NFT's Creators")
+                break;
+            case 6009:
                 errorAlert("Unknown Collection Or The Collection Is Not Allowed")
                 break;
             case 4001:
