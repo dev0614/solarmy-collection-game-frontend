@@ -79,3 +79,24 @@ export const getUserTransactions = async (
     data.sort((a: any, b: any) => b.createdAt - a.createdAt);
     return data;
 }
+
+export const getPlanBuyResult = async (
+    txId: string,
+    type: string
+) => {
+    let data: any = [];
+
+    await axios.post(`${API_URL}buyLootBox`, {
+        "txId": txId,
+        "type": type
+    }
+    )
+        .then((res) => {
+            console.log(res);
+            data = res.data;
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+    return data;
+}
