@@ -830,7 +830,7 @@ export const createDepositToVaultTx = async (
     let tx = new Transaction();
     console.log('==>Depositing to Vault...', rewardVault.toBase58());
     tx.add(program.instruction.depositToVault(
-        bump, new anchor.BN(amount), {
+        bump, new anchor.BN(amount * AMMO_TOKEN_DECIMAL), {
         accounts: {
             owner: userAddress,
             globalAuthority,
