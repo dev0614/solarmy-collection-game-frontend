@@ -3,6 +3,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { NextRouter, useRouter } from "next/router";
 import { PureComponent, useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
+import { useUserContext } from "../../context/UserProvider";
 import { depositToVault } from "../../solana/transaction_staking";
 
 export default function PlanItem(props: {
@@ -10,6 +11,7 @@ export default function PlanItem(props: {
 }) {
     const { id } = props;
     const wallet = useWallet();
+    const { getUserData } = useUserContext();
     const [planContent, setPlanContent] = useState({
         label: "",
         description: "",
@@ -29,7 +31,7 @@ export default function PlanItem(props: {
     const handleBuy = async () => {
         setLoading(true);
         try {
-            const data = await depositToVault(wallet, id, () => setLoading(true), () => setLoading(false));
+            const data = await depositToVault(wallet, id, () => setLoading(true), () => setLoading(false), () => getUserData());
             console.log(data, "===> item data");
             if (data && data.length !== 0) {
                 setFetchedItem({

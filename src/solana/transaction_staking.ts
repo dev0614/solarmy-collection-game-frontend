@@ -140,7 +140,8 @@ export const depositToVault = async (
     wallet: WalletContextState,
     planId: number,
     startLoading: Function,
-    closeLoading: Function
+    closeLoading: Function,
+    updatePage: Function
 ) => {
     if (!wallet.publicKey) return;
     let userAddress: PublicKey = wallet.publicKey;
@@ -172,6 +173,7 @@ export const depositToVault = async (
         successAlert("Transaction is confirmed!");
         const data = await getPlanBuyResult(txId, planId.toString());
         closeLoading();
+        updatePage();
         return data;
     } catch (error) {
         console.log(error);
