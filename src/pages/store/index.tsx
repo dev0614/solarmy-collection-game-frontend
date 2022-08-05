@@ -1,10 +1,19 @@
 import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import PlanItem from "../../components/Store/PlanItem";
 import { MainPage } from "../../components/Widget";
 import { LIVE_URL } from "../../config";
 
 export default function StorePage() {
+    const router = useRouter();
+    const [lastPage, setLastPage] = useState<string | null>("/dashboard");
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            setLastPage(localStorage.getItem("last-page"))
+        }
+    }, [router])
     return (
         <>
             <NextSeo
@@ -26,7 +35,7 @@ export default function StorePage() {
                     site_name: 'Solarmy',
                 }}
             />
-            <Header back={{ title: "Store", backUrl: "/dashboard" }} />
+            <Header back={{ title: "Store", backUrl: lastPage }} />
             <MainPage>
                 <div className="store-page">
                     <PlanItem id={1} />
