@@ -140,6 +140,8 @@
                             justify-content: space-between;
                             padding: 16px 24px;
                             margin-bottom: 4px;
+                            border-radius: 50px;
+                            cursor: pointer;
                             .title {
                                 font-family: "Oxanium";
                                 font-style: normal;
@@ -199,6 +201,9 @@
                                         right: 0;
                                     }
                                 }
+                            }
+                            &:hover {
+                                background: rgba(255, 255, 255, 0.06);
                             }
                         }
                     }
@@ -263,6 +268,72 @@
                         right: -17px;
                         bottom: -6px;
                     }
+                }
+            }
+        }
+    }
+}
+.fusion-controls {
+    display: flex;
+    margin-top: 24px;
+    .tabs-set {
+        width: calc(100% - 590px);
+        margin-right: 24px;
+    }
+    .fusion-fuse {
+        width: 566px;
+        display: flex;
+        align-items: center;
+        .total-ammo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: "Oxanium";
+            font-style: normal;
+            padding: 12px 0;
+            border-width: 1px 0px;
+            border-style: dashed;
+            border-color: rgba(255, 255, 255, 0.34);
+            h5 {
+                font-weight: 500;
+                font-size: 17px;
+                line-height: 143%;
+                letter-spacing: 1px;
+                color: rgba(255, 255, 255, 0.6);
+            }
+            p {
+                font-weight: 600;
+                font-size: 24px;
+                line-height: 118%;
+                letter-spacing: 1px;
+
+                /* w */
+
+                color: #ffffff;
+            }
+        }
+        .fuse-group {
+            button {
+                font-family: "Oxanium";
+                font-style: normal;
+                font-weight: 600;
+                font-size: 15px;
+                line-height: 160%;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                color: #ffffff;
+                padding: 12px 24px;
+                border-radius: 16px;
+                width: 125.5px;
+                &.cancel {
+                    border: 1px solid rgba(255, 255, 255, 0.34);
+                    background-color: transparent;
+                    margin-left: 16px;
+                }
+                &.fuse {
+                    border: 1px solid #0059f7;
+                    background-color: #0059f7;
+                    margin-left: 12px;
                 }
             }
         }

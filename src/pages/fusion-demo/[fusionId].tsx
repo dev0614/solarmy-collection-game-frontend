@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import Menu from '../../components/Menu';
-import { RoundCornerLeft, RoundCornerRight } from '../../components/svgIcons';
+import { CircleCloseIcon, RoundCornerLeft, RoundCornerRight } from '../../components/svgIcons';
 import { AttributeSetting, MainPage } from '../../components/Widget';
 import { getNftMetaData } from '../../solana/transaction_staking';
 import { AttributeFilterTypes, AttributeItem, AttributeTypes } from '../../solana/types';
@@ -29,13 +29,29 @@ export default function FusionEdit() {
             .then(resp =>
                 resp.json()
             ).then((json) => {
-                console.log(json)
-                setImage(json.image)
-                setBeforeAttr(json.attributes)
+                console.log(json);
+                setImage(json.image);
+                setBeforeAttr(json.attributes);
+                setBeforeAttributes(json.attributes);
             })
             .catch((error) => {
                 console.log(error);
             })
+    }
+
+    const setBeforeAttributes = (attrs: AttributeItem[]) => {
+
+    }
+
+    const handleAttribute = (attr: string) => {
+        switch (attr) {
+            case 'head':
+
+                break;
+
+            default:
+                break;
+        }
     }
 
     useEffect(() => {
@@ -62,14 +78,31 @@ export default function FusionEdit() {
                         <div className='kind'>
                             <h4>Type</h4>
                             <ul>
-                                <li className=''>Head</li>
+                                <li
+                                    className=''
+                                    onClick={() => handleAttribute('head')}
+                                >
+                                    Head
+                                </li>
                                 {/* <li className='selected activated'>Head</li> */}
-                                <li>Head Accessories</li>
-                                <li>Torse</li>
-                                <li>L Arm</li>
-                                <li>R Arm</li>
-                                <li>Legs</li>
-                                <li>Background</li>
+                                <li onClick={() => handleAttribute('head_accessories')}>
+                                    Head Accessories
+                                </li>
+                                <li onClick={() => handleAttribute('torse')}>
+                                    Torse
+                                </li>
+                                <li onClick={() => handleAttribute('l_arm')}>
+                                    L Arm
+                                </li>
+                                <li onClick={() => handleAttribute('r_arm')}>
+                                    R Arm
+                                </li>
+                                <li onClick={() => handleAttribute('legs')}>
+                                    Legs
+                                </li>
+                                <li onClick={() => handleAttribute('background')}>
+                                    Background
+                                </li>
                             </ul>
                         </div>
                         <div className='options'>
@@ -155,6 +188,38 @@ export default function FusionEdit() {
                             <span>See points</span>
                             <RoundCornerRight />
                         </button>
+                    </div>
+                </div>
+                <div className='fusion-controls'>
+                    <div className='tabs-set'>
+                        <ul>
+                            <li className='option-tab-item'>
+                                <label>Robot Orglass</label>
+                                <button>
+                                    <CircleCloseIcon />
+                                </button>
+                            </li>
+                            <li className='option-tab-item'>
+                                <label>Orglass</label>
+                                <button>
+                                    <CircleCloseIcon />
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div className='fusion-fuse'>
+                        <div className='total-ammo'>
+                            <h5>Total AMMO</h5>
+                            <p>90</p>
+                        </div>
+                        <div className='fuse-group'>
+                            <button className='cancel'>
+                                cancel
+                            </button>
+                            <button className='fuse'>
+                                fuse
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

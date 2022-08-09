@@ -626,6 +626,7 @@ button.btn-balance {
         width: calc(100% - 48px);
         padding: 24px;
         border-radius: 24px;
+        z-index: 99;
     }
 }
 .toggle-switch {
