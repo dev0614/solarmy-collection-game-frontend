@@ -45,3 +45,26 @@ export interface UserTxType {
     wallet: string,
     type: string
 }
+
+export interface AttributeItem {
+    trait_type: string,
+    value: string,
+}
+
+export interface AttributeTypes {
+    head: AttributeItem,
+    head_accessories: AttributeItem,
+    torso: AttributeItem,
+    l_arm: AttributeItem,
+    r_arm: AttributeItem,
+    legs: AttributeItem,
+    background: AttributeItem,
+}
+
+export interface AttributeFilterTypes {
+    common: boolean,
+    universal: boolean,
+    rare: boolean,
+    first_class: boolean,
+    transendental: boolean
+}

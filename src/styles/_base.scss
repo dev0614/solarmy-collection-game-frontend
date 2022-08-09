@@ -4,7 +4,9 @@ body {
     -moz-osx-font-smoothing: grayscale;
     background-color: $back-color;
 }
-
+ul {
+    list-style: none;
+}
 * {
     margin: 0;
     padding: 0;
