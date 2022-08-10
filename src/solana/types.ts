@@ -46,6 +46,15 @@ export interface UserTxType {
     type: string
 }
 
+export interface PlanFetched {
+    Atribute: string,
+    Atribute_Type: string,
+    Points: string,
+    Rarity: string,
+    URL: string,
+    _id: string
+}
+
 export interface AttributeItem {
     trait_type: string,
     value: string,
