@@ -80,7 +80,7 @@ export const getUserTransactions = async (
     return data;
 }
 
-<<<<<<< HEAD
+
 export const getPlanBuyResult = async (
     txId: string,
     type: string
@@ -95,7 +95,13 @@ export const getPlanBuyResult = async (
         .then((res) => {
             console.log(res);
             data = res.data;
-=======
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+    return data;
+}
+
 export const getAttributeItemData = async (attType: string, attr: string) => {
     let data: AttributeFetched | undefined = undefined;
     await axios.post(`${API_URL}getItemInfo`, {
@@ -107,7 +113,6 @@ export const getAttributeItemData = async (attType: string, attr: string) => {
             if (res.data?.length !== 0) {
                 data = res.data
             }
->>>>>>> fussion/ui
         })
         .catch((error) => {
             console.log(error);
