@@ -1,9 +1,11 @@
+import { ClickAwayListener } from "@mui/material"
 import { WalletContextState } from "@solana/wallet-adapter-react"
 import moment from "moment"
 import { NextRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { TOPPLAYER2D, TOPPLAYER3D, WALLET_NFTS } from "../config"
-import { ArrowRightTwoTone, InfoTwoTone } from "./svgIcons"
+import { AttributeFilterTypes } from "../solana/types"
+import { ArrowRightTwoTone, InfoTwoTone, SettingIcon } from "./svgIcons"
 import { ToggleSwitch } from "./WidgetJs"
 export const MainPage = (props: { children: any }) => {
     return (
@@ -146,14 +148,63 @@ export const BattalionDashboardBox = (props: {
     )
 }
 
-export const AttributeSetting = () => {
+export const AttributeSetting = (props: {
+    attributeFilter: AttributeFilterTypes | undefined
+    setAttributeFilter: Function
+}) => {
+    const [show, setShow] = useState(false);
+    const [forceRender, setForseRender] = useState(false);
+
+    const handleChange = (checked: boolean, id: string) => {
+        let filtered: any = props.attributeFilter;
+
+        filtered[`${id}`] = checked;
+        props.setAttributeFilter(filtered);
+        console.log(filtered);
+        setForseRender(!forceRender)
+
+    }
     return (
-        <div className="attribute-setting">
-            <ToggleSwitch label="Common" id="common" />
-            <ToggleSwitch label="Universal" id="universal" />
-            <ToggleSwitch label="Rare" id="rare" />
-            <ToggleSwitch label="First Class" id="first_class" />
-            <ToggleSwitch label="Transendental" id="transendental" />
-        </div>
+        <ClickAwayListener onClickAway={() => setShow(false)}>
+            <div className="attribute-setting">
+                <button className="btn-icon btn-transparent" onClick={() => setShow(!show)}>
+                    <SettingIcon />
+                </button>
+                {show &&
+                    <div className="setting-content">
+                        <ToggleSwitch
+                            id="common"
+                            label="Common"
+                            checked={props.attributeFilter?.common}
+                            handleChange={(checked: boolean) => handleChange(checked, 'common')}
+                        />
+                        <ToggleSwitch
+                            id="universal"
+                            label="Universal"
+                            checked={props.attributeFilter?.universal}
+                            handleChange={(checked: boolean) => handleChange(checked, 'universal')}
+                        />
+                        <ToggleSwitch
+                            id="rare"
+                            label="Rare"
+                            checked={props.attributeFilter?.rare}
+                            handleChange={(checked: boolean) => handleChange(checked, 'rare')}
+                        />
+                        <ToggleSwitch
+                            id="first_class"
+                            label="First Class"
+                            checked={props.attributeFilter?.first_class}
+                            handleChange={(checked: boolean) => handleChange(checked, 'first_class')}
+                        />
+                        <ToggleSwitch
+                            id="transendental"
+                            label="Transendental"
+                            checked={props.attributeFilter?.transendental}
+                            handleChange={(checked: boolean) => handleChange(checked, 'transendental')}
+                        />
+                    </div>
+                }
+            </div>
+        </ClickAwayListener>
     )
 }

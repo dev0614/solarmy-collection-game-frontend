@@ -113,6 +113,11 @@ header {
     background-color: #fff;
     border-radius: 50%;
 }
+.btn-transparent {
+    background-color: transparent;
+    width: 24px;
+    height: 24px;
+}
 button.special-effect {
     border: none;
     background-color: transparent;
@@ -599,14 +604,33 @@ button.btn-balance {
     }
 }
 .attribute-setting {
-    display: flex;
-    flex-direction: column;
+    position: absolute;
+    right: 0;
+    top: 16px;
+    width: 100%;
     .toggle-switch {
         margin-bottom: 12px;
     }
+    button.btn-icon {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+    .setting-content {
+        display: inline-flex;
+        flex-direction: column;
+        position: absolute;
+        background-color: #383838;
+        right: 0;
+        top: 32px;
+        width: calc(100% - 48px);
+        padding: 24px;
+        border-radius: 24px;
+        z-index: 99;
+    }
 }
 .toggle-switch {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     span.label {
         font-family: "Oxanium";
@@ -617,5 +641,6 @@ button.btn-balance {
         letter-spacing: 1px;
         color: #ffffff;
         margin-left: 8px;
+        display: inline;
     }
 }

@@ -21,11 +21,6 @@ export interface UserPool {
     staking: StakedData[],          // 56 * 100
 }
 
-export interface UserVault {
-    owner: PublicKey,               // 32
-    amount: anchor.BN,         // 8
-}
-
 export interface DeployItemType {
     nftMint: string,
     id?: number,
@@ -58,4 +53,46 @@ export interface PlanFetched {
     Rarity: string,
     URL: string,
     _id: string
+}
+
+export interface AttributeItem {
+    trait_type: string,
+    value: string,
+}
+
+export interface AttributeTypes {
+    head: AttributeItem,
+    head_accessories: AttributeItem,
+    torso: AttributeItem,
+    l_arm: AttributeItem,
+    r_arm: AttributeItem,
+    legs: AttributeItem,
+    background: AttributeItem,
+}
+
+export interface AttributeFilterTypes {
+    common: boolean,
+    universal: boolean,
+    rare: boolean,
+    first_class: boolean,
+    transendental: boolean
+}
+
+export interface AttributeFetched {
+    _id: string,
+    Atribute_type: string,
+    Atribute: string,
+    Points: string,
+    Rarity: string,
+    URL: string
+}
+
+export interface NftAttrsTypes {
+    head: AttributeFetched,
+    head_accessories: AttributeFetched,
+    right_arm: AttributeFetched,
+    left_arm: AttributeFetched,
+    torse: AttributeFetched,
+    legs: AttributeFetched,
+    background: AttributeFetched,
 }

@@ -1,7 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 
 //mainnet-beta | devnet
-export const NETWORK = "devnet";
+export const NETWORK = "mainnet-beta";
 export const LIVE_URL = "https://solarmy.herokuapp.com/";
 export const CREATOR_2D_ADDRESS = "C3t2xtqA2NFTDqs1SJgcHxyaNqCE4JYnT9EqRySVXYfK";
 
