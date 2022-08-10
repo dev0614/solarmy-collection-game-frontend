@@ -3218,10 +3218,112 @@ button.claim-all {
                 color: #ffffff;
                 margin-top: 8px;
                 transition: all 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 &:hover {
                     box-shadow: 0px 2px 12px #0048c8;
                     transition: all 0.3s;
                 }
+                &:disabled {
+                    background-color: #003591;
+                    pointer-events: none;
+                }
+            }
+        }
+    }
+}
+
+.purchased-modal {
+    width: 405px;
+    background-color: #383838;
+    padding: 24px;
+    .modal-content {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.34);
+        padding-bottom: 24px;
+        margin-bottom: 24px;
+        p.title {
+            font-family: "Oxanium";
+            font-style: normal;
+            font-weight: 600;
+            font-size: 24px;
+            line-height: 118%;
+            letter-spacing: 1px;
+            color: #ffffff;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.16);
+            text-align: center;
+            border-radius: 40px;
+        }
+        h5.desc {
+            font-family: "Oxanium";
+            font-style: normal;
+            font-weight: 500;
+            font-size: 15px;
+            line-height: 160%;
+            text-align: center;
+            letter-spacing: 1px;
+            margin-top: 24px;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+        .media-box {
+            border-radius: 16px;
+            background-color: #1f1f1f;
+            padding: 12px;
+            img {
+                width: 100%;
+                border-radius: 16px;
+            }
+            p.attribute-name {
+                font-family: "Oxanium";
+                font-style: normal;
+                font-weight: 500;
+                font-size: 15px;
+                line-height: 160%;
+                letter-spacing: 1px;
+                color: #ffffff;
+                margin: 2px 0;
+            }
+            h5.attribute-points {
+                font-family: "Oxanium";
+                font-style: normal;
+                font-weight: 500;
+                font-size: 15px;
+                line-height: 160%;
+                letter-spacing: 1px;
+                color: rgba(255, 255, 255, 0.6);
+            }
+        }
+    }
+    .button-group {
+        button {
+            border-radius: 16px;
+            width: calc(50% - 5px);
+            color: #fff;
+            text-transform: uppercase;
+            font-family: "Oxanium";
+            font-style: normal;
+            font-weight: 600;
+            font-size: 15px;
+            line-height: 160%;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            &:first-child {
+                margin-right: 5px;
+            }
+            &:last-child {
+                margin-left: 5px;
+            }
+            &.btn-close {
+                border: 1px solid rgba(255, 255, 255, 0.34);
+                background-color: transparent;
+            }
+            &.btn-fuse {
+                border: 1px solid #0059f7;
+                background-color: #0059f7;
             }
         }
     }

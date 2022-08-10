@@ -26,7 +26,7 @@ export default function Menu() {
                         {menus.map((item, key) => (
                             <li key={key}>
                                 <Link href={item.link}>
-                                    <a style={{ pointerEvents: item.title === "Deploy" ? "all" : "none" }}>
+                                    <a style={{ pointerEvents: item.title === "Deploy" || item.title === "Store" ? "all" : "none" }}>
                                         <div className={`menu-item ${router.pathname === item.link ? "active" : ""}`}>
                                             <span>
                                                 {item.icon}

@@ -8,14 +8,15 @@ import {
     Transaction,
 } from '@solana/web3.js';
 
-import { DeployItemType, UserPool } from './types';
+import { DeployItemType, UserPool, UserVault } from './types';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { filterError, getAssociatedTokenAccount, getATokenAccountsNeedCreate, getMetadata, getNFTTokenAccount, getOwnerOfNFT, isExistAccount, METAPLEX, solConnection } from './utils';
 import { IDL } from './staking';
 import { errorAlert, successAlert } from '../components/toastGroup';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { AMMO_TOKEN_DECIMAL, AMMO_TOKEN_MINT, GLOBAL_AUTHORITY_SEED, STAKING_PROGRAM_ID, USER_POOL_SIZE, VAULT_SEED } from '../config';
-import { accessUserVault } from './server';
+import { accessUserVault, getPlanBuyResult } from './server';
+import { Program } from '@project-serum/anchor';
 
 
 export const initUserPool = async (
@@ -39,7 +40,6 @@ export const initUserPool = async (
         console.log(error);
     }
 }
-
 
 export const depositToAccount = async (
     wallet: WalletContextState,
@@ -135,6 +135,54 @@ export const withdrawFromAccount = async (
         filterError(error);
     }
 }
+
+export const depositToVault = async (
+    wallet: WalletContextState,
+    planId: number,
+    startLoading: Function,
+    closeLoading: Function,
+    updatePage: Function
+) => {
+    if (!wallet.publicKey) return;
+    let userAddress: PublicKey = wallet.publicKey;
+    let cloneWindow: any = window;
+    let provider = new anchor.AnchorProvider(solConnection, cloneWindow['solana'], anchor.AnchorProvider.defaultOptions())
+    const program = new anchor.Program(IDL as anchor.Idl, STAKING_PROGRAM_ID, provider);
+    try {
+        startLoading();
+        let amount = 0;
+        switch (planId) {
+            case 1:
+                amount = 500;
+                break;
+            case 2:
+                amount = 1500;
+                break;
+            case 3:
+                amount = 3000;
+                break;
+
+        }
+        const tx = await createDepositToVaultTx(userAddress, amount, program);
+        const { blockhash } = await solConnection.getRecentBlockhash('confirmed');
+        tx.feePayer = userAddress;
+        tx.recentBlockhash = blockhash;
+        const txId = await wallet.sendTransaction(tx, solConnection);
+
+        await solConnection.confirmTransaction(txId, "finalized");
+        successAlert("Transaction is confirmed!");
+        const data = await getPlanBuyResult(txId, planId.toString());
+        closeLoading();
+        updatePage();
+        return data;
+    } catch (error) {
+        console.log(error);
+        closeLoading();
+        filterError(error);
+        return false;
+    }
+}
+
 export const getAmmo = async (
     userAddress: PublicKey
 ) => {
@@ -196,6 +244,7 @@ export const createWithdrawFromAccountTx = async (
 
     return tx;
 }
+
 export const createDepositToAccountTx = async (
     userAddress: PublicKey,
     amount: number,
@@ -424,7 +473,6 @@ export const withdrawNft = async (
     }
 }
 
-
 export const claimAllNFT = async (
     wallet: WalletContextState,
     nfts: PublicKey[],
@@ -646,7 +694,6 @@ export const getUserPoolInfo = async (
         };
 }
 
-
 export const getUserPoolState = async (
     wallet: WalletContextState,
 ): Promise<UserPool | null> => {
@@ -663,6 +710,23 @@ export const getUserPoolState = async (
     try {
         let userPoolState = await program.account.userPool.fetch(userPoolKey);
         return userPoolState as unknown as UserPool;
+    } catch {
+        return null;
+    }
+}
+export const getUserVaultState = async (
+    userAddress: PublicKey,
+    program: anchor.Program
+): Promise<UserPool | null> => {
+    const [userVaultKey, bump] = await PublicKey.findProgramAddress(
+        [Buffer.from(VAULT_SEED), userAddress.toBuffer()],
+        STAKING_PROGRAM_ID,
+    );
+
+
+    try {
+        let userVState = await program.account.userVault.fetch(userVaultKey);
+        return (userVState as any).amount.toNumber();
     } catch {
         return null;
     }
@@ -738,10 +802,50 @@ export const createStakeNftTx = async (
     return tx;
 }
 
-
 export const getNftMetaData = async (nftMintPk: PublicKey) => {
     let { metadata: { Metadata } } = programs;
     let metadataAccount = await Metadata.getPDA(nftMintPk);
     const metadata = await Metadata.load(solConnection, metadataAccount);
     return metadata.data.data.uri;
+}
+
+export const createDepositToVaultTx = async (
+    userAddress: PublicKey,
+    amount: number,
+    program: anchor.Program,
+) => {
+    console.log(amount, "===> amount")
+    const [globalAuthority, globalBump] = await PublicKey.findProgramAddress(
+        [Buffer.from(GLOBAL_AUTHORITY_SEED)],
+        STAKING_PROGRAM_ID,
+    );
+
+    const [userVault, bump] = await PublicKey.findProgramAddress(
+        [Buffer.from(VAULT_SEED), userAddress.toBuffer()],
+        STAKING_PROGRAM_ID,
+    );
+    console.log(userVault.toBase58());
+    console.log(await getUserVaultState(userAddress, program));
+    let rewardVault = await getAssociatedTokenAccount(globalAuthority, AMMO_TOKEN_MINT);
+    let userTokenAccount = await getAssociatedTokenAccount(userVault, AMMO_TOKEN_MINT);
+
+    let tx = new Transaction();
+    console.log('==>Depositing to Vault...', rewardVault.toBase58());
+    tx.add(program.instruction.depositToVault(
+        bump, new anchor.BN(amount * AMMO_TOKEN_DECIMAL), {
+        accounts: {
+            owner: userAddress,
+            globalAuthority,
+            userVault,
+            rewardVault,
+            userTokenAccount,
+            tokenProgram: TOKEN_PROGRAM_ID,
+
+        },
+        instructions: [],
+        signers: []
+    }
+    ));
+
+    return tx;
 }
