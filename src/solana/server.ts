@@ -1,6 +1,6 @@
 import axios from "axios";
 import { AMMO_TOKEN_DECIMAL, API_URL } from "../config";
-import { UserTxType } from "./types";
+import { AttributeFetched, UserTxType } from "./types";
 
 export const setUserName = async (
     wallet: string,
@@ -77,5 +77,23 @@ export const getUserTransactions = async (
             console.log(error);
         })
     data.sort((a: any, b: any) => b.createdAt - a.createdAt);
+    return data;
+}
+
+export const getAttributeItemData = async (attType: string, attr: string) => {
+    let data: AttributeFetched | undefined = undefined;
+    await axios.post(`${API_URL}getItemInfo`, {
+        "attType": attType,
+        "attr": attr
+    }
+    )
+        .then((res) => {
+            if (res.data?.length !== 0) {
+                data = res.data
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        })
     return data;
 }

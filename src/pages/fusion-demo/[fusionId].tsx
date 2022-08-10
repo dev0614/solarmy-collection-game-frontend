@@ -5,15 +5,17 @@ import Header from '../../components/Header';
 import Menu from '../../components/Menu';
 import { CircleCloseIcon, RoundCornerLeft, RoundCornerRight } from '../../components/svgIcons';
 import { AttributeSetting, MainPage } from '../../components/Widget';
+import { getAttributeItemData } from '../../solana/server';
 import { getNftMetaData } from '../../solana/transaction_staking';
-import { AttributeFilterTypes, AttributeItem, AttributeTypes } from '../../solana/types';
+import { AttributeFetched, AttributeFilterTypes, AttributeItem, NftAttrsTypes } from '../../solana/types';
+import { titleCamel, titleCase } from '../../solana/utils';
 
 export default function FusionEdit() {
     const router = useRouter();
     const { query } = router;
     const [itemId, setItemId] = useState<number>(1);
     const [image, setImage] = useState('');
-    const [beforeAttr, setBeforeAttr] = useState<AttributeItem[]>();
+    const [beforeAttr, setBeforeAttr] = useState<NftAttrsTypes>();
     const [showSetting, setShowSetting] = useState(false);
     const [attributeFilter, setAttributeFilter] = useState<AttributeFilterTypes>({
         common: false,
@@ -29,18 +31,51 @@ export default function FusionEdit() {
             .then(resp =>
                 resp.json()
             ).then((json) => {
-                console.log(json);
                 setImage(json.image);
-                setBeforeAttr(json.attributes);
                 setBeforeAttributes(json.attributes);
             })
             .catch((error) => {
                 console.log(error);
             })
+        await getAttributeItemData('Right Arm', 'Alien Down');
     }
 
-    const setBeforeAttributes = (attrs: AttributeItem[]) => {
-
+    const setBeforeAttributes = async (attrs: AttributeItem[]) => {
+        let promise = [];
+        let attrValues: any;
+        for (let item of attrs) {
+            const attrType = titleCase(item.trait_type);
+            const attr = titleCase(item.value);
+            const data = getAttributeItemData(attrType, attr);
+            if (item)
+                promise.push(data);
+        }
+        const res = await Promise.all(promise);
+        for (let item of res) {
+            // switch (item?.Atribute_Type)
+            //     attrValues[titleCamel(item['Atribute_Type'])] = item;
+            if (item)
+                switch (item['Atribute_Type']) {
+                    case 'head':
+                        attrValues.head = item as AttributeFetched
+                        break;
+                    case 'head_accessories':
+                        attrValues.head_accessories = item as AttributeFetched;
+                    case 'right_arm':
+                        attrValues.right_arm = item as AttributeFetched;
+                    case 'left_arm':
+                        attrValues.left_arm = item as AttributeFetched;
+                    case 'torse':
+                        attrValues.torse = item as AttributeFetched;
+                    case 'legs':
+                        attrValues.legs = item as AttributeFetched;
+                    case 'background':
+                        attrValues.background = item as AttributeFetched;
+                }
+        }
+        if (attrValues) {
+            setBeforeAttr(attrValues);
+        }
     }
 
     const handleAttribute = (attr: string) => {
@@ -146,7 +181,7 @@ export default function FusionEdit() {
                             {/* === Background === */}
                             {/* eslint-disable-next-line */}
                             <img
-                                src='/img/attributes/forest.png'
+                                src={beforeAttr?.background.URL}
                                 alt=''
                             />
                             {/* === Shadow === */}
@@ -158,28 +193,28 @@ export default function FusionEdit() {
                             {/* === Legs === */}
                             {/* eslint-disable-next-line */}
                             <img
-                                src='/img/attributes/alien wings.png'
+                                src={beforeAttr?.legs.URL}
                                 alt=''
                             />
                             {/* === Left Arm === */}
                             {/* eslint-disable-next-line */}
                             <img
-                                src='/img/attributes/robot honour.png'
+                                src={beforeAttr?.left_arm.URL}
                                 alt=''
                             />
                             {/* eslint-disable-next-line */}
                             <img
-                                src='/img/attributes/alien chain.png'
+                                src={beforeAttr?.torse.URL}
                                 alt=''
                             />
                             {/* eslint-disable-next-line */}
                             <img
-                                src='/img/attributes/plant down.png'
+                                src={beforeAttr?.right_arm.URL}
                                 alt=''
                             />
                             {/* eslint-disable-next-line */}
                             <img
-                                src='/img/attributes/soldier helmet.png'
+                                src={beforeAttr?.head.URL}
                                 alt=''
                             />
                         </div>
@@ -208,7 +243,7 @@ export default function FusionEdit() {
                         </ul>
                     </div>
                     <div className='fusion-fuse'>
-                        <div className='total-ammo'>
+                        <div className='total-ammo' style={{ width: 'calc(100% - 280px)' }}>
                             <h5>Total AMMO</h5>
                             <p>90</p>
                         </div>

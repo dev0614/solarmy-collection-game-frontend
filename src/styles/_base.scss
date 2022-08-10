@@ -16,6 +16,21 @@ ul {
     box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.4), inset 0px 1px 0px #383838;
 }
 
+.btn-noborder {
+    font-family: "Oxanium";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 160%;
+    text-align: center;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border: none;
+    background-color: transparent;
+    color: #ffffff;
+}
+
 .page-loading {
     display: flex;
     position: fixed;

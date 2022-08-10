@@ -68,3 +68,22 @@ export interface AttributeFilterTypes {
     first_class: boolean,
     transendental: boolean
 }
+
+export interface AttributeFetched {
+    _id: string,
+    Atribute_type: string,
+    Atribute: string,
+    Points: string,
+    Rarity: string,
+    URL: string
+}
+
+export interface NftAttrsTypes {
+    head: AttributeFetched,
+    head_accessories: AttributeFetched,
+    right_arm: AttributeFetched,
+    left_arm: AttributeFetched,
+    torse: AttributeFetched,
+    legs: AttributeFetched,
+    background: AttributeFetched,
+}
