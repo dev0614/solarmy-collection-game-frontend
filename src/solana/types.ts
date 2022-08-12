@@ -80,11 +80,11 @@ export interface AttributeFilterTypes {
 
 export interface AttributeFetched {
     _id: string,
-    Atribute_type: string,
-    Atribute: string,
-    Points: string,
-    Rarity: string,
-    URL: string
+    attribute_type: string,
+    attribute: string,
+    points: string,
+    rarity: string,
+    url: string
 }
 
 export interface NftAttrsTypes {
@@ -92,7 +92,20 @@ export interface NftAttrsTypes {
     head_accessories: AttributeFetched,
     right_arm: AttributeFetched,
     left_arm: AttributeFetched,
-    torse: AttributeFetched,
+    torso: AttributeFetched,
     legs: AttributeFetched,
     background: AttributeFetched,
+}
+
+export interface AbleFetchedItem {
+    attribute: string,
+    attribute_type: string,
+    created_at: string,
+    points: string,
+    rarity: string,
+    updated_at: string,
+    url: string,
+    wallet: string,
+    __v: number
+    _id: string,
 }

@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify'
 import { useEffect, useState } from 'react'
 import { UserProvider } from '../context/UserProvider';
 import { useRouter } from 'next/router';
+import PageLoading from '../components/PageLoading';
 
 function RaffleApp({ Component, pageProps }) {
   const [loading, setLoading] = useState(false);
@@ -26,6 +27,7 @@ function RaffleApp({ Component, pageProps }) {
           style={{ fontSize: 15 }}
           pauseOnFocusLoss={false}
         />
+        <PageLoading loading={loading} />
       </UserProvider>
     </Wallet>
   )
