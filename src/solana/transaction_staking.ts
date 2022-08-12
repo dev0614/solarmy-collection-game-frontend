@@ -8,7 +8,7 @@ import {
     Transaction,
 } from '@solana/web3.js';
 
-import { DeployItemType, UserPool, UserVault } from './types';
+import { DeployItemType, UserPool } from './types';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { filterError, getAssociatedTokenAccount, getATokenAccountsNeedCreate, getMetadata, getNFTTokenAccount, getOwnerOfNFT, isExistAccount, METAPLEX, solConnection } from './utils';
 import { IDL } from './staking';
@@ -191,7 +191,6 @@ export const getAmmo = async (
         STAKING_PROGRAM_ID,
     );
     let userTokenAccount = await getAssociatedTokenAccount(userVault, AMMO_TOKEN_MINT);
-    console.log(userTokenAccount.toBase58(), "userTokenAccount")
     try {
         let amount = await solConnection.getTokenAccountBalance(userTokenAccount);
         if (amount.value.uiAmount) {
@@ -200,7 +199,7 @@ export const getAmmo = async (
             return 0;
         }
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return 0;
     }
 }

@@ -35,11 +35,11 @@ export default function PlanItem(props: {
             console.log(data, "===> item data");
             if (data && data.length !== 0) {
                 setFetchedItem({
-                    Atribute: data.Atribute,
-                    Atribute_Type: data.Atribute_Type,
-                    Points: data.Points,
-                    Rarity: data.Rarity,
-                    URL: data.URL,
+                    Atribute: data.attribute,
+                    Atribute_Type: data.attribute_type,
+                    Points: data.points,
+                    Rarity: data.rarity,
+                    URL: data.url,
                 })
                 setModalOpened(true);
             }
