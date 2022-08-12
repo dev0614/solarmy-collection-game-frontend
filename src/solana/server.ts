@@ -119,3 +119,22 @@ export const getAttributeItemData = async (attType: string, attr: string) => {
         })
     return data;
 }
+
+export const getAvailableInventory = async (wallet: string) => {
+    let data = undefined;
+    console.log(wallet)
+    await axios.post(`${API_URL}getInventoryInfo`, {
+        "wallet": wallet,
+    }
+    )
+        .then((res) => {
+            console.log(res)
+            if (res.data?.length !== 0) {
+                data = res.data
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+    return data;
+}

@@ -3284,6 +3284,7 @@ button.claim-all {
                 letter-spacing: 1px;
                 color: #ffffff;
                 margin: 2px 0;
+                text-transform: capitalize;
             }
             h5.attribute-points {
                 font-family: "Oxanium";
@@ -3292,6 +3293,7 @@ button.claim-all {
                 font-size: 15px;
                 line-height: 160%;
                 letter-spacing: 1px;
+                text-transform: capitalize;
                 color: rgba(255, 255, 255, 0.6);
             }
         }
