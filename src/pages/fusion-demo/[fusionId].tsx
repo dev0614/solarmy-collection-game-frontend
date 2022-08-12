@@ -8,17 +8,29 @@ import { CircleCloseIcon, CircleCloseMdIcon, RoundCornerLeft, RoundCornerRight }
 import { AttributeSetting, MainPage } from "../../components/Widget";
 import { getAttributeItemData, getAvailableInventory } from "../../solana/server";
 import { getNftMetaData } from "../../solana/transaction_staking";
-import { AttributeFetched, AttributeFilterTypes, AttributeItem, NftAttrsTypes } from "../../solana/types";
-import { titleCamel, titleCase } from "../../solana/utils";
+import { AbleFetchedItem, AttributeFetched, AttributeFilterTypes, AttributeItem } from "../../solana/types";
+import { titleCamel, titleCase, titleLowerCase } from "../../solana/utils";
 
-export default function FusionEdit() {
+interface SelectedItemType {
+    attribute: string,
+    attribute_type: string,
+    points: string,
+    rarity: string,
+    url: string,
+}
+
+export default function FusionEdit(props: {
+    startLoading: Function,
+    closeLoading: Function
+}) {
+    const { startLoading, closeLoading } = props;
     const router = useRouter();
-    const { query } = router;
     const [itemId, setItemId] = useState<number>(1);
     const wallet = useWallet();
     const [equipedAttr, setEquipedAttr] = useState<any>();
     const [seeTab, setSeeTab] = useState("changes");
     const [selectedKind, setSelectedKind] = useState('head');
+    const [selectedName, setSelectedName] = useState<AttributeFetched>();
     const [attributeFilter, setAttributeFilter] = useState<AttributeFilterTypes>({
         common: false,
         universal: false,
@@ -26,8 +38,18 @@ export default function FusionEdit() {
         first_class: false,
         transendental: false
     });
+    const [selectAbled, setSelectAbled] = useState<AbleFetchedItem[]>();
+    const [ableInventories, setAbleInventoris] = useState<AbleFetchedItem[]>();
+    const [changesItems, setChangesItems] = useState<{
+        attribute: string,
+        attribute_type: string,
+        points: string,
+        rarity: string,
+        url: string,
+    }[]>([]);
 
     const getNftData = async (mint: string) => {
+        startLoading();
         const uri = await getNftMetaData(new PublicKey(mint));
         await fetch(uri)
             .then(resp =>
@@ -36,6 +58,7 @@ export default function FusionEdit() {
                 setEquipedAttributes(json.attributes);
             })
             .catch((error) => {
+                closeLoading();
                 console.log(error);
             });
     };
@@ -51,34 +74,86 @@ export default function FusionEdit() {
         }
         const res = await Promise.all(promise);
         setEquipedAttr(res);
+        closeLoading();
     };
 
     const getAbleInventory = async () => {
         if (!wallet.publicKey) return;
+        let inventories: any[];
+
         try {
             const data = await getAvailableInventory(wallet.publicKey?.toBase58());
-            console.log(data)
+            if (data.length !== 0) {
+                setAbleInventoris(data)
+                console.log(data)
+            }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     };
 
     const handleAttribute = useCallback(async (e: any) => {
         const attr = e.target.innerText;
         setSelectedKind(titleCamel(attr as string));
+        let attrName = '';
+        if (attr === 'L Arm') {
+            attrName = 'left arm';
+        } else if (attr === 'R Arm') {
+            attrName = 'right arm';
+        } else if (attr === 'Head' && attr !== "Head Accessories") {
+            attrName = 'head';
+        } else {
+            attrName = titleLowerCase(attr);
+        }
+        const item = equipedAttr?.find((item: any) => item.attribute_type === attrName);
+        const names = ableInventories?.filter((attr) => attr.attribute_type === attrName);
+        setSelectAbled(names)
+        setSelectedName(item);
         // eslint-disable-next-line
     }, [equipedAttr]);
 
-    const setNameSpace = () => {
-
+    const handleRemoveSelected = (attr: string, attr_type: string) => {
+        let selected: SelectedItemType[] = changesItems;
+        for (var i = 0; i < selected.length; i++) {
+            if (selected[i].attribute === attr && selected[i].attribute_type === attr_type) {
+                selected.splice(i, 1);
+                setChangesItems(selected);
+                setForceRender(!forceRender);
+            }
+        }
     }
 
+    const handleNameSelect = (attribute_type: string, attribute: string, points: string, rarity: string, url: string) => {
+        let selected: SelectedItemType[] = changesItems;
+        const current = selected?.filter((attr) => attr.attribute_type === attribute_type && attribute);
+        console.log(current.length)
+        if (current.length < 2) {
+            selected.push({
+                attribute: attribute,
+                attribute_type: attribute_type,
+                points: points,
+                rarity: rarity,
+                url: url,
+            })
+            setChangesItems(selected);
+            setForceRender(!forceRender);
+            console.log(selected);
+        }
+    };
+
+    const [forceRender, setForceRender] = useState(false);
     useEffect(() => {
-        console.log(equipedAttr)
+        if (equipedAttr && selectedKind === "head") {
+            const item = equipedAttr?.find((item: any) => selectedKind === 'head');
+            setSelectedName(item);
+            const names = ableInventories?.filter((attr) => attr.attribute_type === 'head');
+            setSelectAbled(names);
+        }
         // eslint-disable-next-line
-    }, [selectedKind])
+    }, [equipedAttr, selectedKind])
 
     useEffect(() => {
+        startLoading();
         if (router.query.fusionId) {
             setItemId(parseInt(router.query.fusionId as string));
             getAbleInventory()
@@ -87,6 +162,7 @@ export default function FusionEdit() {
             getNftData(router.query.mint as string)
             // FIND
         }
+
         // eslint-disable-next-line
     }, [router, wallet.connected]);
 
@@ -120,10 +196,10 @@ export default function FusionEdit() {
                                     Head Accessories
                                 </li>
                                 <li
-                                    className={`${selectedKind === "torse" ? "selected" : ""}`}
+                                    className={`${selectedKind === "torso" ? "selected" : ""}`}
                                     onClick={handleAttribute}
                                 >
-                                    Torse
+                                    Torso
                                 </li>
                                 <li
                                     className={`${selectedKind === "l_arm" ? "selected" : ""}`}
@@ -164,25 +240,24 @@ export default function FusionEdit() {
                             <div className="option-list">
                                 <ul>
                                     <li className="option-item current">
-                                        <h5 className="title">Robot orglass</h5>
-                                        <p className="points"><span className="common">common</span>300 Equiped</p>
+                                        <h5 className="title">{selectedName?.attribute}</h5>
+                                        <p className="points"><span className="common">{selectedName?.rarity}</span>{selectedName?.points} Equiped</p>
                                     </li>
-                                    <li className="option-item selected">
-                                        <h5 className="title">Robot orglass</h5>
-                                        <p className="points"><span className="universal">universal</span>300 <span className="selected-dot"></span></p>
-                                    </li>
-                                    <li className="option-item">
-                                        <h5 className="title">Robot orglass</h5>
-                                        <p className="points"><span className="rare">rare</span>300</p>
-                                    </li>
-                                    <li className="option-item">
-                                        <h5 className="title">Robot orglass</h5>
-                                        <p className="points"><span className="first_class">1st class</span>300</p>
-                                    </li>
-                                    <li className="option-item">
-                                        <h5 className="title">Robot orglass</h5>
-                                        <p className="points"><span className="transendental">transendental</span>300</p>
-                                    </li>
+
+                                    {selectAbled && selectAbled.length !== 0 && selectAbled.map((item, key) => (
+                                        <li
+                                            className="option-item selected"
+                                            key={key}
+                                            onClick={() => handleNameSelect(item.attribute_type, item.attribute, item.points, item.rarity, item.url)}
+                                        >
+                                            <h5 className="title">{item.attribute}</h5>
+                                            <p className="points">
+                                                <span className="universal">{item.rarity}</span>
+                                                &nbsp;{item.points}&nbsp;
+                                                <span className="selected-dot"></span>
+                                            </p>
+                                        </li>
+                                    ))}
                                 </ul>
                             </div>
                         </div>
@@ -220,7 +295,7 @@ export default function FusionEdit() {
                                 {/* eslint-disable-next-line */}
                                 <img
                                     src={"/img/attributes/alien chain.png"}
-                                    // src={equipedAttr?.torse.URL}
+                                    // src={equipedAttr?.torso.URL}
                                     alt=""
                                 />
                                 {/* eslint-disable-next-line */}
@@ -252,7 +327,7 @@ export default function FusionEdit() {
                                         </div>
                                         <div className="attr-table changes">
                                             <div className="thead">
-                                                <div className="tr">
+                                                <div className="tr changes">
                                                     <div className="th">Equiped</div>
                                                     <div className="th">New</div>
                                                     <div className="th">Points</div>
@@ -288,7 +363,7 @@ export default function FusionEdit() {
                                         <div className="header-points">
                                             <h2>Points</h2>
                                             <div className="">
-                                                <h3>{equipedAttr?.reduce((attr: any, { Points }: any) => attr + parseFloat(Points), 0)}</h3>
+                                                <h3>{equipedAttr?.reduce((attr: any, { points }: any) => attr + parseFloat(points), 0)}</h3>
                                             </div>
                                         </div>
                                         <div className="attr-table">
@@ -302,38 +377,38 @@ export default function FusionEdit() {
                                             <div className="tbody">
                                                 <div className="tr">
                                                     <div className="td">Head</div>
-                                                    <div className="td">{equipedAttr?.find((element: any) => element.Atribute_Type === "Head")?.Atribute}</div>
-                                                    <div className="td">{equipedAttr?.find((element: any) => element.Atribute_Type === "Head")?.Points}</div>
+                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "head")?.attribute}</div>
+                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "head")?.points}</div>
                                                 </div>
                                                 <div className="tr">
                                                     <div className="td">Head Accessories</div>
-                                                    <div className="td">{equipedAttr?.find((element: any) => element.Atribute_Type === "Head Accessories")?.Atribute}</div>
-                                                    <div className="td">{equipedAttr?.find((element: any) => element.Atribute_Type === "Head Accessories")?.Points}</div>
+                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "head accessories")?.attribute}</div>
+                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "head accessories")?.points}</div>
                                                 </div>
                                                 <div className="tr">
                                                     <div className="td">L Arm</div>
-                                                    <div className="td">{equipedAttr?.find((element: any) => element.Atribute_Type === "Left Arm")?.Atribute}</div>
-                                                    <div className="td">{equipedAttr?.find((element: any) => element.Atribute_Type === "Left Arm")?.Points}</div>
+                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "left arm")?.attribute}</div>
+                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "left arm")?.points}</div>
                                                 </div>
                                                 <div className="tr">
                                                     <div className="td">R Arm</div>
-                                                    <div className="td">{equipedAttr?.find((element: any) => element.Atribute_Type === "Right Arm")?.Atribute}</div>
-                                                    <div className="td">{equipedAttr?.find((element: any) => element.Atribute_Type === "Right Arm")?.Points}</div>
+                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "right arm")?.attribute}</div>
+                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "right arm")?.points}</div>
                                                 </div>
                                                 <div className="tr">
                                                     <div className="td">Torso</div>
-                                                    <div className="td">{equipedAttr?.find((element: any) => element.Atribute_Type === "Torso")?.Atribute}</div>
-                                                    <div className="td">{equipedAttr?.find((element: any) => element.Atribute_Type === "Torso")?.Points}</div>
+                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "torso")?.attribute}</div>
+                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "torso")?.points}</div>
                                                 </div>
                                                 <div className="tr">
                                                     <div className="td">Legs</div>
-                                                    <div className="td">{equipedAttr?.find((element: any) => element.Atribute_Type === "Legs")?.Atribute}</div>
-                                                    <div className="td">{equipedAttr?.find((element: any) => element.Atribute_Type === "Legs")?.Points}</div>
+                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "legs")?.attribute}</div>
+                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "legs")?.points}</div>
                                                 </div>
                                                 <div className="tr">
                                                     <div className="td">Background</div>
-                                                    <div className="td">{equipedAttr?.find((element: any) => element.Atribute_Type === "Background")?.Atribute}</div>
-                                                    <div className="td">{equipedAttr?.find((element: any) => element.Atribute_Type === "Background")?.Points}</div>
+                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "background")?.attribute}</div>
+                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "background")?.points}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -351,18 +426,23 @@ export default function FusionEdit() {
                 <div className="fusion-controls">
                     <div className="tabs-set">
                         <ul>
-                            <li className="option-tab-item">
-                                <label>Robot Orglass</label>
-                                <button>
-                                    <CircleCloseIcon />
-                                </button>
-                            </li>
-                            <li className="option-tab-item">
-                                <label>Orglass</label>
-                                <button>
-                                    <CircleCloseIcon />
-                                </button>
-                            </li>
+                            {changesItems.length !== 0 && changesItems.map((item: SelectedItemType, key) => (
+                                <li className="option-tab-item" key={key} onClick={() => handleRemoveSelected(item.attribute, item.attribute_type)}>
+                                    <label>{item.attribute}</label>
+                                    <button>
+                                        <CircleCloseIcon />
+                                    </button>
+                                </li>
+                            ))}
+                            {changesItems.length !== 0 &&
+                                <li
+                                    className="option-tab-item"
+                                    style={{ background: "transparent" }}
+                                    onClick={() => setChangesItems([])}
+                                >
+                                    <button className="btn-noborder">clear all</button>
+                                </li>
+                            }
                         </ul>
                     </div>
                     <div className="fusion-fuse">

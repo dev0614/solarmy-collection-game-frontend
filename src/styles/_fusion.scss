@@ -150,6 +150,7 @@
                                 line-height: 143%;
                                 letter-spacing: 1px;
                                 color: #ffffff;
+                                text-transform: capitalize;
                             }
                             p.points {
                                 font-family: "Oxanium";
@@ -298,6 +299,7 @@
         margin-right: 24px;
         ul {
             display: flex;
+            flex-wrap: wrap;
             li.option-tab-item {
                 border-radius: 100px;
                 background: #383838;
@@ -305,6 +307,7 @@
                 align-items: center;
                 padding: 4px 8px;
                 margin-left: 24px;
+                margin-bottom: 12px;
                 label {
                     font-family: "Oxanium";
                     font-style: normal;
@@ -313,6 +316,7 @@
                     line-height: 160%;
                     letter-spacing: 1px;
                     color: #fff;
+                    text-transform: capitalize;
                 }
                 button {
                     border: none;
@@ -320,6 +324,15 @@
                     margin-left: 10px;
                     display: flex;
                     align-items: center;
+                }
+                &:last-child {
+                    margin-left: 0;
+                    button {
+                        margin-left: 0;
+                    }
+                }
+                &:hover {
+                    background-color: rgba(255, 255, 255, 0.16);
                 }
             }
         }
@@ -486,6 +499,7 @@
                     letter-spacing: 1px;
                     color: #fff;
                     width: 33.3%;
+                    text-transform: capitalize;
                     &:first-child {
                         color: rgba(255, 255, 255, 0.6);
                     }
@@ -516,6 +530,10 @@
                     &.dec {
                         border-color: #ff453a;
                     }
+                }
+                &.changes {
+                    background-color: rgba(255, 255, 255, 0.06);
+                    border-radius: 16px;
                 }
                 button.close {
                     border: none;

@@ -295,14 +295,14 @@ export function titleCase(str: string) {
     return splitStr.join(' ');
 }
 
-// export function titleCase(str: string) {
-//     var splitStr = str.toLowerCase().split(' ');
-//     for (var i = 0; i < splitStr.length; i++) {
-//         splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-//     }
-//     // Directly return the joined string
-//     return splitStr.join(' ');
-// }
+export function titleLowerCase(str: string) {
+    var splitStr = str.toLowerCase().split(' ');
+    for (var i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toLowerCase() + splitStr[i].substring(1);
+    }
+    // Directly return the joined string
+    return splitStr.join(' ');
+}
 
 export function titleCamel(str: string) {
     var splitStr = str.toLowerCase().split(' ');
@@ -311,4 +311,12 @@ export function titleCamel(str: string) {
     }
     // Directly return the joined string
     return splitStr.join('_');
+}
+
+export function removeItemFromArray(array: any, attr: string, attr_type: string) {
+    for (var i = 0; i < array.length; i++) {
+        if (array[i].attribute === attr && array[i].attribute_type === attr_type) {
+            return array.splice(i, 1);
+        }
+    }
 }

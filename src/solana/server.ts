@@ -1,6 +1,6 @@
 import axios from "axios";
 import { AMMO_TOKEN_DECIMAL, API_URL } from "../config";
-import { AttributeFetched, UserTxType } from "./types";
+import { AbleFetchedItem, AttributeFetched, UserTxType } from "./types";
 
 export const setUserName = async (
     wallet: string,
@@ -121,14 +121,13 @@ export const getAttributeItemData = async (attType: string, attr: string) => {
 }
 
 export const getAvailableInventory = async (wallet: string) => {
-    let data = undefined;
+    let data: AbleFetchedItem[] = [];
     console.log(wallet)
     await axios.post(`${API_URL}getInventoryInfo`, {
         "wallet": wallet,
     }
     )
         .then((res) => {
-            console.log(res)
             if (res.data?.length !== 0) {
                 data = res.data
             }
