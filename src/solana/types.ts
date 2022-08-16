@@ -84,7 +84,8 @@ export interface AttributeFetched {
     attribute: string,
     points: string,
     rarity: string,
-    url: string
+    url: string,
+    selected: boolean
 }
 
 export interface NftAttrsTypes {

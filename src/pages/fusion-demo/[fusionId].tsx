@@ -8,16 +8,8 @@ import { CircleCloseIcon, CircleCloseMdIcon, RoundCornerLeft, RoundCornerRight }
 import { AttributeSetting, MainPage } from "../../components/Widget";
 import { getAttributeItemData, getAvailableInventory } from "../../solana/server";
 import { getNftMetaData } from "../../solana/transaction_staking";
-import { AbleFetchedItem, AttributeFetched, AttributeFilterTypes, AttributeItem } from "../../solana/types";
+import { AbleFetchedItem, AttributeFetched, AttributeFilterTypes, AttributeItem, NftAttrsTypes } from "../../solana/types";
 import { titleCamel, titleCase, titleLowerCase } from "../../solana/utils";
-
-interface SelectedItemType {
-    attribute: string,
-    attribute_type: string,
-    points: string,
-    rarity: string,
-    url: string,
-}
 
 export default function FusionEdit(props: {
     startLoading: Function,
@@ -29,7 +21,7 @@ export default function FusionEdit(props: {
     const wallet = useWallet();
     const [equipedAttr, setEquipedAttr] = useState<any>();
     const [seeTab, setSeeTab] = useState("changes");
-    const [selectedKind, setSelectedKind] = useState('head');
+    const [selectedKind, setSelectedKind] = useState("head");
     const [selectedName, setSelectedName] = useState<AttributeFetched>();
     const [attributeFilter, setAttributeFilter] = useState<AttributeFilterTypes>({
         common: false,
@@ -40,13 +32,17 @@ export default function FusionEdit(props: {
     });
     const [selectAbled, setSelectAbled] = useState<AbleFetchedItem[]>();
     const [ableInventories, setAbleInventoris] = useState<AbleFetchedItem[]>();
-    const [changesItems, setChangesItems] = useState<{
-        attribute: string,
-        attribute_type: string,
-        points: string,
-        rarity: string,
-        url: string,
-    }[]>([]);
+    const [changesItems, setChangesItems] = useState<NftAttrsTypes>();
+    const [forceRender, setForceRender] = useState(false);
+
+    // image group
+    const [headImage, setHeadImage] = useState("");
+    const [headAccessoriesImage, setHeadAccessoriesImage] = useState("");
+    const [torsoImage, setTorsoImage] = useState("");
+    const [leftArmImage, setLeftArmImage] = useState("");
+    const [rightArmImage, setRightArmImage] = useState("");
+    const [legsImage, setLegsImage] = useState("");
+    const [backgroundImage, setBackgroundImage] = useState("");
 
     const getNftData = async (mint: string) => {
         startLoading();
@@ -95,58 +91,36 @@ export default function FusionEdit(props: {
     const handleAttribute = useCallback(async (e: any) => {
         const attr = e.target.innerText;
         setSelectedKind(titleCamel(attr as string));
-        let attrName = '';
-        if (attr === 'L Arm') {
-            attrName = 'left arm';
-        } else if (attr === 'R Arm') {
-            attrName = 'right arm';
-        } else if (attr === 'Head' && attr !== "Head Accessories") {
-            attrName = 'head';
+        let attrName = "";
+        if (attr === "L Arm") {
+            attrName = "left arm";
+        } else if (attr === "R Arm") {
+            attrName = "right arm";
+        } else if (attr === "Head" && attr !== "Head Accessories") {
+            attrName = "head";
         } else {
             attrName = titleLowerCase(attr);
         }
         const item = equipedAttr?.find((item: any) => item.attribute_type === attrName);
         const names = ableInventories?.filter((attr) => attr.attribute_type === attrName);
-        setSelectAbled(names)
+        setSelectAbled(names);
         setSelectedName(item);
         // eslint-disable-next-line
     }, [equipedAttr]);
 
     const handleRemoveSelected = (attr: string, attr_type: string) => {
-        let selected: SelectedItemType[] = changesItems;
-        for (var i = 0; i < selected.length; i++) {
-            if (selected[i].attribute === attr && selected[i].attribute_type === attr_type) {
-                selected.splice(i, 1);
-                setChangesItems(selected);
-                setForceRender(!forceRender);
-            }
-        }
+
     }
 
     const handleNameSelect = (attribute_type: string, attribute: string, points: string, rarity: string, url: string) => {
-        let selected: SelectedItemType[] = changesItems;
-        const current = selected?.filter((attr) => attr.attribute_type === attribute_type && attribute);
-        console.log(current.length)
-        if (current.length < 2) {
-            selected.push({
-                attribute: attribute,
-                attribute_type: attribute_type,
-                points: points,
-                rarity: rarity,
-                url: url,
-            })
-            setChangesItems(selected);
-            setForceRender(!forceRender);
-            console.log(selected);
-        }
+
     };
 
-    const [forceRender, setForceRender] = useState(false);
     useEffect(() => {
         if (equipedAttr && selectedKind === "head") {
-            const item = equipedAttr?.find((item: any) => selectedKind === 'head');
+            const item = equipedAttr?.find((item: any) => selectedKind === "head");
             setSelectedName(item);
-            const names = ableInventories?.filter((attr) => attr.attribute_type === 'head');
+            const names = ableInventories?.filter((attr) => attr.attribute_type === "head");
             setSelectAbled(names);
         }
         // eslint-disable-next-line
@@ -246,7 +220,7 @@ export default function FusionEdit(props: {
 
                                     {selectAbled && selectAbled.length !== 0 && selectAbled.map((item, key) => (
                                         <li
-                                            className="option-item selected"
+                                            className={`option-item selected`}
                                             key={key}
                                             onClick={() => handleNameSelect(item.attribute_type, item.attribute, item.points, item.rarity, item.url)}
                                         >
@@ -265,49 +239,47 @@ export default function FusionEdit(props: {
                     <div className="fusion-edit-card box-shadow">
                         <div className="media">
                             <div className="merged-image" style={{ display: "none" }}>
-                                {/* === Background === */}
                                 {/* eslint-disable-next-line */}
                                 <img
-                                    src={"/img/attributes/forest.png"}
+                                    src={backgroundImage}
                                     // src={equipedAttr?.background.URL}
                                     alt=""
                                 />
-                                {/* === Shadow === */}
                                 {/* eslint-disable-next-line */}
                                 <img
                                     src="/img/attributes/shadow.png"
                                     alt=""
                                 />
-                                {/* === Legs === */}
                                 {/* eslint-disable-next-line */}
                                 <img
-                                    src={"/img/attributes/alien wings.png"}
+                                    src={legsImage}
                                     // src={equipedAttr?.legs.URL}
                                     alt=""
                                 />
-                                {/* === Left Arm === */}
                                 {/* eslint-disable-next-line */}
                                 <img
-                                    src={"/img/attributes/robot honour.png"}
-                                    // src={equipedAttr?.left_arm.URL}
+                                    src={leftArmImage}
                                     alt=""
                                 />
                                 {/* eslint-disable-next-line */}
                                 <img
-                                    src={"/img/attributes/alien chain.png"}
-                                    // src={equipedAttr?.torso.URL}
+                                    src={torsoImage}
+                                    alt=""
+                                />
+
+                                {/* eslint-disable-next-line */}
+                                <img
+                                    src={rightArmImage}
                                     alt=""
                                 />
                                 {/* eslint-disable-next-line */}
                                 <img
-                                    src={"/img/attributes/plant down.png"}
-                                    // src={equipedAttr?.right_arm.URL}
+                                    src={headAccessoriesImage}
                                     alt=""
                                 />
                                 {/* eslint-disable-next-line */}
                                 <img
-                                    src={"/img/attributes/soldier helmet.png"}
-                                    // src={equipedAttr?.head.URL}
+                                    src={headImage}
                                     alt=""
                                 />
                             </div>
@@ -426,10 +398,10 @@ export default function FusionEdit(props: {
                 <div className="fusion-controls">
                     <div className="tabs-set">
                         <ul>
-                            {changesItems.length !== 0 && changesItems.map((item: SelectedItemType, key) => (
-                                <li className="option-tab-item" key={key} onClick={() => handleRemoveSelected(item.attribute, item.attribute_type)}>
+                            {/* {changesItems.length !== 0 && changesItems.map((item: AttributeFetched, key) => (
+                                <li className="option-tab-item" key={key}>
                                     <label>{item.attribute}</label>
-                                    <button>
+                                    <button onClick={() => handleRemoveSelected(item.attribute, item.attribute_type)}>
                                         <CircleCloseIcon />
                                     </button>
                                 </li>
@@ -442,7 +414,7 @@ export default function FusionEdit(props: {
                                 >
                                     <button className="btn-noborder">clear all</button>
                                 </li>
-                            }
+                            } */}
                         </ul>
                     </div>
                     <div className="fusion-fuse">
