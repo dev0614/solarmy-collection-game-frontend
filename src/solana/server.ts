@@ -137,3 +137,51 @@ export const getAvailableInventory = async (wallet: string) => {
         })
     return data;
 }
+
+export const modifyInventory = async (
+    wallet: string,
+    txId: string,
+    post: string,
+    newAttr: string,
+) => {
+    await axios.post(`${API_URL}modifyInventory`, {
+        "wallet": wallet,
+        "txId": txId,
+        "post": post,
+        "new": newAttr
+    }
+    ).then((res) => {
+        console.log(res)
+    })
+        .catch((error) => {
+            console.log(error);
+        })
+}
+
+export const makeNft = async (
+    wallet: string,
+    id: string,
+    head: string,
+    head_accessories: string,
+    l_arm: string,
+    r_arm: string,
+    torso: string,
+    legs: string
+) => {
+    await axios.post(`${API_URL}makeNft`, {
+        "wallet": wallet,
+        "id": id,
+        "head": head,
+        "head_accessories": head_accessories,
+        "l_arm": l_arm,
+        "r_arm": r_arm,
+        "torso": torso,
+        "legs": legs,
+    }
+    ).then((res) => {
+        console.log(res)
+    })
+        .catch((error) => {
+            console.log(error);
+        })
+}

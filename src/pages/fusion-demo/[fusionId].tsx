@@ -2,6 +2,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
+import { FusionMediaImage, FusionType } from "../../components/Fusion/FusionWidget";
 import Header from "../../components/Header";
 import Menu from "../../components/Menu";
 import { CircleCloseIcon, CircleCloseMdIcon, RoundCornerLeft, RoundCornerRight } from "../../components/svgIcons";
@@ -47,6 +48,19 @@ export default function FusionEdit(props: {
         rarity: string,
         url: string,
     }[]>([]);
+    const [forceRender, setForceRender] = useState(false);
+
+    const [equipedTotal, setEquipedTotal] = useState(0);
+    const [changedTotal, setChangedTotal] = useState(0);
+
+    // NFT image group with attribute
+    const [headImage, setHeadImage] = useState("");
+    const [headAccessoriesImage, setHeadAccessoriesImage] = useState("");
+    const [torsoImage, setTorsoImage] = useState("");
+    const [leftArmImage, setLeftArmImage] = useState("");
+    const [rightArmImage, setRighttArmImage] = useState("");
+    const [legsImage, setLegsImage] = useState("");
+    const [backgroundImage, setBackgroundImage] = useState("");
 
     const getNftData = async (mint: string) => {
         startLoading();
@@ -92,7 +106,7 @@ export default function FusionEdit(props: {
         }
     };
 
-    const handleAttribute = useCallback(async (e: any) => {
+    const handleAttribute = (e: any) => {
         const attr = e.target.innerText;
         setSelectedKind(titleCamel(attr as string));
         let attrName = '';
@@ -110,7 +124,7 @@ export default function FusionEdit(props: {
         setSelectAbled(names)
         setSelectedName(item);
         // eslint-disable-next-line
-    }, [equipedAttr]);
+    };
 
     const handleRemoveSelected = (attr: string, attr_type: string) => {
         let selected: SelectedItemType[] = changesItems;
@@ -125,9 +139,8 @@ export default function FusionEdit(props: {
 
     const handleNameSelect = (attribute_type: string, attribute: string, points: string, rarity: string, url: string) => {
         let selected: SelectedItemType[] = changesItems;
-        const current = selected?.filter((attr) => attr.attribute_type === attribute_type && attribute);
-        console.log(current.length)
-        if (current.length < 2) {
+        const current = selected?.filter((attr) => attr.attribute_type === attribute_type);
+        if (current.length === 0) {
             selected.push({
                 attribute: attribute,
                 attribute_type: attribute_type,
@@ -135,13 +148,20 @@ export default function FusionEdit(props: {
                 rarity: rarity,
                 url: url,
             })
-            setChangesItems(selected);
-            setForceRender(!forceRender);
-            console.log(selected);
+        } else if (current.length === 1) {
+            handleRemoveSelected(current[0].attribute, current[0].attribute_type);
+            selected.push({
+                attribute: attribute,
+                attribute_type: attribute_type,
+                points: points,
+                rarity: rarity,
+                url: url,
+            })
         }
+        setChangesItems(selected);
+        setForceRender(!forceRender);
     };
 
-    const [forceRender, setForceRender] = useState(false);
     useEffect(() => {
         if (equipedAttr && selectedKind === "head") {
             const item = equipedAttr?.find((item: any) => selectedKind === 'head');
@@ -149,8 +169,80 @@ export default function FusionEdit(props: {
             const names = ableInventories?.filter((attr) => attr.attribute_type === 'head');
             setSelectAbled(names);
         }
+        const eTotal = equipedAttr?.reduce((attr: any, { points }: any) => attr + parseFloat(points), 0);
+        setEquipedTotal(eTotal);
+        if (equipedAttr) {
+            for (let item of equipedAttr) {
+                switch (item.attribute_type) {
+                    case "right arm":
+                        setRighttArmImage(item.url);
+                        break;
+                    case "head":
+                        setHeadImage(item.url);
+                        break;
+                    case "head accessories":
+                        setHeadAccessoriesImage(item.url);
+                        break;
+                    case "left arm":
+                        setLeftArmImage(item.url);
+                        break;
+                    case "torso":
+                        setTorsoImage(item.url);
+                        break;
+                    case "legs":
+                        setLegsImage(item.url);
+                        break;
+                    case "background":
+                        setBackgroundImage(item.url);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
         // eslint-disable-next-line
-    }, [equipedAttr, selectedKind])
+    }, [equipedAttr, selectedKind]);
+
+    useEffect(() => {
+        let cTotal = 0;
+        if (equipedAttr) {
+            for (let item of equipedAttr) {
+                const filtered = changesItems?.filter((attr: any) => attr.attribute_type === item.attribute_type);
+                if (filtered.length !== 0) {
+                    cTotal += parseFloat(filtered[0].points);
+                    switch (filtered[0].attribute_type) {
+                        case "right arm":
+                            setRighttArmImage(filtered[0].url);
+                            break;
+                        case "head":
+                            setHeadImage(filtered[0].url);
+                            break;
+                        case "head accessories":
+                            setHeadAccessoriesImage(filtered[0].url);
+                            break;
+                        case "left arm":
+                            setLeftArmImage(filtered[0].url);
+                            break;
+                        case "torso":
+                            setTorsoImage(filtered[0].url);
+                            break;
+                        case "legs":
+                            setLegsImage(filtered[0].url);
+                            break;
+                        case "background":
+                            setBackgroundImage(filtered[0].url);
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    cTotal += parseFloat(item.points)
+                }
+            }
+        }
+        setChangedTotal(cTotal);
+        // eslint-disable-next-line
+    }, [equipedAttr, JSON.stringify(changesItems)])
 
     useEffect(() => {
         startLoading();
@@ -181,51 +273,10 @@ export default function FusionEdit(props: {
                     <div className="attributes">
                         <div className="kind">
                             <h4>Type</h4>
-                            <ul>
-                                <li
-                                    className={`${selectedKind === "head" ? "selected" : ""}`}
-                                    onClick={handleAttribute}
-                                >
-                                    Head
-                                </li>
-                                {/* <li className="selected activated">Head</li> */}
-                                <li
-                                    className={`${selectedKind === "head_accessories" ? "selected" : ""}`}
-                                    onClick={handleAttribute}
-                                >
-                                    Head Accessories
-                                </li>
-                                <li
-                                    className={`${selectedKind === "torso" ? "selected" : ""}`}
-                                    onClick={handleAttribute}
-                                >
-                                    Torso
-                                </li>
-                                <li
-                                    className={`${selectedKind === "l_arm" ? "selected" : ""}`}
-                                    onClick={handleAttribute}
-                                >
-                                    L Arm
-                                </li>
-                                <li
-                                    className={`${selectedKind === "r_arm" ? "selected" : ""}`}
-                                    onClick={handleAttribute}
-                                >
-                                    R Arm
-                                </li>
-                                <li
-                                    className={`${selectedKind === "legs" ? "selected" : ""}`}
-                                    onClick={handleAttribute}
-                                >
-                                    Legs
-                                </li>
-                                <li
-                                    className={`${selectedKind === "background" ? "selected" : ""}`}
-                                    onClick={handleAttribute}
-                                >
-                                    Background
-                                </li>
-                            </ul>
+                            <FusionType
+                                selectedKind={selectedKind}
+                                handleAttribute={handleAttribute}
+                            />
                         </div>
                         <div className="options">
                             <div className="option-header">
@@ -246,7 +297,7 @@ export default function FusionEdit(props: {
 
                                     {selectAbled && selectAbled.length !== 0 && selectAbled.map((item, key) => (
                                         <li
-                                            className="option-item selected"
+                                            className={`option-item ${changesItems.filter((attr) => attr.attribute === item.attribute && attr.attribute_type === item.attribute_type).length === 1 ? "selected" : ""}`}
                                             key={key}
                                             onClick={() => handleNameSelect(item.attribute_type, item.attribute, item.points, item.rarity, item.url)}
                                         >
@@ -254,7 +305,9 @@ export default function FusionEdit(props: {
                                             <p className="points">
                                                 <span className="universal">{item.rarity}</span>
                                                 &nbsp;{item.points}&nbsp;
-                                                <span className="selected-dot"></span>
+                                                {changesItems.filter((attr) => attr.attribute === item.attribute && attr.attribute_type === item.attribute_type).length === 1 &&
+                                                    <span className="selected-dot"></span>
+                                                }
                                             </p>
                                         </li>
                                     ))}
@@ -264,54 +317,16 @@ export default function FusionEdit(props: {
                     </div>
                     <div className="fusion-edit-card box-shadow">
                         <div className="media">
-                            <div className="merged-image" style={{ display: "none" }}>
-                                {/* === Background === */}
-                                {/* eslint-disable-next-line */}
-                                <img
-                                    src={"/img/attributes/forest.png"}
-                                    // src={equipedAttr?.background.URL}
-                                    alt=""
-                                />
-                                {/* === Shadow === */}
-                                {/* eslint-disable-next-line */}
-                                <img
-                                    src="/img/attributes/shadow.png"
-                                    alt=""
-                                />
-                                {/* === Legs === */}
-                                {/* eslint-disable-next-line */}
-                                <img
-                                    src={"/img/attributes/alien wings.png"}
-                                    // src={equipedAttr?.legs.URL}
-                                    alt=""
-                                />
-                                {/* === Left Arm === */}
-                                {/* eslint-disable-next-line */}
-                                <img
-                                    src={"/img/attributes/robot honour.png"}
-                                    // src={equipedAttr?.left_arm.URL}
-                                    alt=""
-                                />
-                                {/* eslint-disable-next-line */}
-                                <img
-                                    src={"/img/attributes/alien chain.png"}
-                                    // src={equipedAttr?.torso.URL}
-                                    alt=""
-                                />
-                                {/* eslint-disable-next-line */}
-                                <img
-                                    src={"/img/attributes/plant down.png"}
-                                    // src={equipedAttr?.right_arm.URL}
-                                    alt=""
-                                />
-                                {/* eslint-disable-next-line */}
-                                <img
-                                    src={"/img/attributes/soldier helmet.png"}
-                                    // src={equipedAttr?.head.URL}
-                                    alt=""
-                                />
-                            </div>
-                            <div className="fusion-see-detail" style={{ display: "block" }}>
+                            <FusionMediaImage
+                                headImage={headImage}
+                                headAccessoriesImage={headAccessoriesImage}
+                                torsoImage={torsoImage}
+                                leftArmImage={leftArmImage}
+                                rightArmImage={rightArmImage}
+                                legsImage={legsImage}
+                                backgroundImage={backgroundImage}
+                            />
+                            <div className="fusion-see-detail">
                                 <div className="header-tabs">
                                     <div className={seeTab === "changes" ? "tab active" : "tab"} onClick={() => setSeeTab("changes")}>changes</div>
                                     <div className={seeTab === "equiped" ? "tab active" : "tab"} onClick={() => setSeeTab("equiped")}>equiped</div>
@@ -321,8 +336,15 @@ export default function FusionEdit(props: {
                                         <div className="header-points">
                                             <h2>Points</h2>
                                             <div className="">
-                                                <h3>1500</h3>
-                                                <p>+500</p>
+                                                <h3 className={`${(changedTotal - equipedTotal) > 0 ? "inc-title" : "dec-title"} ${(changedTotal - equipedTotal) === 0 ? "normal-title" : ""}`}>
+                                                    {changedTotal.toLocaleString()}
+                                                </h3>
+                                                <p>
+                                                    {
+                                                        (changedTotal - equipedTotal) > 0 ? "+" : ""
+                                                    }
+                                                    {(changedTotal - equipedTotal).toLocaleString()}
+                                                </p>
                                             </div>
                                         </div>
                                         <div className="attr-table changes">
@@ -334,26 +356,22 @@ export default function FusionEdit(props: {
                                                 </div>
                                             </div>
                                             <div className="tbody">
-                                                <div className="tr">
-                                                    <div className="tr-content inc">
-                                                        <div className="td">BoneWolrd</div>
-                                                        <div className="td">Alien Jason Mask</div>
-                                                        <div className="td">-100</div>
+                                                {changesItems.length !== 0 && changesItems.map((item: SelectedItemType, key) => (
+                                                    <div className="tr" key={key}>
+                                                        <div
+                                                            className={`tr-content ${(parseFloat(item.points) - parseFloat(equipedAttr?.find((attr: any) => attr.attribute_type === item.attribute_type)?.points)) > 0 ? "inc" : "dec"}`}
+                                                        >
+                                                            <div className="td">{equipedAttr?.find((attr: any) => attr.attribute_type === item.attribute_type)?.attribute}</div>
+                                                            <div className="td">{item.attribute}</div>
+                                                            <div className="td">
+                                                                {(parseFloat(item.points) - parseFloat(equipedAttr?.find((attr: any) => attr.attribute_type === item.attribute_type)?.points)).toLocaleString()}
+                                                            </div>
+                                                        </div>
+                                                        <button className="close" onClick={() => handleRemoveSelected(item.attribute, item.attribute_type)}>
+                                                            <CircleCloseMdIcon />
+                                                        </button>
                                                     </div>
-                                                    <button className="close">
-                                                        <CircleCloseMdIcon />
-                                                    </button>
-                                                </div>
-                                                <div className="tr">
-                                                    <div className="tr-content dec">
-                                                        <div className="td">BoneWolrd</div>
-                                                        <div className="td">Alien Jason Mask</div>
-                                                        <div className="td">-100</div>
-                                                    </div>
-                                                    <button className="close">
-                                                        <CircleCloseMdIcon />
-                                                    </button>
-                                                </div>
+                                                ))}
                                             </div>
                                         </div>
                                     </>
@@ -363,7 +381,7 @@ export default function FusionEdit(props: {
                                         <div className="header-points">
                                             <h2>Points</h2>
                                             <div className="">
-                                                <h3>{equipedAttr?.reduce((attr: any, { points }: any) => attr + parseFloat(points), 0)}</h3>
+                                                <h3>{equipedTotal}</h3>
                                             </div>
                                         </div>
                                         <div className="attr-table">
