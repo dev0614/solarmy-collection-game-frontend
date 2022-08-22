@@ -56,54 +56,71 @@ export function FusionType(props:
     )
 }
 
-export const FusionMediaImage = () => {
+export const FusionMediaImage = (props: {
+    headImage: string,
+    headAccessoriesImage: string,
+    torsoImage: string,
+    leftArmImage: string,
+    rightArmImage: string,
+    legsImage: string,
+    backgroundImage: string,
+}) => {
     return (
-        <div className="merged-image" style={{ display: "none" }}>
-            {/* === Background === */}
-            {/* eslint-disable-next-line */}
-            <img
-                src={"/img/attributes/forest.png"}
-                // src={equipedAttr?.background.URL}
-                alt=""
-            />
-            {/* === Shadow === */}
+        <div className="merged-image">
+            {props.backgroundImage !== "" &&
+                // eslint-disable-next-line
+                <img
+                    src={props.backgroundImage}
+                    alt=""
+                />
+            }
             {/* eslint-disable-next-line */}
             <img
                 src="/img/attributes/shadow.png"
                 alt=""
             />
-            {/* === Legs === */}
-            {/* eslint-disable-next-line */}
-            <img
-                src={"/img/attributes/alien wings.png"}
-                // src={equipedAttr?.legs.URL}
-                alt=""
-            />
-            {/* === Left Arm === */}
-            {/* eslint-disable-next-line */}
-            <img
-                src={"/img/attributes/robot honour.png"}
-                // src={equipedAttr?.left_arm.URL}
-                alt=""
-            />
-            {/* eslint-disable-next-line */}
-            <img
-                src={"/img/attributes/alien chain.png"}
-                // src={equipedAttr?.torso.URL}
-                alt=""
-            />
-            {/* eslint-disable-next-line */}
-            <img
-                src={"/img/attributes/plant down.png"}
-                // src={equipedAttr?.right_arm.URL}
-                alt=""
-            />
-            {/* eslint-disable-next-line */}
-            <img
-                src={"/img/attributes/soldier helmet.png"}
-                // src={equipedAttr?.head.URL}
-                alt=""
-            />
+            {props.legsImage !== "" &&
+                // eslint-disable-next-line
+                <img
+                    src={props.legsImage}
+                    alt=""
+                />
+            }
+            {props.leftArmImage !== "" &&
+                // eslint-disable-next-line
+                <img
+                    src={props.leftArmImage}
+                    alt=""
+                />
+            }
+            {props.torsoImage !== "" &&
+                // eslint-disable-next-line
+                <img
+                    src={props.torsoImage}
+                    alt=""
+                />
+            }
+            {props.rightArmImage !== "" &&
+                // eslint-disable-next-line
+                <img
+                    src={props.rightArmImage}
+                    alt=""
+                />
+            }
+            {props.headAccessoriesImage !== "" &&
+                // eslint-disable-next-line
+                <img
+                    src={props.headAccessoriesImage}
+                    alt=""
+                />
+            }
+            {props.headImage !== "" &&
+                // eslint-disable-next-line
+                <img
+                    src={props.headImage}
+                    alt=""
+                />
+            }
         </div>
     )
 }

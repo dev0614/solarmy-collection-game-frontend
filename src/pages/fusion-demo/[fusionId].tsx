@@ -53,6 +53,15 @@ export default function FusionEdit(props: {
     const [equipedTotal, setEquipedTotal] = useState(0);
     const [changedTotal, setChangedTotal] = useState(0);
 
+    // NFT image group with attribute
+    const [headImage, setHeadImage] = useState("");
+    const [headAccessoriesImage, setHeadAccessoriesImage] = useState("");
+    const [torsoImage, setTorsoImage] = useState("");
+    const [leftArmImage, setLeftArmImage] = useState("");
+    const [rightArmImage, setRighttArmImage] = useState("");
+    const [legsImage, setLegsImage] = useState("");
+    const [backgroundImage, setBackgroundImage] = useState("");
+
     const getNftData = async (mint: string) => {
         startLoading();
         const uri = await getNftMetaData(new PublicKey(mint));
@@ -117,7 +126,6 @@ export default function FusionEdit(props: {
         // eslint-disable-next-line
     };
 
-
     const handleRemoveSelected = (attr: string, attr_type: string) => {
         let selected: SelectedItemType[] = changesItems;
         for (var i = 0; i < selected.length; i++) {
@@ -163,6 +171,35 @@ export default function FusionEdit(props: {
         }
         const eTotal = equipedAttr?.reduce((attr: any, { points }: any) => attr + parseFloat(points), 0);
         setEquipedTotal(eTotal);
+        if (equipedAttr) {
+            for (let item of equipedAttr) {
+                switch (item.attribute_type) {
+                    case "right arm":
+                        setRighttArmImage(item.url);
+                        break;
+                    case "head":
+                        setHeadImage(item.url);
+                        break;
+                    case "head accessories":
+                        setHeadAccessoriesImage(item.url);
+                        break;
+                    case "left arm":
+                        setLeftArmImage(item.url);
+                        break;
+                    case "torso":
+                        setTorsoImage(item.url);
+                        break;
+                    case "legs":
+                        setLegsImage(item.url);
+                        break;
+                    case "background":
+                        setBackgroundImage(item.url);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
         // eslint-disable-next-line
     }, [equipedAttr, selectedKind]);
 
@@ -170,10 +207,34 @@ export default function FusionEdit(props: {
         let cTotal = 0;
         if (equipedAttr) {
             for (let item of equipedAttr) {
-                // if(item.attribute)
                 const filtered = changesItems?.filter((attr: any) => attr.attribute_type === item.attribute_type);
                 if (filtered.length !== 0) {
-                    cTotal += parseFloat(filtered[0].points)
+                    cTotal += parseFloat(filtered[0].points);
+                    switch (filtered[0].attribute_type) {
+                        case "right arm":
+                            setRighttArmImage(filtered[0].url);
+                            break;
+                        case "head":
+                            setHeadImage(filtered[0].url);
+                            break;
+                        case "head accessories":
+                            setHeadAccessoriesImage(filtered[0].url);
+                            break;
+                        case "left arm":
+                            setLeftArmImage(filtered[0].url);
+                            break;
+                        case "torso":
+                            setTorsoImage(filtered[0].url);
+                            break;
+                        case "legs":
+                            setLegsImage(filtered[0].url);
+                            break;
+                        case "background":
+                            setBackgroundImage(filtered[0].url);
+                            break;
+                        default:
+                            break;
+                    }
                 } else {
                     cTotal += parseFloat(item.points)
                 }
@@ -181,7 +242,7 @@ export default function FusionEdit(props: {
         }
         setChangedTotal(cTotal);
         // eslint-disable-next-line
-    }, [JSON.stringify(changesItems), equipedAttr])
+    }, [equipedAttr, JSON.stringify(changesItems)])
 
     useEffect(() => {
         startLoading();
@@ -256,8 +317,16 @@ export default function FusionEdit(props: {
                     </div>
                     <div className="fusion-edit-card box-shadow">
                         <div className="media">
-                            <FusionMediaImage />
-                            <div className="fusion-see-detail" style={{ display: "block" }}>
+                            <FusionMediaImage
+                                headImage={headImage}
+                                headAccessoriesImage={headAccessoriesImage}
+                                torsoImage={torsoImage}
+                                leftArmImage={leftArmImage}
+                                rightArmImage={rightArmImage}
+                                legsImage={legsImage}
+                                backgroundImage={backgroundImage}
+                            />
+                            <div className="fusion-see-detail">
                                 <div className="header-tabs">
                                     <div className={seeTab === "changes" ? "tab active" : "tab"} onClick={() => setSeeTab("changes")}>changes</div>
                                     <div className={seeTab === "equiped" ? "tab active" : "tab"} onClick={() => setSeeTab("equiped")}>equiped</div>
