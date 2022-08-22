@@ -66,6 +66,14 @@ export interface FusionNftDetail {
     name: string
 }
 
+export interface SelectedItemType {
+    attribute: string,
+    attribute_type: string,
+    points: string,
+    rarity: string,
+    url: string,
+}
+
 export interface AttributeItem {
     trait_type: string,
     value: string,

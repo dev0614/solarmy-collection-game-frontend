@@ -9,16 +9,8 @@ import { CircleCloseIcon, CircleCloseMdIcon, RoundCornerLeft, RoundCornerRight }
 import { AttributeSetting, MainPage } from "../../components/Widget";
 import { getAttributeItemData, getAvailableInventory } from "../../solana/server";
 import { getNftMetaData } from "../../solana/transaction_staking";
-import { AbleFetchedItem, AttributeFetched, AttributeFilterTypes, AttributeItem } from "../../solana/types";
+import { AbleFetchedItem, AttributeFetched, AttributeFilterTypes, AttributeItem, SelectedItemType } from "../../solana/types";
 import { titleCamel, titleCase, titleLowerCase } from "../../solana/utils";
-
-interface SelectedItemType {
-    attribute: string,
-    attribute_type: string,
-    points: string,
-    rarity: string,
-    url: string,
-}
 
 export default function FusionEdit(props: {
     startLoading: Function,

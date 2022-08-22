@@ -570,3 +570,17 @@
 .normal-title {
     color: #fff !important;
 }
+.empty-fusion-media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1f1f1f;
+    width: calc(100% - 96px) !important;
+    height: calc(100% - 96px) !important;
+    border-radius: 16px;
+    margin: 24px;
+    box-shadow: inset 0px 0px 18px rgba(0, 0, 0, 0.59);
+    img {
+        width: 100%;
+    }
+}
