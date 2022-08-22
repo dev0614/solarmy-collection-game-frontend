@@ -55,6 +55,17 @@ export interface PlanFetched {
     _id: string
 }
 
+export interface FusionNft {
+    nftMint: string,
+    uri: string
+}
+
+export interface FusionNftDetail {
+    nftMint: string,
+    image: string,
+    name: string
+}
+
 export interface AttributeItem {
     trait_type: string,
     value: string,

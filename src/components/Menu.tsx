@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { WalletModalProvider, WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import { BattalionIcon, DashboardIcon, DeployIcon, DeveloperIcon, FusionIcon, LeaderboardIcon, MarketplaceIcon, StoreIcon } from "./svgIcons";
+import { BattalionIcon, DashboardIcon, DeployIcon, FusionIcon, LeaderboardIcon, MarketplaceIcon, StoreIcon } from "./svgIcons";
 
 export default function Menu() {
     const router = useRouter();
@@ -26,7 +26,7 @@ export default function Menu() {
                         {menus.map((item, key) => (
                             <li key={key}>
                                 <Link href={item.link}>
-                                    <a style={{ pointerEvents: item.title === "Deploy" || item.title === "Store" ? "all" : "none" }}>
+                                    <a style={{ pointerEvents: item.title === "Deploy" || item.title === "Store" || item.title === "Fusion" ? "all" : "none" }}>
                                         <div className={`menu-item ${router.pathname === item.link ? "active" : ""}`}>
                                             <span>
                                                 {item.icon}
