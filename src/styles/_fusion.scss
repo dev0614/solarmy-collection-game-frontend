@@ -613,3 +613,54 @@
         transition: all 0.3s;
     }
 }
+
+.fusion-confirm {
+    width: 342px;
+    background-color: #383838;
+    padding: 24px;
+    .head {
+        margin-bottom: 16px;
+        h4 {
+            font-family: "Oxanium";
+            font-style: normal;
+            font-weight: 600;
+            font-size: 24px;
+            line-height: 118%;
+            letter-spacing: 1px;
+            color: #ffffff;
+        }
+    }
+    .content {
+        p {
+            font-family: "Oxanium";
+            font-style: normal;
+            font-weight: 500;
+            font-size: 17px;
+            line-height: 143%;
+            letter-spacing: 1px;
+            color: #ffffff;
+        }
+    }
+}
+.confirm-checkbox {
+    background-color: #292929;
+    border-radius: 16px;
+    padding: 8px 12px;
+    input {
+        display: none;
+    }
+    label {
+        display: flex;
+        align-items: center;
+        span {
+            margin-left: 15px;
+            font-family: "Oxanium";
+            font-style: normal;
+            font-weight: 600;
+            font-size: 12px;
+            line-height: 165%;
+            letter-spacing: 0.02em;
+            color: rgba(255, 255, 255, 0.6);
+        }
+    }
+}

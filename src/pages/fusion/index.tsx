@@ -112,6 +112,7 @@ export default function FusionPage() {
     useEffect(() => {
         getPostNfts();
         getAbleInventory();
+        // eslint-disable-next-line
     }, [wallet.connected, wallet.publicKey, pageTab])
     return (
         <MainPage>

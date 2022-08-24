@@ -18,6 +18,7 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { AMMO_TOKEN_DECIMAL, AMMO_TOKEN_MINT, GLOBAL_AUTHORITY_SEED, STAKING_PROGRAM_ID, USER_POOL_SIZE, VAULT_SEED } from '../config';
 import { accessUserVault, getPlanBuyResult } from './server';
 import { fakeWallet } from "./fakeWallet";
+import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 
 export const initUserPool = async (
     wallet: WalletContextState
@@ -184,7 +185,7 @@ export const depositToVault = async (
 }
 
 export const fusion = async (
-    wallet: WalletContextState,
+    wallet: any,
     nftMint: PublicKey,
     amount: number,
     newUri: string,
@@ -198,6 +199,7 @@ export const fusion = async (
     let cloneWindow: any = window;
     let provider = new anchor.AnchorProvider(solConnection, cloneWindow['solana'], anchor.AnchorProvider.defaultOptions())
     const program = new anchor.Program(IDL as anchor.Idl, STAKING_PROGRAM_ID, provider);
+    let txId = "";
     try {
         startLoading();
         const [userVault, bump] = await PublicKey.findProgramAddress(
@@ -214,20 +216,26 @@ export const fusion = async (
         if (poolAccount === null || poolAccount.data === null) {
             await initUserPool(wallet);
         }
-        const tx = await createFusionTx(userAddress, nftMint, amount, newUri, program);
-        const { blockhash } = await solConnection.getRecentBlockhash('finalized');
-        tx.feePayer = userAddress;
-        tx.recentBlockhash = blockhash;
-        const txId = await wallet.sendTransaction(tx, solConnection);
-        console.log("fusion tx => ", txId)
+        const { tx, updateKeypair } = await createFusionTx(userAddress, nftMint, amount, newUri, program);
+        // const txId = await wallet.sendTransaction(tx, solConnection);
+        const transaction = await wallet.signTransaction(tx);
+        const rawTransaction = transaction.serialize();
+        let options = {
+            skipPreflight: true,
+            commitment: "Finalized"
+        };
+        txId = await solConnection.sendRawTransaction(rawTransaction, options);
+        console.log("fusion tx => ", txId);
         await solConnection.confirmTransaction(txId, "finalized");
         successAlert("Transaction is confirmed!");
         closeLoading();
         updatePage();
+        return txId;
     } catch (error) {
         console.log(error);
         closeLoading();
         filterError(error);
+        return null;
     }
 }
 
@@ -921,7 +929,6 @@ export const createFusionTx = async (
     const metadata = await getMetadata(nftMint);
 
     let tx = new Transaction();
-    console.log(tx, "===> tx1")
     console.log('==>Fusioning...', nftMint.toBase58());
     tx.add(program.instruction.fusion(
         bump, new anchor.BN(amount * AMMO_TOKEN_DECIMAL), newUri, {
@@ -937,12 +944,24 @@ export const createFusionTx = async (
             tokenMetadataProgram: METAPLEX,
             tokenProgram: TOKEN_PROGRAM_ID,
         },
-        instructions: [],
         signers: [updateKeypair]
     }
     ));
 
+    const { blockhash } = await solConnection.getRecentBlockhash('finalized');
+    tx.feePayer = userAddress;
+    tx.recentBlockhash = blockhash;
+
+    tx.setSigners(
+        // fee payed by the wallet owner
+        userAddress,
+        updateKeypair.publicKey,
+    );
+
+    tx.partialSign(updateKeypair);
+
     console.log(updateKeypair.publicKey.toBase58())
 
-    return tx;
+    return { tx, updateKeypair };
 }
+

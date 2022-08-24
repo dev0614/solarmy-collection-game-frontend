@@ -1,5 +1,6 @@
 
-import { useWallet } from "@solana/wallet-adapter-react";
+import { Dialog } from "@mui/material";
+import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
@@ -7,9 +8,11 @@ import EquipedTable from "../../components/Fusion/EquipedTable";
 import { FusionMediaImage, FusionType } from "../../components/Fusion/FusionWidget";
 import Header from "../../components/Header";
 import Menu from "../../components/Menu";
-import { CircleCloseIcon, CircleCloseMdIcon, RoundCornerLeft, RoundCornerRight } from "../../components/svgIcons";
+import { ApprovedCheck, ApprovedUnCheck, CircleCloseIcon, CircleCloseMdIcon, RoundCornerLeft, RoundCornerRight } from "../../components/svgIcons";
+import { successAlert } from "../../components/toastGroup";
 import { AttributeSetting, MainPage } from "../../components/Widget";
-import { getAttributeItemData, getAvailableInventory, makeNft } from "../../solana/server";
+import { useUserContext } from "../../context/UserProvider";
+import { getAttributeItemData, getAvailableInventory, makeNft, modifyInventory } from "../../solana/server";
 import { fusion, getNftMetaData } from "../../solana/transaction_staking";
 import { AbleFetchedItem, AttributeFetched, AttributeFilterTypes, AttributeItem, SelectedItemType } from "../../solana/types";
 import { titleCamel, titleCase, titleLowerCase } from "../../solana/utils";
@@ -20,9 +23,11 @@ export default function FusionEdit(props: {
     setLoadingLabel: any
 }) {
     const { startLoading, closeLoading } = props;
+    const { getUserData } = useUserContext();
     const router = useRouter();
     const [itemId, setItemId] = useState<number>(1);
     const wallet = useWallet();
+    const anchorWallet = useAnchorWallet();
     const [equipedAttr, setEquipedAttr] = useState<any>();
     const [seeTab, setSeeTab] = useState("changes");
     const [selectedKind, setSelectedKind] = useState("head");
@@ -44,6 +49,8 @@ export default function FusionEdit(props: {
         url: string,
     }[]>([]);
     const [forceRender, setForceRender] = useState(false);
+
+    const [confirmModal, setConfirmModal] = useState(false);
 
     const [equipedTotal, setEquipedTotal] = useState(0);
     const [changedTotal, setChangedTotal] = useState(0);
@@ -87,6 +94,7 @@ export default function FusionEdit(props: {
             }
         }
         const res = await Promise.all(promise);
+        console.log(res, "===> res")
         setEquipedAttr(res);
         closeLoading();
     };
@@ -192,34 +200,67 @@ export default function FusionEdit(props: {
             if (changesItems.filter((item: any) => item.attribute_type === "background").length > 0) {
                 backgroundImage = changesItems.filter((item: any) => item.attribute_type === "background")[0].attribute;
             }
-            // Get new nft uri
+            let changed: any = [];
+            let post: any = [];
+            for (let item of changesItems) {
+                changed.push({
+                    attribute_type: item.attribute_type,
+                    attribute: item.attribute
+                })
+                let p_type = "";
+                let p_attr = "";
+                p_type = equipedAttr.filter((post: any) => post.attribute_type === item.attribute_type)[0].attribute_type;
+                p_attr = equipedAttr.filter((post: any) => post.attribute_type === item.attribute_type)[0].attribute;
+                post.push({
+                    attribute_type: p_type,
+                    attribute: p_attr
+                })
+
+            }
+            // // Get new nft uri
             startLoading();
             // props.setLoadingLabel("Generation new NFT uri...")
-            const newUri = "https://solarmy-1.s3.amazonaws.com/16612733845591484"
-            // = await makeNft(
-            //     wallet.publicKey?.toBase58(),
-            //     id,
-            //     head,
-            //     head_accessories,
-            //     l_arm,
-            //     r_arm,
-            //     torso,
-            //     legs,
-            //     backgroundImage
-            // );
+            // const newUri = "https://solarmy-1.s3.amazonaws.com/16612733845591484";
+            const newUri = await makeNft(
+                wallet.publicKey?.toBase58(),
+                id,
+                head,
+                head_accessories,
+                l_arm,
+                r_arm,
+                torso,
+                legs,
+                backgroundImage
+            );
             // Get fusion transaction id
             if (newUri) {
                 let mint: string = router.query.mint as string;
                 const fusionTx = await fusion(
-                    wallet,
+                    anchorWallet,
                     new PublicKey(mint),
-                    changesItems.length,
+                    changesItems.length * 90,
                     newUri,
                     () => startLoading(),
                     () => closeLoading(),
                     () => console.log("Fetched Tx id")
-                )
+                );
+                startLoading();
+                if (fusionTx) {
+                    const modified = await modifyInventory(
+                        wallet.publicKey.toBase58(),
+                        fusionTx,
+                        JSON.stringify(post),
+                        JSON.stringify(changed)
+                    )
+                    if (modified) {
+                        setChangesItems([]);
+                        successAlert("Fusion completed successfully!");
+                        getUserData();
+                        router.push("/fusion");
+                    }
+                }
             }
+            closeLoading();
 
         } catch (error) {
             console.log("make nft error: ", error);
@@ -511,6 +552,63 @@ export default function FusionEdit(props: {
                 </div>
             </div>
             <Menu />
+            <FusionConfirmAlert opened={false} onClose={() => setConfirmModal(false)} />
         </MainPage >
+    )
+}
+
+export const FusionConfirmAlert = (props: {
+    opened: boolean,
+    onClose: Function
+}) => {
+    const { opened, onClose } = props;
+    const [approved, setApproved] = useState(false);
+    const handleChange = (e: any) => {
+        setApproved(!approved);
+    }
+    return (
+        <Dialog
+            open={opened}
+            onClose={() => onClose()}
+        >
+            <div
+                className="fusion-confirm"
+            >
+                <div className="head">
+                    <h4>Fuse</h4>
+                </div>
+                <div className="content">
+                    <p>By fusing new attributes onto your soldier, the current attributes will be discarded and replaced with the new attrbiute.</p>
+                    <div className="confirm-checkbox">
+                        <input
+                            checked={approved}
+                            type="checkbox"
+                            id="fusion-approved"
+                            onChange={handleChange}
+                        />
+                        <label htmlFor="fusion-approved">
+                            {approved ?
+                                <ApprovedCheck />
+                                :
+                                <ApprovedUnCheck />
+                            }
+                            <span>I understand this cannot be undone.</span>
+                        </label>
+                    </div>
+                </div>
+                <div className="confirm-control">
+                    <button
+                        className="btn-item-cancel"
+                    >
+                        cancel
+                    </button>
+                    <button
+                        className="btn-item-fuse"
+                    >
+                        fuse now
+                    </button>
+                </div>
+            </div>
+        </Dialog>
     )
 }

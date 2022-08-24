@@ -151,7 +151,7 @@ export const PurchasedModal = (props: {
                     <button className="btn-close" onClick={() => onClose()}>
                         close
                     </button>
-                    <button className="btn-fuse" onClick={() => router.push("/fussion")}>
+                    <button className="btn-fuse" onClick={() => router.push("/fusion")}>
                         go fuse
                     </button>
                 </div>

@@ -16,23 +16,23 @@ function RaffleApp({ Component, pageProps }) {
     }
   }, [router])
   return (
-    // <Wallet>
-    //   <UserProvider>
-    <Component
-      {...pageProps}
-      pageLoading={loading}
-      loadingLabel={loadingLabel}
-      startLoading={() => setLoading(true)}
-      closeLoading={() => setLoading(false)}
-      setLoadingLoabel={(e) => setLoadingLabel(e)}
-    />
-    //     <ToastContainer
-    //       style={{ fontSize: 15 }}
-    //       pauseOnFocusLoss={false}
-    //     />
-    //     <PageLoading loading={loading} label={loadingLabel} />
-    //   </UserProvider>
-    // </Wallet>
+    <Wallet>
+      <UserProvider>
+        <Component
+          {...pageProps}
+          pageLoading={loading}
+          loadingLabel={loadingLabel}
+          startLoading={() => setLoading(true)}
+          closeLoading={() => setLoading(false)}
+          setLoadingLoabel={(e) => setLoadingLabel(e)}
+        />
+        <ToastContainer
+          style={{ fontSize: 15 }}
+          pauseOnFocusLoss={false}
+        />
+        <PageLoading loading={loading} label={loadingLabel} />
+      </UserProvider>
+    </Wallet>
   )
 }
 
