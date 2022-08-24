@@ -83,7 +83,7 @@ export default function FusionEdit(props: {
     };
 
     const setEquipedAttributes = async (attrs: AttributeItem[]) => {
-        let promise = [];
+        let promise: any = [];
         for (let item of attrs) {
             if (item.trait_type.toLocaleLowerCase() !== "shadow") {
                 const attrType = titleCase(item.trait_type);
