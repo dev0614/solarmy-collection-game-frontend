@@ -584,3 +584,32 @@
         width: 100%;
     }
 }
+
+.fusion-store-cta {
+    position: fixed;
+    bottom: 172px;
+    right: -96px;
+    background-color: #0059f7;
+    border-radius: 16px 0px 0px 16px;
+    padding: 12px 24px 12px 12px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    span {
+        font-family: "Oxanium";
+        font-style: normal;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 158%;
+        text-align: center;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #fff;
+        margin-left: 12px;
+    }
+    transition: all 0.3s;
+    &:hover {
+        right: 0;
+        transition: all 0.3s;
+    }
+}

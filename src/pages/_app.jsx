@@ -8,6 +8,7 @@ import PageLoading from '../components/PageLoading';
 
 function RaffleApp({ Component, pageProps }) {
   const [loading, setLoading] = useState(false);
+  const [loadingLabel, setLoadingLabel] = useState("");
   const router = useRouter();
   useEffect(() => {
     if (typeof window !== "undefined" && router.pathname !== "/bunker") {
@@ -15,21 +16,23 @@ function RaffleApp({ Component, pageProps }) {
     }
   }, [router])
   return (
-    <Wallet>
-      <UserProvider>
-        <Component
-          {...pageProps}
-          pageLoading={loading}
-          startLoading={() => setLoading(true)}
-          closeLoading={() => setLoading(false)}
-        />
-        <ToastContainer
-          style={{ fontSize: 15 }}
-          pauseOnFocusLoss={false}
-        />
-        <PageLoading loading={loading} />
-      </UserProvider>
-    </Wallet>
+    // <Wallet>
+    //   <UserProvider>
+    <Component
+      {...pageProps}
+      pageLoading={loading}
+      loadingLabel={loadingLabel}
+      startLoading={() => setLoading(true)}
+      closeLoading={() => setLoading(false)}
+      setLoadingLoabel={(e) => setLoadingLabel(e)}
+    />
+    //     <ToastContainer
+    //       style={{ fontSize: 15 }}
+    //       pauseOnFocusLoss={false}
+    //     />
+    //     <PageLoading loading={loading} label={loadingLabel} />
+    //   </UserProvider>
+    // </Wallet>
   )
 }
 

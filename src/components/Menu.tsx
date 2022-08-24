@@ -5,7 +5,6 @@ import { BattalionIcon, DashboardIcon, DeployIcon, FusionIcon, LeaderboardIcon, 
 
 export default function Menu() {
     const router = useRouter();
-
     return (
         <div className="menu">
             <div className="menu-content">
@@ -27,7 +26,7 @@ export default function Menu() {
                             <li key={key}>
                                 <Link href={item.link}>
                                     <a style={{ pointerEvents: item.title === "Deploy" || item.title === "Store" || item.title === "Fusion" ? "all" : "none" }}>
-                                        <div className={`menu-item ${router.pathname === item.link ? "active" : ""}`}>
+                                        <div className={`menu-item ${router.pathname.split("/")[1] === item.title.toLowerCase() ? "active" : ""}`}>
                                             <span>
                                                 {item.icon}
                                             </span>

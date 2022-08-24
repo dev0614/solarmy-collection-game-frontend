@@ -210,7 +210,6 @@ export const fusion = async (
             "user-pool",
             STAKING_PROGRAM_ID,
         );
-
         let poolAccount = await solConnection.getAccountInfo(userPoolKey);
         if (poolAccount === null || poolAccount.data === null) {
             await initUserPool(wallet);
@@ -220,6 +219,7 @@ export const fusion = async (
         tx.feePayer = userAddress;
         tx.recentBlockhash = blockhash;
         const txId = await wallet.sendTransaction(tx, solConnection);
+        console.log("fusion tx => ", txId)
         await solConnection.confirmTransaction(txId, "finalized");
         successAlert("Transaction is confirmed!");
         closeLoading();
@@ -921,6 +921,7 @@ export const createFusionTx = async (
     const metadata = await getMetadata(nftMint);
 
     let tx = new Transaction();
+    console.log(tx, "===> tx1")
     console.log('==>Fusioning...', nftMint.toBase58());
     tx.add(program.instruction.fusion(
         bump, new anchor.BN(amount * AMMO_TOKEN_DECIMAL), newUri, {
@@ -940,6 +941,8 @@ export const createFusionTx = async (
         signers: [updateKeypair]
     }
     ));
+
+    console.log(updateKeypair.publicKey.toBase58())
 
     return tx;
 }

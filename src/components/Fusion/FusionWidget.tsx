@@ -1,4 +1,6 @@
+import { useRouter } from "next/router";
 import { MouseEventHandler } from "react";
+import { CategoryTwoToneIcon } from "../svgIcons";
 
 export function FusionType(props:
     {
@@ -121,6 +123,16 @@ export const FusionMediaImage = (props: {
                     alt=""
                 />
             }
+        </div>
+    )
+}
+
+export const FusionStoreCta = (props: { link?: string }) => {
+    const router = useRouter();
+    return (
+        <div className="fusion-store-cta" onClick={() => router.push(props.link ? props.link : "#")}>
+            <CategoryTwoToneIcon />
+            <span>store</span>
         </div>
     )
 }

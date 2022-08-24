@@ -280,6 +280,9 @@ export const filterError = (error: any) => {
     if (error?.code === -32603) {
         errorAlert("Something went wrong.")
     }
+    if (error?.code === -32003) {
+        errorAlert("Signature verification failed")
+    }
 }
 
 export const pad = (d: number) => {

@@ -231,6 +231,75 @@ export type Staking = {
             ]
         },
         {
+            "name": "fusion",
+            "accounts": [
+                {
+                    "name": "owner",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "globalAuthority",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "updateAuthority",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "userVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "rewardVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "userTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "nftMint",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "mintMetadata",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenMetadataProgram",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "bump",
+                    "type": "u8"
+                },
+                {
+                    "name": "amount",
+                    "type": "u64"
+                },
+                {
+                    "name": "newUri",
+                    "type": "string"
+                }
+            ]
+        },
+        {
             "name": "stakeNftToPool",
             "accounts": [
                 {
@@ -517,7 +586,7 @@ export type Staking = {
         },
         {
             "code": 6007,
-            "name": "InvaliedMetadata",
+            "name": "InvalidMetadata",
             "msg": "Invalid Metadata Address"
         },
         {
@@ -766,6 +835,75 @@ export const IDL: Staking = {
             ]
         },
         {
+            "name": "fusion",
+            "accounts": [
+                {
+                    "name": "owner",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "globalAuthority",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "updateAuthority",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "userVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "rewardVault",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "userTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "nftMint",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "mintMetadata",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenMetadataProgram",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "bump",
+                    "type": "u8"
+                },
+                {
+                    "name": "amount",
+                    "type": "u64"
+                },
+                {
+                    "name": "newUri",
+                    "type": "string"
+                }
+            ]
+        },
+        {
             "name": "stakeNftToPool",
             "accounts": [
                 {
@@ -1052,7 +1190,7 @@ export const IDL: Staking = {
         },
         {
             "code": 6007,
-            "name": "InvaliedMetadata",
+            "name": "InvalidMetadata",
             "msg": "Invalid Metadata Address"
         },
         {

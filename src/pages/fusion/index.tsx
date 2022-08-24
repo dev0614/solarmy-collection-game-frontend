@@ -3,7 +3,7 @@ import { useWallet } from "@solana/wallet-adapter-react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
-import { FusionType } from "../../components/Fusion/FusionWidget"
+import { FusionStoreCta, FusionType } from "../../components/Fusion/FusionWidget"
 import Header from "../../components/Header"
 import Menu from "../../components/Menu"
 import { BuySoliderMarketplaceIcon, CompassIcon, FusionCardEditLg, FusionCardEditMd, FusionEmptyIcon, FusionIconlg } from "../../components/svgIcons"
@@ -36,7 +36,7 @@ export default function FusionPage() {
             const data = await getAvailableInventory(wallet.publicKey?.toBase58());
             if (data.length !== 0) {
                 setAbleInventoris(data)
-                console.log(data)
+                console.log(data, "=======> consol.log")
             }
         } catch (error) {
             console.log(error);
@@ -78,6 +78,7 @@ export default function FusionPage() {
             }
             if (list.length !== 0) {
                 let promise = [];
+                console.log(list, "===> list")
                 for (let item of list) {
                     const metadata = fetch(item.uri)
                         .then(resp =>
@@ -138,7 +139,7 @@ export default function FusionPage() {
                                             />
                                         </div>
                                         <div className="fusion-card-overview">
-                                            <Link href={`/fusion/1?mint=${postNfts[0].nftMint}`}>
+                                            <Link href={`/fusion/${postNfts[0].name.split("#")[1]}?mint=${postNfts[0].nftMint}`}>
                                                 <a>
                                                     <FusionCardEditLg />
                                                 </a>
@@ -165,7 +166,7 @@ export default function FusionPage() {
                                     <>
                                         {
                                             postNfts.map((item, key) => (
-                                                <div className="empty-fusion-card" key={key} onClick={() => router.push(`/fusion/${key + 1}?mint=${item.nftMint}`)}>
+                                                <div className="empty-fusion-card" key={key} onClick={() => router.push(`/fusion/${item.name.split("#")[1]}?mint=${item.nftMint}`)}>
                                                     {/* eslint-disable-next-line */}
                                                     <img
                                                         src={item.image}
@@ -196,6 +197,7 @@ export default function FusionPage() {
                                     </>
                                 }
                             </div>
+                            <FusionStoreCta link="/store" />
                         </div>
                     </>
                     :
@@ -222,10 +224,6 @@ export default function FusionPage() {
                                         </div>
                                         <div className="option-list">
                                             <ul>
-                                                {/* <li className="option-item current">
-                                                    <h5 className="title">{selectedName?.attribute}</h5>
-                                                    <p className="points"><span className="common">{selectedName?.rarity}</span>{selectedName?.points} Equiped</p>
-                                                </li> */}
                                                 {selectAbled && selectAbled.length !== 0 && selectAbled.map((item, key) => (
                                                     <li
                                                         className={`option-item`}

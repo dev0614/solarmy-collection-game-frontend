@@ -1,20 +1,23 @@
+
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
+import EquipedTable from "../../components/Fusion/EquipedTable";
 import { FusionMediaImage, FusionType } from "../../components/Fusion/FusionWidget";
 import Header from "../../components/Header";
 import Menu from "../../components/Menu";
 import { CircleCloseIcon, CircleCloseMdIcon, RoundCornerLeft, RoundCornerRight } from "../../components/svgIcons";
 import { AttributeSetting, MainPage } from "../../components/Widget";
-import { getAttributeItemData, getAvailableInventory } from "../../solana/server";
-import { getNftMetaData } from "../../solana/transaction_staking";
+import { getAttributeItemData, getAvailableInventory, makeNft } from "../../solana/server";
+import { fusion, getNftMetaData } from "../../solana/transaction_staking";
 import { AbleFetchedItem, AttributeFetched, AttributeFilterTypes, AttributeItem, SelectedItemType } from "../../solana/types";
 import { titleCamel, titleCase, titleLowerCase } from "../../solana/utils";
 
 export default function FusionEdit(props: {
     startLoading: Function,
-    closeLoading: Function
+    closeLoading: Function,
+    setLoadingLabel: any
 }) {
     const { startLoading, closeLoading } = props;
     const router = useRouter();
@@ -22,7 +25,7 @@ export default function FusionEdit(props: {
     const wallet = useWallet();
     const [equipedAttr, setEquipedAttr] = useState<any>();
     const [seeTab, setSeeTab] = useState("changes");
-    const [selectedKind, setSelectedKind] = useState('head');
+    const [selectedKind, setSelectedKind] = useState("head");
     const [selectedName, setSelectedName] = useState<AttributeFetched>();
     const [attributeFilter, setAttributeFilter] = useState<AttributeFilterTypes>({
         common: false,
@@ -54,6 +57,9 @@ export default function FusionEdit(props: {
     const [legsImage, setLegsImage] = useState("");
     const [backgroundImage, setBackgroundImage] = useState("");
 
+    // Page Status Loading
+    const [fusionTxLoading, setFusionTxLoading] = useState(false);
+
     const getNftData = async (mint: string) => {
         startLoading();
         const uri = await getNftMetaData(new PublicKey(mint));
@@ -72,11 +78,13 @@ export default function FusionEdit(props: {
     const setEquipedAttributes = async (attrs: AttributeItem[]) => {
         let promise = [];
         for (let item of attrs) {
-            const attrType = titleCase(item.trait_type);
-            const attr = titleCase(item.value);
-            const data = getAttributeItemData(attrType, attr);
-            if (item)
-                promise.push(data);
+            if (item.trait_type.toLocaleLowerCase() !== "shadow") {
+                const attrType = titleCase(item.trait_type);
+                const attr = titleCase(item.value);
+                const data = getAttributeItemData(attrType, attr);
+                if (item)
+                    promise.push(data);
+            }
         }
         const res = await Promise.all(promise);
         setEquipedAttr(res);
@@ -85,13 +93,10 @@ export default function FusionEdit(props: {
 
     const getAbleInventory = async () => {
         if (!wallet.publicKey) return;
-        let inventories: any[];
-
         try {
             const data = await getAvailableInventory(wallet.publicKey?.toBase58());
             if (data.length !== 0) {
                 setAbleInventoris(data)
-                console.log(data)
             }
         } catch (error) {
             console.log(error);
@@ -101,13 +106,13 @@ export default function FusionEdit(props: {
     const handleAttribute = (e: any) => {
         const attr = e.target.innerText;
         setSelectedKind(titleCamel(attr as string));
-        let attrName = '';
-        if (attr === 'L Arm') {
-            attrName = 'left arm';
-        } else if (attr === 'R Arm') {
-            attrName = 'right arm';
-        } else if (attr === 'Head' && attr !== "Head Accessories") {
-            attrName = 'head';
+        let attrName = "";
+        if (attr === "L Arm") {
+            attrName = "left arm";
+        } else if (attr === "R Arm") {
+            attrName = "right arm";
+        } else if (attr === "Head" && attr !== "Head Accessories") {
+            attrName = "head";
         } else {
             attrName = titleLowerCase(attr);
         }
@@ -154,11 +159,79 @@ export default function FusionEdit(props: {
         setForceRender(!forceRender);
     };
 
+    const onFusion = async () => {
+        if (!wallet.publicKey || !router.query.fusionId || !router.query.mint) return;
+        try {
+            let id: string = router.query.fusionId as string;
+            let head = equipedAttr.filter((item: any) => item.attribute_type === "head")[0].attribute;
+            let head_accessories = equipedAttr.filter((item: any) => item.attribute_type === "head accessories")[0].attribute;
+            let l_arm = equipedAttr.filter((item: any) => item.attribute_type === "left arm")[0].attribute;
+            let r_arm = equipedAttr.filter((item: any) => item.attribute_type === "right arm")[0].attribute;
+            let torso = equipedAttr.filter((item: any) => item.attribute_type === "torso")[0].attribute;
+            let legs = equipedAttr.filter((item: any) => item.attribute_type === "legs")[0].attribute;
+            let backgroundImage = equipedAttr.filter((item: any) => item.attribute_type === "background")[0].attribute;
+
+            if (changesItems.filter((item: any) => item.attribute_type === "head").length > 0) {
+                head = changesItems.filter((item: any) => item.attribute_type === "head")[0].attribute;
+            }
+            if (changesItems.filter((item: any) => item.attribute_type === "head accessories").length > 0) {
+                head_accessories = changesItems.filter((item: any) => item.attribute_type === "head accessories")[0].attribute;
+            }
+            if (changesItems.filter((item: any) => item.attribute_type === "right arm").length > 0) {
+                r_arm = changesItems.filter((item: any) => item.attribute_type === "right arm")[0].attribute;
+            }
+            if (changesItems.filter((item: any) => item.attribute_type === "left arm").length > 0) {
+                l_arm = changesItems.filter((item: any) => item.attribute_type === "left arm")[0].attribute;
+            }
+            if (changesItems.filter((item: any) => item.attribute_type === "torso").length > 0) {
+                torso = changesItems.filter((item: any) => item.attribute_type === "torso")[0].attribute;
+            }
+            if (changesItems.filter((item: any) => item.attribute_type === "legs").length > 0) {
+                legs = changesItems.filter((item: any) => item.attribute_type === "legs")[0].attribute;
+            }
+            if (changesItems.filter((item: any) => item.attribute_type === "background").length > 0) {
+                backgroundImage = changesItems.filter((item: any) => item.attribute_type === "background")[0].attribute;
+            }
+            // Get new nft uri
+            startLoading();
+            // props.setLoadingLabel("Generation new NFT uri...")
+            const newUri = "https://solarmy-1.s3.amazonaws.com/16612733845591484"
+            // = await makeNft(
+            //     wallet.publicKey?.toBase58(),
+            //     id,
+            //     head,
+            //     head_accessories,
+            //     l_arm,
+            //     r_arm,
+            //     torso,
+            //     legs,
+            //     backgroundImage
+            // );
+            // Get fusion transaction id
+            if (newUri) {
+                let mint: string = router.query.mint as string;
+                const fusionTx = await fusion(
+                    wallet,
+                    new PublicKey(mint),
+                    changesItems.length,
+                    newUri,
+                    () => startLoading(),
+                    () => closeLoading(),
+                    () => console.log("Fetched Tx id")
+                )
+            }
+
+        } catch (error) {
+            console.log("make nft error: ", error);
+            closeLoading();
+        }
+    }
+
     useEffect(() => {
         if (equipedAttr && selectedKind === "head") {
-            const item = equipedAttr?.find((item: any) => selectedKind === 'head');
+            const item = equipedAttr?.find((item: any) => selectedKind === "head");
             setSelectedName(item);
-            const names = ableInventories?.filter((attr) => attr.attribute_type === 'head');
+            const names = ableInventories?.filter((attr) => attr.attribute_type === "head");
             setSelectAbled(names);
         }
         const eTotal = equipedAttr?.reduce((attr: any, { points }: any) => attr + parseFloat(points), 0);
@@ -246,7 +319,6 @@ export default function FusionEdit(props: {
             getNftData(router.query.mint as string)
             // FIND
         }
-
         // eslint-disable-next-line
     }, [router, wallet.connected]);
 
@@ -256,7 +328,7 @@ export default function FusionEdit(props: {
                 <Header
                     back={{
                         title: `Fusion NFT #${itemId < 10 ? "0" + router.query?.fusionId : router.query?.fusionId}`,
-                        backUrl: "/fusion-demo"
+                        backUrl: "/fusion"
                     }}
                 />
             }
@@ -376,52 +448,9 @@ export default function FusionEdit(props: {
                                                 <h3>{equipedTotal}</h3>
                                             </div>
                                         </div>
-                                        <div className="attr-table">
-                                            <div className="thead">
-                                                <div className="tr">
-                                                    <div className="th">Attribute</div>
-                                                    <div className="th">Name</div>
-                                                    <div className="th">Rarity &#38; Points</div>
-                                                </div>
-                                            </div>
-                                            <div className="tbody">
-                                                <div className="tr">
-                                                    <div className="td">Head</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "head")?.attribute}</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "head")?.points}</div>
-                                                </div>
-                                                <div className="tr">
-                                                    <div className="td">Head Accessories</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "head accessories")?.attribute}</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "head accessories")?.points}</div>
-                                                </div>
-                                                <div className="tr">
-                                                    <div className="td">L Arm</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "left arm")?.attribute}</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "left arm")?.points}</div>
-                                                </div>
-                                                <div className="tr">
-                                                    <div className="td">R Arm</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "right arm")?.attribute}</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "right arm")?.points}</div>
-                                                </div>
-                                                <div className="tr">
-                                                    <div className="td">Torso</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "torso")?.attribute}</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "torso")?.points}</div>
-                                                </div>
-                                                <div className="tr">
-                                                    <div className="td">Legs</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "legs")?.attribute}</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "legs")?.points}</div>
-                                                </div>
-                                                <div className="tr">
-                                                    <div className="td">Background</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "background")?.attribute}</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "background")?.points}</div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <EquipedTable
+                                            equipedAttr={equipedAttr}
+                                        />
                                     </>
                                 }
                             </div>
@@ -456,18 +485,28 @@ export default function FusionEdit(props: {
                         </ul>
                     </div>
                     <div className="fusion-fuse">
-                        <div className="total-ammo" style={{ width: "calc(100% - 280px)" }}>
+                        <div
+                            className="total-ammo"
+                            style={{
+                                width:
+                                    changesItems.length !== 0 ?
+                                        "calc(100% - 280px)" :
+                                        "100%"
+                            }}
+                        >
                             <h5>Total AMMO</h5>
-                            <p>90</p>
+                            <p>{changesItems.length * 90}</p>
                         </div>
-                        <div className="fuse-group">
-                            <button className="cancel">
-                                cancel
-                            </button>
-                            <button className="fuse">
-                                fuse
-                            </button>
-                        </div>
+                        {changesItems.length !== 0 &&
+                            <div className="fuse-group">
+                                <button className="cancel">
+                                    cancel
+                                </button>
+                                <button className="fuse" onClick={() => onFusion()}>
+                                    fuse
+                                </button>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

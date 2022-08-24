@@ -106,7 +106,7 @@ export const getAttributeItemData = async (attType: string, attr: string) => {
     let data: AttributeFetched | undefined = undefined;
     await axios.post(`${API_URL}getItemInfo`, {
         "attType": attType,
-        "attr": attr
+        "attr": attr.replace("_", " ")
     }
     )
         .then((res) => {
@@ -122,7 +122,6 @@ export const getAttributeItemData = async (attType: string, attr: string) => {
 
 export const getAvailableInventory = async (wallet: string) => {
     let data: AbleFetchedItem[] = [];
-    console.log(wallet)
     await axios.post(`${API_URL}getInventoryInfo`, {
         "wallet": wallet,
     }
@@ -166,22 +165,38 @@ export const makeNft = async (
     l_arm: string,
     r_arm: string,
     torso: string,
-    legs: string
+    legs: string,
+    backgroundImage: string
 ) => {
+    let result = null;
+
+    console.log(
+        "======wallet:", wallet,
+        "======id:", id,
+        "======head:", head,
+        "======head_accessories:", head_accessories,
+        "======l_arm:", l_arm,
+        "======r_arm:", r_arm,
+        "======torso:", torso,
+        "======legs:", legs,
+        "background_image:", backgroundImage)
     await axios.post(`${API_URL}makeNft`, {
         "wallet": wallet,
         "id": id,
-        "head": head,
-        "head_accessories": head_accessories,
-        "l_arm": l_arm,
-        "r_arm": r_arm,
-        "torso": torso,
-        "legs": legs,
+        "head": head.replace(" ", "_"),
+        "head_accessories": head_accessories.replace(" ", "_"),
+        "l_arm": l_arm.replace(" ", "_"),
+        "r_arm": r_arm.replace(" ", "_"),
+        "torso": torso.replace(" ", "_"),
+        "legs": legs.replace(" ", "_"),
+        "background_image": backgroundImage.replace(" ", "_")
     }
     ).then((res) => {
-        console.log(res)
+        result = res.data
     })
         .catch((error) => {
             console.log(error);
         })
+    return result;
 }
+
