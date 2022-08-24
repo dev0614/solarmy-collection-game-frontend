@@ -549,6 +549,24 @@ export const FusionCardEditLg = () => {
         </svg>
     )
 }
+export const FusionCardEditMd = () => {
+    return (
+        <svg width="142" height="143" viewBox="0 0 142 143" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clipPath="url(#clip0_121_5465)">
+                <path d="M99.8332 1.60385C124.869 -6.43699 148.51 17.2045 140.469 42.24L134.393 61.158C132.33 67.5821 132.33 74.4911 134.393 80.9152L140.469 99.8332C148.51 124.869 124.869 148.51 99.8332 140.469L80.9152 134.393C74.4911 132.33 67.5821 132.33 61.158 134.393L42.24 140.469C17.2045 148.51 -6.43695 124.869 1.60389 99.8332L7.67991 80.9152C9.7432 74.4911 9.7432 67.5821 7.67991 61.158L1.60389 42.24C-6.43695 17.2045 17.2045 -6.43699 42.24 1.60386L61.158 7.67988C67.5821 9.74317 74.4911 9.74316 80.9152 7.67987L99.8332 1.60385Z" fill="#292929" />
+                <rect x="45" y="45" width="52" height="52" rx="16" fill="#0059F7" />
+                <path opacity="0.3" d="M62.8334 78.0933V79.1666H63.9067L74.4767 68.5966L73.4034 67.5233L62.8334 78.0933Z" fill="white" />
+                <path d="M81.1617 65.2133C81.6167 64.7583 81.6167 64.0233 81.1617 63.5683L78.4317 60.8383C78.1983 60.605 77.9067 60.5 77.6033 60.5C77.3 60.5 77.0083 60.6167 76.7867 60.8383L74.6517 62.9733L79.0267 67.3483L81.1617 65.2133V65.2133ZM60.5 77.125V81.5H64.875L77.7783 68.5967L73.4033 64.2217L60.5 77.125ZM63.9067 79.1667H62.8333V78.0933L73.4033 67.5233L74.4767 68.5967L63.9067 79.1667Z" fill="white" />
+            </g>
+            <defs>
+                <clipPath id="clip0_121_5465">
+                    <rect width="142" height="143" fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+
+    )
+}
 export const RoundCornerLeft = () => {
     return (
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -584,6 +602,67 @@ export const CircleCloseMdIcon = () => {
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path opacity="0.3" d="M12 4C7.59 4 4 7.59 4 12C4 16.41 7.59 20 12 20C16.41 20 20 16.41 20 12C20 7.59 16.41 4 12 4ZM17 15.59L15.59 17L12 13.41L8.41 17L7 15.59L10.59 12L7 8.41L8.41 7L12 10.59L15.59 7L17 8.41L13.41 12L17 15.59Z" fill="white" />
             <path d="M12 2C6.47 2 2 6.47 2 12C2 17.53 6.47 22 12 22C17.53 22 22 17.53 22 12C22 6.47 17.53 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM15.59 7L12 10.59L8.41 7L7 8.41L10.59 12L7 15.59L8.41 17L12 13.41L15.59 17L17 15.59L13.41 12L17 8.41L15.59 7Z" fill="white" />
+        </svg>
+    )
+}
+
+export const FusionIconlg = () => {
+    return (
+        <svg width="214" height="214" viewBox="0 0 214 214" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g filter="url(#filter0_i_122_5471)">
+                <path d="M129.262 79.2064L198.799 160.024C214.042 177.74 201.509 205.5 176.537 205.5L37.4627 205.5C12.4913 205.5 -0.0425787 177.74 15.2008 160.024L84.7381 79.2064C96.2943 65.7755 117.706 65.7755 129.262 79.2064Z" stroke="#292929" strokeWidth="17" />
+            </g>
+            <g filter="url(#filter1_i_122_5471)">
+                <path d="M135.705 143.601C120.757 161.377 93.2422 161.377 78.2946 143.601L8.75747 60.9037C-11.5666 36.7333 5.74652 -0.000257513 37.4626 -0.000249195L176.537 -0.00021272C208.253 -0.000204402 225.566 36.7333 205.242 60.9037L135.705 143.601Z" fill="#292929" />
+            </g>
+            <defs>
+                <filter id="filter0_i_122_5471" x="0" y="60.6332" width="214" height="157.367" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                    <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                    <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+                    <feOffset dy="4" />
+                    <feGaussianBlur stdDeviation="4" />
+                    <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
+                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" />
+                    <feBlend mode="normal" in2="shape" result="effect1_innerShadow_122_5471" />
+                </filter>
+                <filter id="filter1_i_122_5471" x="-0.00012207" y="-0.000244141" width="214" height="160.933" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                    <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                    <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+                    <feOffset dy="4" />
+                    <feGaussianBlur stdDeviation="4" />
+                    <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
+                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.59 0" />
+                    <feBlend mode="normal" in2="shape" result="effect1_innerShadow_122_5471" />
+                </filter>
+            </defs>
+        </svg>
+    )
+}
+
+export const CategoryTwoToneIcon = () => {
+    return (
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.3" d="M5.83331 18.0835H10.5V22.7501H5.83331V18.0835ZM14 6.81348L11.7483 10.5001H16.2516L14 6.81348Z" fill="white" />
+            <path d="M14 2.3335L7.58333 12.8335H20.4167L14 2.3335ZM14 6.8135L16.2517 10.5002H11.7367L14 6.8135ZM20.4167 15.1668C17.5117 15.1668 15.1667 17.5118 15.1667 20.4168C15.1667 23.3218 17.5117 25.6668 20.4167 25.6668C23.3217 25.6668 25.6667 23.3218 25.6667 20.4168C25.6667 17.5118 23.3217 15.1668 20.4167 15.1668ZM20.4167 23.3335C18.8067 23.3335 17.5 22.0268 17.5 20.4168C17.5 18.8068 18.8067 17.5002 20.4167 17.5002C22.0267 17.5002 23.3333 18.8068 23.3333 20.4168C23.3333 22.0268 22.0267 23.3335 20.4167 23.3335ZM12.8333 15.7502H3.5V25.0835H12.8333V15.7502ZM10.5 22.7502H5.83333V18.0835H10.5V22.7502Z" fill="white" />
+        </svg>
+    )
+}
+
+export const ApprovedCheck = () => {
+    return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.3" d="M5 19H19V5H5V19ZM7.41 11.6L9.99 14.18L16.58 7.59L17.99 9L9.99 17L6 13.01L7.41 11.6Z" fill="#4AF497" />
+            <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19ZM17.99 9L16.58 7.58L9.99 14.17L7.41 11.6L5.99 13.01L9.99 17L17.99 9Z" fill="#4AF497" />
+        </svg>
+    )
+}
+
+export const ApprovedUnCheck = () => {
+    return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 5V19H5V5H19ZM19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3Z" fill="white" />
         </svg>
     )
 }

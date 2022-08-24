@@ -6,7 +6,6 @@ export const setUserName = async (
     wallet: string,
     username: string
 ) => {
-    console.log(username, "username")
     await axios.post(`${API_URL}setUserName`, {
         "wallet": wallet,
         "name": username
@@ -17,7 +16,6 @@ export const setUserName = async (
         .catch((error) => {
             console.log(error)
         })
-    // return username
 }
 
 export const getUsername = async (
@@ -103,10 +101,17 @@ export const getPlanBuyResult = async (
 }
 
 export const getAttributeItemData = async (attType: string, attr: string) => {
-    let data: AttributeFetched | undefined = undefined;
+    let data = {
+        attribute: "",
+        attribute_type: "",
+        points: "0",
+        rarity: "",
+        url: "",
+        _id: "",
+    };
     await axios.post(`${API_URL}getItemInfo`, {
         "attType": attType,
-        "attr": attr
+        "attr": attr.replaceAll("_", " ")
     }
     )
         .then((res) => {
@@ -122,7 +127,6 @@ export const getAttributeItemData = async (attType: string, attr: string) => {
 
 export const getAvailableInventory = async (wallet: string) => {
     let data: AbleFetchedItem[] = [];
-    console.log(wallet)
     await axios.post(`${API_URL}getInventoryInfo`, {
         "wallet": wallet,
     }
@@ -144,6 +148,7 @@ export const modifyInventory = async (
     post: string,
     newAttr: string,
 ) => {
+    let result = null;
     await axios.post(`${API_URL}modifyInventory`, {
         "wallet": wallet,
         "txId": txId,
@@ -152,10 +157,12 @@ export const modifyInventory = async (
     }
     ).then((res) => {
         console.log(res)
+        return true;
     })
         .catch((error) => {
             console.log(error);
-        })
+        });
+    return result;
 }
 
 export const makeNft = async (
@@ -166,22 +173,27 @@ export const makeNft = async (
     l_arm: string,
     r_arm: string,
     torso: string,
-    legs: string
+    legs: string,
+    backgroundImage: string
 ) => {
+    let result = null;
     await axios.post(`${API_URL}makeNft`, {
         "wallet": wallet,
         "id": id,
-        "head": head,
-        "head_accessories": head_accessories,
-        "l_arm": l_arm,
-        "r_arm": r_arm,
-        "torso": torso,
-        "legs": legs,
+        "head": head.replace(" ", "_"),
+        "head_accessories": head_accessories.replace(" ", "_"),
+        "l_arm": l_arm.replace(" ", "_"),
+        "r_arm": r_arm.replace(" ", "_"),
+        "torso": torso.replace(" ", "_"),
+        "legs": legs.replace(" ", "_"),
+        "background_image": backgroundImage.replace(" ", "_")
     }
     ).then((res) => {
-        console.log(res)
+        result = res.data
     })
         .catch((error) => {
             console.log(error);
         })
+    return result;
 }
+

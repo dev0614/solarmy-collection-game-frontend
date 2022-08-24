@@ -1,36 +1,36 @@
-import { useWallet } from "@solana/wallet-adapter-react";
+
+import { Dialog } from "@mui/material";
+import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
+import EquipedTable from "../../components/Fusion/EquipedTable";
 import { FusionMediaImage, FusionType } from "../../components/Fusion/FusionWidget";
 import Header from "../../components/Header";
 import Menu from "../../components/Menu";
-import { CircleCloseIcon, CircleCloseMdIcon, RoundCornerLeft, RoundCornerRight } from "../../components/svgIcons";
+import { ApprovedCheck, ApprovedUnCheck, CircleCloseIcon, CircleCloseMdIcon, RoundCornerLeft, RoundCornerRight } from "../../components/svgIcons";
+import { successAlert } from "../../components/toastGroup";
 import { AttributeSetting, MainPage } from "../../components/Widget";
-import { getAttributeItemData, getAvailableInventory } from "../../solana/server";
-import { getNftMetaData } from "../../solana/transaction_staking";
-import { AbleFetchedItem, AttributeFetched, AttributeFilterTypes, AttributeItem } from "../../solana/types";
+import { useUserContext } from "../../context/UserProvider";
+import { getAttributeItemData, getAvailableInventory, makeNft, modifyInventory } from "../../solana/server";
+import { fusion, getNftMetaData } from "../../solana/transaction_staking";
+import { AbleFetchedItem, AttributeFetched, AttributeFilterTypes, AttributeItem, SelectedItemType } from "../../solana/types";
 import { titleCamel, titleCase, titleLowerCase } from "../../solana/utils";
-
-interface SelectedItemType {
-    attribute: string,
-    attribute_type: string,
-    points: string,
-    rarity: string,
-    url: string,
-}
 
 export default function FusionEdit(props: {
     startLoading: Function,
-    closeLoading: Function
+    closeLoading: Function,
+    setLoadingLabel: any
 }) {
     const { startLoading, closeLoading } = props;
+    const { getUserData } = useUserContext();
     const router = useRouter();
     const [itemId, setItemId] = useState<number>(1);
     const wallet = useWallet();
+    const anchorWallet = useAnchorWallet();
     const [equipedAttr, setEquipedAttr] = useState<any>();
     const [seeTab, setSeeTab] = useState("changes");
-    const [selectedKind, setSelectedKind] = useState('head');
+    const [selectedKind, setSelectedKind] = useState("head");
     const [selectedName, setSelectedName] = useState<AttributeFetched>();
     const [attributeFilter, setAttributeFilter] = useState<AttributeFilterTypes>({
         common: false,
@@ -50,6 +50,8 @@ export default function FusionEdit(props: {
     }[]>([]);
     const [forceRender, setForceRender] = useState(false);
 
+    const [confirmModal, setConfirmModal] = useState(false);
+
     const [equipedTotal, setEquipedTotal] = useState(0);
     const [changedTotal, setChangedTotal] = useState(0);
 
@@ -61,6 +63,9 @@ export default function FusionEdit(props: {
     const [rightArmImage, setRighttArmImage] = useState("");
     const [legsImage, setLegsImage] = useState("");
     const [backgroundImage, setBackgroundImage] = useState("");
+
+    // Page Status Loading
+    const [fusionTxLoading, setFusionTxLoading] = useState(false);
 
     const getNftData = async (mint: string) => {
         startLoading();
@@ -80,26 +85,26 @@ export default function FusionEdit(props: {
     const setEquipedAttributes = async (attrs: AttributeItem[]) => {
         let promise = [];
         for (let item of attrs) {
-            const attrType = titleCase(item.trait_type);
-            const attr = titleCase(item.value);
-            const data = getAttributeItemData(attrType, attr);
-            if (item)
-                promise.push(data);
+            if (item.trait_type.toLocaleLowerCase() !== "shadow") {
+                const attrType = titleCase(item.trait_type);
+                const attr = titleCase(item.value);
+                const data = getAttributeItemData(attrType, attr);
+                if (item)
+                    promise.push(data);
+            }
         }
         const res = await Promise.all(promise);
+        console.log(res, "===> res")
         setEquipedAttr(res);
         closeLoading();
     };
 
     const getAbleInventory = async () => {
         if (!wallet.publicKey) return;
-        let inventories: any[];
-
         try {
             const data = await getAvailableInventory(wallet.publicKey?.toBase58());
             if (data.length !== 0) {
                 setAbleInventoris(data)
-                console.log(data)
             }
         } catch (error) {
             console.log(error);
@@ -109,13 +114,13 @@ export default function FusionEdit(props: {
     const handleAttribute = (e: any) => {
         const attr = e.target.innerText;
         setSelectedKind(titleCamel(attr as string));
-        let attrName = '';
-        if (attr === 'L Arm') {
-            attrName = 'left arm';
-        } else if (attr === 'R Arm') {
-            attrName = 'right arm';
-        } else if (attr === 'Head' && attr !== "Head Accessories") {
-            attrName = 'head';
+        let attrName = "";
+        if (attr === "L Arm") {
+            attrName = "left arm";
+        } else if (attr === "R Arm") {
+            attrName = "right arm";
+        } else if (attr === "Head" && attr !== "Head Accessories") {
+            attrName = "head";
         } else {
             attrName = titleLowerCase(attr);
         }
@@ -162,11 +167,112 @@ export default function FusionEdit(props: {
         setForceRender(!forceRender);
     };
 
+    const onFusion = async () => {
+        if (!wallet.publicKey || !router.query.fusionId || !router.query.mint) return;
+        try {
+            let id: string = router.query.fusionId as string;
+            let head = equipedAttr.filter((item: any) => item.attribute_type === "head")[0].attribute;
+            let head_accessories = equipedAttr.filter((item: any) => item.attribute_type === "head accessories")[0].attribute;
+            let l_arm = equipedAttr.filter((item: any) => item.attribute_type === "left arm")[0].attribute;
+            let r_arm = equipedAttr.filter((item: any) => item.attribute_type === "right arm")[0].attribute;
+            let torso = equipedAttr.filter((item: any) => item.attribute_type === "torso")[0].attribute;
+            let legs = equipedAttr.filter((item: any) => item.attribute_type === "legs")[0].attribute;
+            let backgroundImage = equipedAttr.filter((item: any) => item.attribute_type === "background")[0].attribute;
+
+            if (changesItems.filter((item: any) => item.attribute_type === "head").length > 0) {
+                head = changesItems.filter((item: any) => item.attribute_type === "head")[0].attribute;
+            }
+            if (changesItems.filter((item: any) => item.attribute_type === "head accessories").length > 0) {
+                head_accessories = changesItems.filter((item: any) => item.attribute_type === "head accessories")[0].attribute;
+            }
+            if (changesItems.filter((item: any) => item.attribute_type === "right arm").length > 0) {
+                r_arm = changesItems.filter((item: any) => item.attribute_type === "right arm")[0].attribute;
+            }
+            if (changesItems.filter((item: any) => item.attribute_type === "left arm").length > 0) {
+                l_arm = changesItems.filter((item: any) => item.attribute_type === "left arm")[0].attribute;
+            }
+            if (changesItems.filter((item: any) => item.attribute_type === "torso").length > 0) {
+                torso = changesItems.filter((item: any) => item.attribute_type === "torso")[0].attribute;
+            }
+            if (changesItems.filter((item: any) => item.attribute_type === "legs").length > 0) {
+                legs = changesItems.filter((item: any) => item.attribute_type === "legs")[0].attribute;
+            }
+            if (changesItems.filter((item: any) => item.attribute_type === "background").length > 0) {
+                backgroundImage = changesItems.filter((item: any) => item.attribute_type === "background")[0].attribute;
+            }
+            let changed: any = [];
+            let post: any = [];
+            for (let item of changesItems) {
+                changed.push({
+                    attribute_type: item.attribute_type,
+                    attribute: item.attribute
+                })
+                let p_type = "";
+                let p_attr = "";
+                p_type = equipedAttr.filter((post: any) => post.attribute_type === item.attribute_type)[0].attribute_type;
+                p_attr = equipedAttr.filter((post: any) => post.attribute_type === item.attribute_type)[0].attribute;
+                post.push({
+                    attribute_type: p_type,
+                    attribute: p_attr
+                })
+
+            }
+            // // Get new nft uri
+            startLoading();
+            // props.setLoadingLabel("Generation new NFT uri...")
+            // const newUri = "https://solarmy-1.s3.amazonaws.com/16612733845591484";
+            const newUri = await makeNft(
+                wallet.publicKey?.toBase58(),
+                id,
+                head,
+                head_accessories,
+                l_arm,
+                r_arm,
+                torso,
+                legs,
+                backgroundImage
+            );
+            // Get fusion transaction id
+            if (newUri) {
+                let mint: string = router.query.mint as string;
+                const fusionTx = await fusion(
+                    anchorWallet,
+                    new PublicKey(mint),
+                    changesItems.length * 90,
+                    newUri,
+                    () => startLoading(),
+                    () => closeLoading(),
+                    () => console.log("Fetched Tx id")
+                );
+                startLoading();
+                if (fusionTx) {
+                    const modified = await modifyInventory(
+                        wallet.publicKey.toBase58(),
+                        fusionTx,
+                        JSON.stringify(post),
+                        JSON.stringify(changed)
+                    )
+                    if (modified) {
+                        setChangesItems([]);
+                        successAlert("Fusion completed successfully!");
+                        getUserData();
+                        router.push("/fusion");
+                    }
+                }
+            }
+            closeLoading();
+
+        } catch (error) {
+            console.log("make nft error: ", error);
+            closeLoading();
+        }
+    }
+
     useEffect(() => {
         if (equipedAttr && selectedKind === "head") {
-            const item = equipedAttr?.find((item: any) => selectedKind === 'head');
+            const item = equipedAttr?.find((item: any) => selectedKind === "head");
             setSelectedName(item);
-            const names = ableInventories?.filter((attr) => attr.attribute_type === 'head');
+            const names = ableInventories?.filter((attr) => attr.attribute_type === "head");
             setSelectAbled(names);
         }
         const eTotal = equipedAttr?.reduce((attr: any, { points }: any) => attr + parseFloat(points), 0);
@@ -254,7 +360,6 @@ export default function FusionEdit(props: {
             getNftData(router.query.mint as string)
             // FIND
         }
-
         // eslint-disable-next-line
     }, [router, wallet.connected]);
 
@@ -264,7 +369,7 @@ export default function FusionEdit(props: {
                 <Header
                     back={{
                         title: `Fusion NFT #${itemId < 10 ? "0" + router.query?.fusionId : router.query?.fusionId}`,
-                        backUrl: "/fusion-demo"
+                        backUrl: "/fusion"
                     }}
                 />
             }
@@ -384,52 +489,9 @@ export default function FusionEdit(props: {
                                                 <h3>{equipedTotal}</h3>
                                             </div>
                                         </div>
-                                        <div className="attr-table">
-                                            <div className="thead">
-                                                <div className="tr">
-                                                    <div className="th">Attribute</div>
-                                                    <div className="th">Name</div>
-                                                    <div className="th">Rarity &#38; Points</div>
-                                                </div>
-                                            </div>
-                                            <div className="tbody">
-                                                <div className="tr">
-                                                    <div className="td">Head</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "head")?.attribute}</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "head")?.points}</div>
-                                                </div>
-                                                <div className="tr">
-                                                    <div className="td">Head Accessories</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "head accessories")?.attribute}</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "head accessories")?.points}</div>
-                                                </div>
-                                                <div className="tr">
-                                                    <div className="td">L Arm</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "left arm")?.attribute}</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "left arm")?.points}</div>
-                                                </div>
-                                                <div className="tr">
-                                                    <div className="td">R Arm</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "right arm")?.attribute}</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "right arm")?.points}</div>
-                                                </div>
-                                                <div className="tr">
-                                                    <div className="td">Torso</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "torso")?.attribute}</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "torso")?.points}</div>
-                                                </div>
-                                                <div className="tr">
-                                                    <div className="td">Legs</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "legs")?.attribute}</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "legs")?.points}</div>
-                                                </div>
-                                                <div className="tr">
-                                                    <div className="td">Background</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "background")?.attribute}</div>
-                                                    <div className="td">{equipedAttr?.find((item: any) => item.attribute_type === "background")?.points}</div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <EquipedTable
+                                            equipedAttr={equipedAttr}
+                                        />
                                     </>
                                 }
                             </div>
@@ -464,22 +526,89 @@ export default function FusionEdit(props: {
                         </ul>
                     </div>
                     <div className="fusion-fuse">
-                        <div className="total-ammo" style={{ width: "calc(100% - 280px)" }}>
+                        <div
+                            className="total-ammo"
+                            style={{
+                                width:
+                                    changesItems.length !== 0 ?
+                                        "calc(100% - 280px)" :
+                                        "100%"
+                            }}
+                        >
                             <h5>Total AMMO</h5>
-                            <p>90</p>
+                            <p>{changesItems.length * 90}</p>
                         </div>
-                        <div className="fuse-group">
-                            <button className="cancel">
-                                cancel
-                            </button>
-                            <button className="fuse">
-                                fuse
-                            </button>
-                        </div>
+                        {changesItems.length !== 0 &&
+                            <div className="fuse-group">
+                                <button className="cancel">
+                                    cancel
+                                </button>
+                                <button className="fuse" onClick={() => onFusion()}>
+                                    fuse
+                                </button>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
             <Menu />
+            <FusionConfirmAlert opened={false} onClose={() => setConfirmModal(false)} />
         </MainPage >
+    )
+}
+
+export const FusionConfirmAlert = (props: {
+    opened: boolean,
+    onClose: Function
+}) => {
+    const { opened, onClose } = props;
+    const [approved, setApproved] = useState(false);
+    const handleChange = (e: any) => {
+        setApproved(!approved);
+    }
+    return (
+        <Dialog
+            open={opened}
+            onClose={() => onClose()}
+        >
+            <div
+                className="fusion-confirm"
+            >
+                <div className="head">
+                    <h4>Fuse</h4>
+                </div>
+                <div className="content">
+                    <p>By fusing new attributes onto your soldier, the current attributes will be discarded and replaced with the new attrbiute.</p>
+                    <div className="confirm-checkbox">
+                        <input
+                            checked={approved}
+                            type="checkbox"
+                            id="fusion-approved"
+                            onChange={handleChange}
+                        />
+                        <label htmlFor="fusion-approved">
+                            {approved ?
+                                <ApprovedCheck />
+                                :
+                                <ApprovedUnCheck />
+                            }
+                            <span>I understand this cannot be undone.</span>
+                        </label>
+                    </div>
+                </div>
+                <div className="confirm-control">
+                    <button
+                        className="btn-item-cancel"
+                    >
+                        cancel
+                    </button>
+                    <button
+                        className="btn-item-fuse"
+                    >
+                        fuse now
+                    </button>
+                </div>
+            </div>
+        </Dialog>
     )
 }
