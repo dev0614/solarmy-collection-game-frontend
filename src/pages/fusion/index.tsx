@@ -77,7 +77,7 @@ export default function FusionPage() {
                         })
             }
             if (list.length !== 0) {
-                let promise = [];
+                let promise: any = [];
                 console.log(list, "===> list")
                 for (let item of list) {
                     const metadata = fetch(item.uri)
