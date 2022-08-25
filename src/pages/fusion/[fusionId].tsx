@@ -112,22 +112,25 @@ export default function FusionEdit(props: {
     };
 
     const handleAttribute = (e: any) => {
-        const attr = e.target.innerText;
-        setSelectedKind(titleCamel(attr as string));
+        const attr_type = e.target.innerText;
+        setSelectedKind(titleCamel(attr_type as string));
         let attrName = "";
-        if (attr === "L Arm") {
+        if (attr_type === "L Arm") {
             attrName = "left arm";
-        } else if (attr === "R Arm") {
+        } else if (attr_type === "R Arm") {
             attrName = "right arm";
-        } else if (attr === "Head" && attr !== "Head Accessories") {
+        } else if (attr_type === "Head" && attr_type !== "Head Accessories") {
             attrName = "head";
         } else {
-            attrName = titleLowerCase(attr);
+            attrName = titleLowerCase(attr_type);
         }
-        const item = equipedAttr?.find((item: any) => item.attribute_type === attrName);
+        const item = equipedAttr?.filter((item: any) => item.attribute_type === attrName)[0];
         const names = ableInventories?.filter((attr) => attr.attribute_type === attrName);
-        setSelectAbled(names)
+        setSelectAbled(names);
         setSelectedName(item);
+
+        console.log(item, "===> item")
+        console.log(equipedAttr, "===> equipedAttr")
         // eslint-disable-next-line
     };
 
@@ -269,12 +272,12 @@ export default function FusionEdit(props: {
     }
 
     useEffect(() => {
-        if (equipedAttr && selectedKind === "head") {
-            const item = equipedAttr?.find((item: any) => selectedKind === "head");
-            setSelectedName(item);
-            const names = ableInventories?.filter((attr) => attr.attribute_type === "head");
-            setSelectAbled(names);
-        }
+        // if (equipedAttr && selectedKind === "head") {
+        //     const item = equipedAttr?.find((item: any) => selectedKind === "head");
+        //     setSelectedName(item);
+        //     const names = ableInventories?.filter((attr) => attr.attribute_type === "head");
+        //     setSelectAbled(names);
+        // }
         const eTotal = equipedAttr?.reduce((attr: any, { points }: any) => attr + parseFloat(points), 0);
         setEquipedTotal(eTotal);
         if (equipedAttr) {
@@ -395,12 +398,14 @@ export default function FusionEdit(props: {
                             </div>
                             <div className="option-list">
                                 <ul>
-                                    <li className="option-item current">
-                                        <h5 className="title">{selectedName?.attribute}</h5>
-                                        <p className="points"><span className="common">{selectedName?.rarity}</span>{selectedName?.points} Equiped</p>
-                                    </li>
-
+                                    {selectedName &&
+                                        <li className="option-item current">
+                                            <h5 className="title">{selectedName?.attribute}</h5>
+                                            <p className="points"><span className="common">{selectedName?.rarity}</span>{selectedName?.points} Equiped</p>
+                                        </li>
+                                    }
                                     {selectAbled && selectAbled.length !== 0 && selectAbled.map((item, key) => (
+                                        selectedName?.attribute !== item.attribute &&
                                         <li
                                             className={`option-item ${changesItems.filter((attr) => attr.attribute === item.attribute && attr.attribute_type === item.attribute_type).length === 1 ? "selected" : ""}`}
                                             key={key}
@@ -540,7 +545,7 @@ export default function FusionEdit(props: {
                         </div>
                         {changesItems.length !== 0 &&
                             <div className="fuse-group">
-                                <button className="cancel">
+                                <button className="cancel" onClick={() => setChangesItems([])}>
                                     cancel
                                 </button>
                                 <button className="fuse" onClick={() => onFusion()}>
