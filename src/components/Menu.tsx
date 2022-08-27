@@ -25,7 +25,7 @@ export default function Menu() {
                         {menus.map((item, key) => (
                             <li key={key}>
                                 <Link href={item.link}>
-                                    <a style={{ pointerEvents: item.title === "Deploy" || item.title === "Store" || item.title === "Fusion" ? "all" : "none" }}>
+                                    <a style={{ pointerEvents: item.title === "Deploy" || item.title === "Store" || item.title === "Fusion" || item.title === "Battalion" ? "all" : "none" }}>
                                         <div className={`menu-item ${router.pathname.split("/")[1] === item.title.toLowerCase() ? "active" : ""}`}>
                                             <span>
                                                 {item.icon}
