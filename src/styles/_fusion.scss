@@ -471,94 +471,99 @@
             }
         }
     }
-    .attr-table {
-        .tr {
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 16px;
-            margin-bottom: 4px;
+}
+.attr-table {
+    .tr {
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        margin-bottom: 4px;
+    }
+    .thead {
+        .th {
+            font-family: "Oxanium";
+            font-style: normal;
+            font-weight: 600;
+            font-size: 12px;
+            line-height: 165%;
+            letter-spacing: 0.02em;
+            color: #ffffff;
+            padding: 8px 16px;
+            width: 33.3%;
+            &:last-child {
+                text-align: right;
+            }
         }
-        .thead {
-            .th {
+    }
+    .tbody {
+        .tr {
+            .td {
+                padding: 8px 16px;
                 font-family: "Oxanium";
                 font-style: normal;
-                font-weight: 600;
-                font-size: 12px;
-                line-height: 165%;
-                letter-spacing: 0.02em;
-                color: #ffffff;
-                padding: 8px 16px;
+                font-weight: 500;
+                font-size: 15px;
+                line-height: 160%;
+                letter-spacing: 1px;
+                color: #fff;
                 width: 33.3%;
+                text-transform: capitalize;
+                &:first-child {
+                    color: rgba(255, 255, 255, 0.6);
+                }
                 &:last-child {
                     text-align: right;
                 }
             }
         }
-        .tbody {
-            .tr {
-                .td {
-                    padding: 8px 16px;
-                    font-family: "Oxanium";
-                    font-style: normal;
-                    font-weight: 500;
-                    font-size: 15px;
-                    line-height: 160%;
-                    letter-spacing: 1px;
-                    color: #fff;
-                    width: 33.3%;
-                    text-transform: capitalize;
-                    &:first-child {
-                        color: rgba(255, 255, 255, 0.6);
-                    }
-                    &:last-child {
-                        text-align: right;
-                    }
-                }
-            }
+    }
+    &.changes {
+        .td {
+            color: #fff !important;
+            white-space: nowrap;
         }
-        &.changes {
-            .td {
-                color: #fff !important;
-                white-space: nowrap;
-            }
-            .tr {
-                border-radius: 0;
-                background-color: transparent;
-                .tr-content {
-                    background-color: rgba(255, 255, 255, 0.06);
-                    border-radius: 16px;
-                    display: flex;
-                    align-items: center;
-                    width: calc(100%);
-                    border: 1px solid rgba(255, 255, 255, 0.06);
-                    &.inc {
-                        border-color: #4af497;
-                    }
-                    &.dec {
-                        border-color: #ff453a;
-                    }
+        .tr {
+            border-radius: 0;
+            background-color: transparent;
+            .tr-content {
+                background-color: rgba(255, 255, 255, 0.06);
+                border-radius: 16px;
+                display: flex;
+                align-items: center;
+                width: calc(100%);
+                border: 1px solid rgba(255, 255, 255, 0.06);
+                &.inc {
+                    border-color: #4af497;
                 }
-                &.changes {
-                    background-color: rgba(255, 255, 255, 0.06);
-                    border-radius: 16px;
+                &.dec {
+                    border-color: #ff453a;
+                }
+            }
+            &.changes {
+                background-color: rgba(255, 255, 255, 0.06);
+                border-radius: 16px;
+            }
+            button.close {
+                border: none;
+                background-color: transparent;
+                margin-left: 4px;
+                display: none;
+            }
+            &:hover {
+                .tr-content {
+                    width: calc(100% - 24px);
                 }
                 button.close {
-                    border: none;
-                    background-color: transparent;
-                    margin-left: 4px;
-                    display: none;
-                }
-                &:hover {
-                    .tr-content {
-                        width: calc(100% - 24px);
-                    }
-                    button.close {
-                        display: block;
-                    }
+                    display: block;
                 }
             }
         }
+    }
+}
+.attribute-list .attr-table.changes .tr .tr-content {
+    &:hover {
+        width: 100%;
     }
 }
 .inc-title {
