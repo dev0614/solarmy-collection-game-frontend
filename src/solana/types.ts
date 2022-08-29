@@ -130,12 +130,16 @@ export interface AbleFetchedItem {
     _id: string,
 }
 
-export const TableFirstData = {
+export const TableFirstData2D = {
+    hat: {
+        name: "",
+        rarity: ""
+    },
     head: {
         name: "",
         rarity: ""
     },
-    head_accessories: {
+    torso_accessories: {
         name: "",
         rarity: ""
     },
@@ -156,6 +160,14 @@ export const TableFirstData = {
         rarity: ""
     },
     background: {
+        name: "",
+        rarity: ""
+    },
+    companion: {
+        name: "",
+        rarity: ""
+    },
+    shoes: {
         name: "",
         rarity: ""
     },

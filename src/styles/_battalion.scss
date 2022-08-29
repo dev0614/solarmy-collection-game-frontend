@@ -207,10 +207,7 @@
             line-height: 165%;
             letter-spacing: 0.02em;
             color: #ffffff;
-            text-align: center;
-            &:first-child {
-                text-align: left;
-            }
+            text-align: left;
             &:last-child {
                 text-align: right;
             }
@@ -223,6 +220,54 @@
                     color: rgba(255, 255, 255, 0.6);
                 }
             }
+        }
+    }
+}
+
+.howrare-button {
+    font-family: "Oxanium";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 160%;
+    text-align: center;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #fff;
+    background-color: #0059f7;
+    border-radius: 16px;
+    padding: 12px 24px;
+    width: calc(100% - 48px);
+}
+
+.no-underline {
+    text-decoration: none;
+}
+.copy-address {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.34);
+    padding: 12px 16px;
+    border-radius: 1000px;
+    margin-top: 4px;
+    p {
+        font-family: "Oxanium";
+        font-style: normal;
+        font-weight: 500;
+        font-size: 15px;
+        line-height: 160%;
+        letter-spacing: 1px;
+        color: #ffffff;
+        width: calc(100% - 40px);
+        overflow: hidden;
+    }
+    .copy-icon {
+        display: flex;
+        align-items: center;
+        span.copied {
+            color: #fff;
         }
     }
 }

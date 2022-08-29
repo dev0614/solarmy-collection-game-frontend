@@ -7,16 +7,16 @@ export const BattlaionFilter = (props: {
     onSelect: Function,
     currentTab: string,
     soldiers: SoldierItem[],
-    setTab: Function
+    setTab: Function,
 }) => {
     const { attributes, selectedId, onSelect, setTab, soldiers } = props;
     return (
         <div className="battalion-filter">
             <div className="filter-header">
                 <p>solider filters</p>
-                <SoliderFilter
+                {/* <SoliderFilter
                     attributes={attributes}
-                />
+                /> */}
             </div>
             <div className="solider-tabs">
                 <div className={`tab ${props.currentTab === "all" ? "active" : ""}`} onClick={() => setTab("all")}>
@@ -40,6 +40,7 @@ export const BattlaionFilter = (props: {
                         selected={item.selected}
                         selectedId={selectedId}
                         onSelect={onSelect}
+                        collection={item.collection}
                     />
                 ))}
             </div>
