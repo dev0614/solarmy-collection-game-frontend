@@ -41,13 +41,16 @@ export const CloseIcon = (props: { color?: string }) => {
 
 export const PastIcon = (props: { color?: string }) => {
     return (
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12.75 10.05V12.3C12.75 15.3 11.55 16.5 8.55 16.5H5.7C2.7 16.5 1.5 15.3 1.5 12.3V9.45C1.5 6.45 2.7 5.25 5.7 5.25H7.95" stroke="#BFBCC8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M12.75 10.05H10.35C8.55 10.05 7.95 9.45 7.95 7.65V5.25L12.75 10.05Z" stroke="#BFBCC8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M8.7 1.5H11.7" stroke="#BFBCC8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M5.25 3.75C5.25 2.505 6.255 1.5 7.5 1.5H9.465" stroke="#BFBCC8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M16.5 6V10.6425C16.5 11.805 15.555 12.75 14.3925 12.75" stroke="#BFBCC8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M16.5 6H14.25C12.5625 6 12 5.4375 12 3.75V1.5L16.5 6Z" stroke="#BFBCC8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clipPath="url(#clip0_51487_26449)">
+                <path opacity="0.3" d="M18 4L9 4L9 16L18 16L18 4Z" fill="white" />
+                <path d="M18 2L9 2C7.9 2 7 2.9 7 4L7 16C7 17.1 7.9 18 9 18L18 18C19.1 18 20 17.1 20 16L20 4C20 2.9 19.1 2 18 2ZM18 16L9 16L9 4L18 4L18 16ZM3 15L3 13L5 13L5 15L3 15ZM3 9.5L5 9.5L5 11.5L3 11.5L3 9.5ZM10 20L12 20L12 22L10 22L10 20ZM3 18.5L3 16.5L5 16.5L5 18.5L3 18.5ZM5 22C3.9 22 3 21.1 3 20L5 20L5 22ZM8.5 22L6.5 22L6.5 20L8.5 20L8.5 22ZM13.5 22L13.5 20L15.5 20C15.5 21.1 14.6 22 13.5 22ZM5 6L5 8L3 8C3 6.9 3.9 6 5 6Z" fill="white" />
+            </g>
+            <defs>
+                <clipPath id="clip0_51487_26449">
+                    <rect width="24" height="24" fill="white" />
+                </clipPath>
+            </defs>
         </svg>
     )
 }

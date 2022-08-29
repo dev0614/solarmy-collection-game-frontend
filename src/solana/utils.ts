@@ -31,6 +31,13 @@ export const getOwnerOfNFT = async (nftMintPk: PublicKey, connection: Connection
     return new PublicKey("");
 }
 
+// get sum value from Object array
+export const getSum = (items: any, prop: any) => {
+    return items.reduce(function (a: any, b: any) {
+        return parseFloat(a) + parseFloat(b[prop]);
+    }, 0);
+};
+
 export const getTokenAccount = async (mintPk: PublicKey, userPk: PublicKey, connection: Connection): Promise<PublicKey> => {
     let tokenAccount = await connection.getProgramAccounts(
         TOKEN_PROGRAM_ID,

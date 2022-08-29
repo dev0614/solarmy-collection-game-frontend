@@ -1,9 +1,13 @@
 export default function Soldier2DAttributeTable(props: {
+    hat: {
+        name: string,
+        rarity: string
+    },
     head: {
         name: string,
         rarity: string
     },
-    head_accessories: {
+    torso_accessories: {
         name: string,
         rarity: string
     },
@@ -26,6 +30,14 @@ export default function Soldier2DAttributeTable(props: {
     background: {
         name: string,
         rarity: string
+    },
+    companion: {
+        name: string,
+        rarity: string
+    },
+    shoes: {
+        name: string,
+        rarity: string
     }
 }) {
     return (
@@ -39,39 +51,54 @@ export default function Soldier2DAttributeTable(props: {
             </div>
             <div className="tbody">
                 <div className="tr">
+                    <div className="td">Hat</div>
+                    <div className="td">{props.hat?.name}</div>
+                    <div className="td">{props.hat?.rarity}%</div>
+                </div>
+                <div className="tr">
                     <div className="td">Head</div>
                     <div className="td">{props.head?.name}</div>
-                    <div className="td">{props.head?.rarity}</div>
-                </div>
-                <div className="tr">
-                    <div className="td">Head Accessories</div>
-                    <div className="td">{props.head_accessories?.name}</div>
-                    <div className="td">{props.head_accessories?.rarity}</div>
-                </div>
-                <div className="tr">
-                    <div className="td">L Arm</div>
-                    <div className="td">{props.l_arm?.name}</div>
-                    <div className="td">{props.l_arm?.rarity}</div>
-                </div>
-                <div className="tr">
-                    <div className="td">R Arm</div>
-                    <div className="td">{props.r_arm?.name}</div>
-                    <div className="td">{props.r_arm?.rarity}</div>
+                    <div className="td">{props.head?.rarity}%</div>
                 </div>
                 <div className="tr">
                     <div className="td">Torso</div>
                     <div className="td">{props.torso?.name}</div>
-                    <div className="td">{props.torso?.rarity}</div>
+                    <div className="td">{props.torso?.rarity}%</div>
+                </div>
+                <div className="tr">
+                    <div className="td">Torso Accessories</div>
+                    <div className="td">{props.torso_accessories?.name}</div>
+                    <div className="td">{props.torso_accessories?.rarity}%</div>
+                </div>
+                <div className="tr">
+                    <div className="td">L Arm</div>
+                    <div className="td">{props.l_arm?.name}</div>
+                    <div className="td">{props.l_arm?.rarity}%</div>
+                </div>
+                <div className="tr">
+                    <div className="td">R Arm</div>
+                    <div className="td">{props.r_arm?.name}</div>
+                    <div className="td">{props.r_arm?.rarity}%</div>
                 </div>
                 <div className="tr">
                     <div className="td">Legs</div>
                     <div className="td">{props.legs?.name}</div>
-                    <div className="td">{props.legs?.rarity}</div>
+                    <div className="td">{props.legs?.rarity}%</div>
+                </div>
+                <div className="tr">
+                    <div className="td">Shoes</div>
+                    <div className="td">{props.shoes?.name}</div>
+                    <div className="td">{props.shoes?.rarity}%</div>
                 </div>
                 <div className="tr">
                     <div className="td">Background</div>
                     <div className="td">{props.background?.name}</div>
-                    <div className="td">{props.background?.rarity}</div>
+                    <div className="td">{props.background?.rarity}%</div>
+                </div>
+                <div className="tr">
+                    <div className="td">Companion</div>
+                    <div className="td">{props.companion?.name}</div>
+                    <div className="td">{props.companion?.rarity}%</div>
                 </div>
             </div>
         </div>

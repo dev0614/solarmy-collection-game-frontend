@@ -22,7 +22,7 @@
     "@solana/wallet-adapter-wallets": "^0.15.4",
     "@solana/web3.js": "^1.35.0",
     "axios": "^0.27.2",
-    "copy-to-clipboard": "^3.3.1",
+    "copy-to-clipboard": "^3.3.2",
     "firebase": "^9.8.2",
     "form-data": "^4.0.0",
     "moment": "^2.29.3",
