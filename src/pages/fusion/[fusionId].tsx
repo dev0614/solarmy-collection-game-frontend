@@ -1,9 +1,9 @@
 
+import React, { useEffect, useState } from "react";
+import { PublicKey } from "@solana/web3.js";
 import { Dialog } from "@mui/material";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useState } from "react";
 import EquipedTable from "../../components/Fusion/EquipedTable";
 import { FusionMediaImage, FusionType } from "../../components/Fusion/FusionWidget";
 import Header from "../../components/Header";

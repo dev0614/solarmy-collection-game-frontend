@@ -1,10 +1,13 @@
 import { PublicKey } from "@solana/web3.js";
 
 //mainnet-beta | devnet
-export const NETWORK = "devnet";
+export const NETWORK = "mainnet-beta";
 export const LIVE_URL = "https://solarmy.herokuapp.com/";
 export const CREATOR_2D_ADDRESS = "C3t2xtqA2NFTDqs1SJgcHxyaNqCE4JYnT9EqRySVXYfK";
 export const CREATOR_3D_ADDRESS = "Am9xhPPVCfDZFDabcGgmQ8GTMdsbqEt1qVXbyhTxybAp";
+
+export const MAIN_2D_CEATOR = "BGSpWrrB6FtnSPZ8PhS7dXiUVLeQyCqxRz3t8cGK2NxH";
+export const MAIN_3D_CEATOR = "9VYHEsB5k9CA1gbUbxJ7CsnxhV9GgegjqiCCSy1APNF1";
 
 export const API_URL = "https://solarmy-api.herokuapp.com/";
 // export const API_URL = "http://localhost:3002/";

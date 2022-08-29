@@ -129,3 +129,44 @@ export interface AbleFetchedItem {
     __v: number
     _id: string,
 }
+
+export const TableFirstData = {
+    head: {
+        name: "",
+        rarity: ""
+    },
+    head_accessories: {
+        name: "",
+        rarity: ""
+    },
+    l_arm: {
+        name: "",
+        rarity: ""
+    },
+    r_arm: {
+        name: "",
+        rarity: ""
+    },
+    legs: {
+        name: "",
+        rarity: ""
+    },
+    torso: {
+        name: "",
+        rarity: ""
+    },
+    background: {
+        name: "",
+        rarity: ""
+    },
+}
+
+export interface SoldierItem {
+    collection: string,
+    mint: string,
+    image: string,
+    uri: string,
+    name: string,
+    id: string,
+    selected: boolean
+}
