@@ -18,7 +18,6 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { AMMO_TOKEN_DECIMAL, AMMO_TOKEN_MINT, GLOBAL_AUTHORITY_SEED, STAKING_PROGRAM_ID, USER_POOL_SIZE, VAULT_SEED } from '../config';
 import { accessUserVault, getPlanBuyResult } from './server';
 import { fakeWallet } from "./fakeWallet";
-import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 
 export const initUserPool = async (
     wallet: WalletContextState

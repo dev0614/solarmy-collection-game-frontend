@@ -18,13 +18,14 @@ export const SoliderSideItem = (props: {
     mint: string,
     selectedId: string,
     image: string,
+    uri: string,
     id: string,
     onSelect: Function,
     collection: string
 }) => {
     return (
         <div className={`solider-side-item ${props.selected ? "selected" : ""}`}
-            onClick={() => props.onSelect(props.mint, props.id, props.collection, props.image)}>
+            onClick={() => props.onSelect(props.mint, props.id, props.collection, props.image, props.uri)}>
             <div className="soldier-media">
                 {props.selected &&
                     <SoldierItemSelectIcon />

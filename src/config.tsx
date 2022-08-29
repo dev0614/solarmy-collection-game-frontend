@@ -12,7 +12,7 @@ export const MAIN_3D_CEATOR = "9VYHEsB5k9CA1gbUbxJ7CsnxhV9GgegjqiCCSy1APNF1";
 //Howrare API
 export const COLLECTION_RARITY_API = "https://api.howrare.is/v0.1/collections/solarmy2d"
 
-export const API_URL = "https://solarmy-api.herokuapp.com/";
+export const API_URL = "https://satestapi.herokuapp.com/";
 // export const API_URL = "http://localhost:3002/";
 export const VAULT_SEED = "vault-seed";
 
