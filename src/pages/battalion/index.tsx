@@ -1,17 +1,23 @@
 import { getParsedNftAccountsByOwner } from "@nfteyez/sol-rayz";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey } from "@solana/web3.js";
 import { NextSeo } from "next-seo";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BattlaionFilter } from "../../components/Battalion/BattalionFilter";
 import CopyAddress from "../../components/Battalion/CopyAddress";
 import Soldier2DAttributeTable from "../../components/Battalion/Soldier2DAttributeTable";
+import Soldier3DAttributeTable from "../../components/Battalion/Soldier3DAttributeTable";
+import BattalionDetailLoading from "../../components/BattalionDetailLoading";
 import Header from "../../components/Header";
 import Menu from "../../components/Menu";
+import PageLoading from "../../components/PageLoading";
+import { CommonIcon, FirstClassIcon, RareIcon, TranscendentalIcon, UniversalIcon } from "../../components/svgIcons";
 import { MainPage } from "../../components/Widget";
-import { COLLECTION_RARITY_API, LIVE_URL, MAIN_2D_CEATOR, MAIN_3D_CEATOR } from "../../config";
-import { AttributeFilterTypes, SoldierItem, TableFirstData2D } from "../../solana/types";
-import { getSum, solConnection } from "../../solana/utils";
+import { LIVE_URL, MAIN_2D_CEATOR, MAIN_3D_CEATOR } from "../../config";
+import { getAttributeItemData } from "../../solana/server";
+import { AttributeFilterTypes, Default3dData, SoldierItem, TableFirstData2D } from "../../solana/types";
+import { getMetadata, getSum, solConnection } from "../../solana/utils";
 import { Soldier2DRarity } from "../../soldier2d_rarity";
 
 export default function BattalionPage() {
@@ -27,27 +33,30 @@ export default function BattalionPage() {
     const [selectedId, setSelectedId] = useState("1");
     const [collection, setCollection] = useState("2d");
     const [score, setScore] = useState(0);
+    const [totalPoints, setTotalPoints] = useState(0);
     const [rank, setRank] = useState(99999);
     const [filterTab, setFilterTab] = useState("all");
     const [tableData2D, setTableData2D] = useState(TableFirstData2D);
+    const [tableData3D, setTableData3D] = useState(Default3dData);
     const [soldiers, setSoldiers] = useState<SoldierItem[]>();
     const [selectedCollection, setSelectedCollection] = useState("2d");
     const [detailLoading, setDetailLoading] = useState(false);
-
-    const handleAttr = (mint: string, id: string, collection: string, image: string) => {
+    const [rarity3d, setRarity3d] = useState<any>();
+    const handleAttr = (mint: string, id: string, collection: string, image: string, uri: string) => {
         setCollection(collection);
         setSelectedId(id);
         setSelectedImage(image);
-        getNftDetail(collection, id, mint);
         setSelectedCollection(collection);
+        // get nft fill data
+        getNftDetail(collection, id, mint, uri);
     };
 
-    const getNftDetail = async (collection: string, id: string, mint: string) => {
+    const getNftDetail = async (collection: string, id: string, mint: string, uri: string) => {
         setDetailLoading(true);
+        // For 2D Collection
         if (collection.toLowerCase() === "2d") {
             const alldata = Soldier2DRarity.result.data.items;
             const data: any = alldata.find((item) => item.id === parseInt(id));
-            console.log(data);
             if (data) {
                 const sum = getSum(data?.attributes, "rarity");
                 console.log(sum);
@@ -99,7 +108,108 @@ export default function BattalionPage() {
             }
 
         }
+        // For 3D Collection
+        if (collection.toLowerCase() === "3d") {
+            const data = await fetch(uri)
+                .then(resp =>
+                    resp.json()
+                ).then((json) => {
+                    return json;
+                })
+                .catch((error) => {
+                    console.log(error);
+                    return ""
+                })
+            let table3d = Default3dData;
+            let totalPointsValue = 0;
+            for (let item of data?.attributes) {
+                let data;
+                switch (item.trait_type) {
+                    case "Right Arm":
+                        data = await getAttributeItemData("right arm", item.value);
+                        table3d.r_arm.value = item.value;
+                        table3d.r_arm.rarity = data.rarity;
+                        table3d.r_arm.points = data.points;
+                        totalPointsValue = + parseFloat(data.points);
+                        break;
+                    case "Head":
+                        data = await getAttributeItemData("head", item.value);
+                        table3d.head.value = item.value;
+                        table3d.head.rarity = data.rarity;
+                        table3d.head.points = data.points;
+                        totalPointsValue = + parseFloat(data.points);
+                        break;
+                    case "Head Accessories":
+                        data = await getAttributeItemData("head accessories", item.value);
+                        table3d.head_accessories.value = item.value;
+                        table3d.head_accessories.rarity = data.rarity;
+                        table3d.head_accessories.points = data.points;
+                        totalPointsValue = + parseFloat(data.points);
+                        break;
+                    case "Torso":
+                        data = await getAttributeItemData("torso", item.value);
+                        table3d.torso.value = item.value;
+                        table3d.torso.rarity = data.rarity;
+                        table3d.torso.points = data.points;
+                        totalPointsValue = + parseFloat(data.points);
+                        break;
+                    case "Left Arm":
+                        data = await getAttributeItemData("left arm", item.value);
+                        table3d.l_arm.value = item.value;
+                        table3d.l_arm.rarity = data.rarity;
+                        table3d.l_arm.points = data.points;
+                        totalPointsValue = + parseFloat(data.points);
+                        break;
+                    case "Legs":
+                        data = await getAttributeItemData("legs", item.value);
+                        table3d.legs.value = item.value;
+                        table3d.legs.rarity = data.rarity;
+                        table3d.legs.points = data.points;
+                        totalPointsValue = + parseFloat(data.points);
+                        break;
+                    case "Background":
+                        data = await getAttributeItemData("background", item.value);
+                        table3d.background.value = item.value;
+                        table3d.background.rarity = data.rarity;
+                        table3d.background.points = data.points;
+                        totalPointsValue = + parseFloat(data.points);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            setTotalPoints(totalPointsValue);
+            setTableData3D(table3d);
+            const rarityElement = getSodier3dRarity(table3d)
+            if (rarityElement) {
+                setRarity3d(rarityElement);
+            }
+        }
         setDetailLoading(false);
+    }
+
+    const getSodier3dRarity = (data: any) => {
+        let commonCnt = Object.values(data).filter((item: any) => item.rarity === "common").length;
+        let rareCnt = Object.values(data).filter((item: any) => item.rarity === "rare").length;
+        let universalCnt = Object.values(data).filter((item: any) => item.rarity === "universal").length;
+        let firstClassCnt = Object.values(data).filter((item: any) => item.rarity === "1st class").length;
+        let transcendentalCnt = Object.values(data).filter((item: any) => item.rarity === "transcendental").length;
+        if (commonCnt >= 6) {
+            return <><CommonIcon /> Common</>
+        }
+        if (universalCnt >= 5) {
+            return <><UniversalIcon /> Universal</>
+        }
+        if (rareCnt >= 5) {
+            return <><RareIcon /> Rare</>
+        }
+        if (firstClassCnt >= 5) {
+            return <><FirstClassIcon /> 1st Class</>
+        }
+        if (transcendentalCnt >= 5) {
+            return <><TranscendentalIcon /> Legendary</>
+        }
     }
 
     const getUserNfts = async () => {
@@ -136,16 +246,16 @@ export default function BattalionPage() {
                 setSelectedImage(nfts[0].image);
                 setSelectedId(nfts[0].id);
                 setSelectedCollection(nfts[0].collection);
-                getNftDetail(nfts[0].collection.toLowerCase(), nfts[0].id, nfts[0].mint);
+                getNftDetail(nfts[0].collection.toLowerCase(), nfts[0].id, nfts[0].mint, nfts[0].uri);
             }
 
-        } else {
-
         }
+
     }
 
     useEffect(() => {
         getUserNfts();
+        // eslint-disable-next-line
     }, [wallet.connected, wallet.publicKey])
     return (
         <>
@@ -191,53 +301,64 @@ export default function BattalionPage() {
                         </div>
                         <div className="attribute-list">
                             {detailLoading ?
-                                <>
-                                    Loading...
-                                </>
+                                <div className="component-loading">
+                                    <BattalionDetailLoading />
+                                </div>
                                 :
                                 <>
-                                </>
-                            }
-                            <div className="list-head">
-                                <div className="id-line">
-                                    <h3>#{selectedId}</h3>
-                                    <p>{selectedCollection}</p>
-                                </div>
-                                <div className="score-line">
-                                    <h3>Score</h3>
-                                    <p>{score}</p>
-                                </div>
-                                <div className="rank-line">
-                                    <h3>Rank</h3>
-                                    <p>{rank}</p>
-                                </div>
-                            </div>
-                            {selectedCollection.toLowerCase() === "2d" &&
-                                <Soldier2DAttributeTable
-                                    hat={tableData2D.hat}
-                                    head={tableData2D.head}
-                                    torso={tableData2D.torso}
-                                    torso_accessories={tableData2D.torso_accessories}
-                                    legs={tableData2D.legs}
-                                    l_arm={tableData2D.l_arm}
-                                    r_arm={tableData2D.r_arm}
-                                    companion={tableData2D.companion}
-                                    shoes={tableData2D.shoes}
-                                    background={tableData2D.background}
-                                />
-                            }
-                            {selectedCollection.toLowerCase() === "2d" &&
-                                <>
-                                    <Link href={`https://howrare.is/solarmy${selectedCollection.toLowerCase()}/${selectedId}/`} >
-                                        <a className="no-underline" target="_blank">
-                                            <div className="howrare-button">
-                                                howrare score
-                                            </div>
-                                        </a>
-                                    </Link>
-                                    <CopyAddress
-                                        address={`https://howrare.is/solarmy${selectedCollection.toLowerCase()}/${selectedId}/`}
-                                    />
+                                    <div className="list-head">
+                                        <div className="id-line">
+                                            <h3>#{selectedId}</h3>
+                                            <p>{selectedCollection}</p>
+                                        </div>
+                                        <div className="score-line">
+                                            <h3>{selectedCollection === "2D" ? "Score" : "Points"}</h3>
+                                            <p>{selectedCollection === "2D" ? score : totalPoints}</p>
+                                        </div>
+                                        <div className="rank-line">
+                                            <h3>{selectedCollection === "2D" ? "Rank" : "Rarity"}</h3>
+                                            <p>{selectedCollection === "2D" ? rank : (rarity3d ? rarity3d : "")}</p>
+                                        </div>
+                                    </div>
+                                    {selectedCollection.toLowerCase() === "2d" &&
+                                        <Soldier2DAttributeTable
+                                            hat={tableData2D.hat}
+                                            head={tableData2D.head}
+                                            torso={tableData2D.torso}
+                                            torso_accessories={tableData2D.torso_accessories}
+                                            legs={tableData2D.legs}
+                                            l_arm={tableData2D.l_arm}
+                                            r_arm={tableData2D.r_arm}
+                                            companion={tableData2D.companion}
+                                            shoes={tableData2D.shoes}
+                                            background={tableData2D.background}
+                                        />
+                                    }
+                                    {selectedCollection.toLowerCase() === "3d" &&
+                                        <Soldier3DAttributeTable
+                                            head={tableData3D.head}
+                                            torso={tableData3D.torso}
+                                            head_accessories={tableData3D.head_accessories}
+                                            legs={tableData3D.legs}
+                                            l_arm={tableData3D.l_arm}
+                                            r_arm={tableData3D.r_arm}
+                                            background={tableData3D.background}
+                                        />
+                                    }
+                                    {selectedCollection.toLowerCase() === "2d" &&
+                                        <>
+                                            <Link href={`https://howrare.is/solarmy${selectedCollection.toLowerCase()}/${selectedId}/`} >
+                                                <a className="no-underline" target="_blank">
+                                                    <div className="howrare-button">
+                                                        howrare score
+                                                    </div>
+                                                </a>
+                                            </Link>
+                                            <CopyAddress
+                                                address={`https://howrare.is/solarmy${selectedCollection.toLowerCase()}/${selectedId}/`}
+                                            />
+                                        </>
+                                    }
                                 </>
                             }
                         </div>

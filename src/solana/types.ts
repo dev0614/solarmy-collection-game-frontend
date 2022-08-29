@@ -173,6 +173,51 @@ export const TableFirstData2D = {
     },
 }
 
+export let Default3dData = {
+    head: {
+        type: "Head",
+        value: "",
+        rarity: "",
+        points: ""
+    },
+    head_accessories: {
+        type: "Head Accessories",
+        value: "",
+        rarity: "",
+        points: ""
+    },
+    torso: {
+        type: "Torso",
+        value: "",
+        rarity: "",
+        points: ""
+    },
+    l_arm: {
+        type: "Left Arm",
+        value: "",
+        rarity: "",
+        points: ""
+    },
+    r_arm: {
+        type: "Right Arm",
+        value: "",
+        rarity: "",
+        points: ""
+    },
+    legs: {
+        type: "Legs",
+        value: "",
+        rarity: "",
+        points: ""
+    },
+    background: {
+        type: "Background",
+        value: "",
+        rarity: "",
+        points: ""
+    },
+}
+
 export interface SoldierItem {
     collection: string,
     mint: string,

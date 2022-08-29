@@ -36,6 +36,7 @@ export const BattlaionFilter = (props: {
                         key={key}
                         mint={item.mint}
                         id={item.id}
+                        uri={item.uri}
                         image={item.image}
                         selected={item.selected}
                         selectedId={selectedId}

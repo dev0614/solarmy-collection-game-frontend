@@ -183,7 +183,15 @@
                 font-size: 17px;
                 line-height: 143%;
                 letter-spacing: 1px;
+                display: flex;
+                align-items: center;
                 color: #ffffff;
+                svg {
+                    width: 16px;
+                    height: 16px;
+                    margin-right: 4px;
+                    padding-bottom: 4px;
+                }
             }
         }
     }
@@ -208,6 +216,7 @@
             letter-spacing: 0.02em;
             color: #ffffff;
             text-align: left;
+            text-transform: capitalize;
             &:last-child {
                 text-align: right;
             }
