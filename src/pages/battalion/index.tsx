@@ -280,90 +280,93 @@ export default function BattalionPage() {
             />
             <MainPage>
                 <Header />
-                <div className="battalion-page">
-                    {soldiers &&
-                        <BattlaionFilter
-                            attributes={filterAttr}
-                            onSelect={handleAttr}
-                            selectedId={selectedId}
-                            currentTab={filterTab}
-                            soldiers={soldiers}
-                            setTab={setFilterTab}
-                        />
-                    }
-                    <div className="soldier-detail">
-                        <div className="soldier-media">
-                            {/* eslint-disable-next-line */}
-                            <img
-                                src={selectedImage}
-                                alt=""
+                {wallet.publicKey &&
+
+                    <div className="battalion-page">
+                        {soldiers &&
+                            <BattlaionFilter
+                                attributes={filterAttr}
+                                onSelect={handleAttr}
+                                selectedId={selectedId}
+                                currentTab={filterTab}
+                                soldiers={soldiers}
+                                setTab={setFilterTab}
                             />
-                        </div>
-                        <div className="attribute-list">
-                            {detailLoading ?
-                                <div className="component-loading">
-                                    <BattalionDetailLoading />
-                                </div>
-                                :
-                                <>
-                                    <div className="list-head">
-                                        <div className="id-line">
-                                            <h3>#{selectedId}</h3>
-                                            <p>{selectedCollection}</p>
-                                        </div>
-                                        <div className="score-line">
-                                            <h3>{selectedCollection === "2D" ? "Score" : "Points"}</h3>
-                                            <p>{selectedCollection === "2D" ? score : totalPoints}</p>
-                                        </div>
-                                        <div className="rank-line">
-                                            <h3>{selectedCollection === "2D" ? "Rank" : "Rarity"}</h3>
-                                            <p>{selectedCollection === "2D" ? rank : (rarity3d ? rarity3d : "")}</p>
-                                        </div>
+                        }
+                        <div className="soldier-detail">
+                            <div className="soldier-media">
+                                {/* eslint-disable-next-line */}
+                                <img
+                                    src={selectedImage}
+                                    alt=""
+                                />
+                            </div>
+                            <div className="attribute-list">
+                                {detailLoading ?
+                                    <div className="component-loading">
+                                        <BattalionDetailLoading />
                                     </div>
-                                    {selectedCollection.toLowerCase() === "2d" &&
-                                        <Soldier2DAttributeTable
-                                            hat={tableData2D.hat}
-                                            head={tableData2D.head}
-                                            torso={tableData2D.torso}
-                                            torso_accessories={tableData2D.torso_accessories}
-                                            legs={tableData2D.legs}
-                                            l_arm={tableData2D.l_arm}
-                                            r_arm={tableData2D.r_arm}
-                                            companion={tableData2D.companion}
-                                            shoes={tableData2D.shoes}
-                                            background={tableData2D.background}
-                                        />
-                                    }
-                                    {selectedCollection.toLowerCase() === "3d" &&
-                                        <Soldier3DAttributeTable
-                                            head={tableData3D.head}
-                                            torso={tableData3D.torso}
-                                            head_accessories={tableData3D.head_accessories}
-                                            legs={tableData3D.legs}
-                                            l_arm={tableData3D.l_arm}
-                                            r_arm={tableData3D.r_arm}
-                                            background={tableData3D.background}
-                                        />
-                                    }
-                                    {selectedCollection.toLowerCase() === "2d" &&
-                                        <>
-                                            <Link href={`https://howrare.is/solarmy${selectedCollection.toLowerCase()}/${selectedId}/`} >
-                                                <a className="no-underline" target="_blank">
-                                                    <div className="howrare-button">
-                                                        howrare score
-                                                    </div>
-                                                </a>
-                                            </Link>
-                                            <CopyAddress
-                                                address={`https://howrare.is/solarmy${selectedCollection.toLowerCase()}/${selectedId}/`}
+                                    :
+                                    <>
+                                        <div className="list-head">
+                                            <div className="id-line">
+                                                <h3>#{selectedId}</h3>
+                                                <p>{selectedCollection}</p>
+                                            </div>
+                                            <div className="score-line">
+                                                <h3>{selectedCollection === "2D" ? "Score" : "Points"}</h3>
+                                                <p>{selectedCollection === "2D" ? score : totalPoints}</p>
+                                            </div>
+                                            <div className="rank-line">
+                                                <h3>{selectedCollection === "2D" ? "Rank" : "Rarity"}</h3>
+                                                <p>{selectedCollection === "2D" ? rank : (rarity3d ? rarity3d : "")}</p>
+                                            </div>
+                                        </div>
+                                        {selectedCollection.toLowerCase() === "2d" &&
+                                            <Soldier2DAttributeTable
+                                                hat={tableData2D.hat}
+                                                head={tableData2D.head}
+                                                torso={tableData2D.torso}
+                                                torso_accessories={tableData2D.torso_accessories}
+                                                legs={tableData2D.legs}
+                                                l_arm={tableData2D.l_arm}
+                                                r_arm={tableData2D.r_arm}
+                                                companion={tableData2D.companion}
+                                                shoes={tableData2D.shoes}
+                                                background={tableData2D.background}
                                             />
-                                        </>
-                                    }
-                                </>
-                            }
+                                        }
+                                        {selectedCollection.toLowerCase() === "3d" &&
+                                            <Soldier3DAttributeTable
+                                                head={tableData3D.head}
+                                                torso={tableData3D.torso}
+                                                head_accessories={tableData3D.head_accessories}
+                                                legs={tableData3D.legs}
+                                                l_arm={tableData3D.l_arm}
+                                                r_arm={tableData3D.r_arm}
+                                                background={tableData3D.background}
+                                            />
+                                        }
+                                        {selectedCollection.toLowerCase() === "2d" &&
+                                            <>
+                                                <Link href={`https://howrare.is/solarmy${selectedCollection.toLowerCase()}/${selectedId}/`} >
+                                                    <a className="no-underline" target="_blank">
+                                                        <div className="howrare-button">
+                                                            howrare score
+                                                        </div>
+                                                    </a>
+                                                </Link>
+                                                <CopyAddress
+                                                    address={`https://howrare.is/solarmy${selectedCollection.toLowerCase()}/${selectedId}/`}
+                                                />
+                                            </>
+                                        }
+                                    </>
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
                 <Menu />
             </MainPage>
         </>
