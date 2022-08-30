@@ -68,13 +68,7 @@ export default function FusionPage() {
                 let promise: any = [];
                 for (let item of list) {
                     console.log(item.uri)
-                    const metadata = fetch(item.uri,
-                        {
-                            mode: "no-cors",
-                            headers: {
-                                'Access-Control-Allow-Origin': '*'
-                            }
-                        })
+                    const metadata = fetch(item.uri)
 
                         .then(resp =>
                             resp.json()
