@@ -111,26 +111,10 @@ export default function FusionEdit(props: {
         }
     };
 
-    const handleAttribute = (e: any) => {
-        const attr_type = e.target.innerText;
-        setSelectedKind(titleCamel(attr_type as string));
-        let attrName = "";
-        if (attr_type === "L Arm") {
-            attrName = "left arm";
-        } else if (attr_type === "R Arm") {
-            attrName = "right arm";
-        } else if (attr_type === "Head" && attr_type !== "Head Accessories") {
-            attrName = "head";
-        } else {
-            attrName = titleLowerCase(attr_type);
-        }
-        const item = equipedAttr?.filter((item: any) => item.attribute_type === attrName)[0];
+    const handleAttribute = (attrName: any) => {
+        setSelectedKind(titleCamel(attrName as string));
         const names = ableInventories?.filter((attr) => attr.attribute_type === attrName);
-        setSelectAbled(names);
-        setSelectedName(item);
-
-        console.log(item, "===> item")
-        console.log(equipedAttr, "===> equipedAttr")
+        setSelectAbled(names)
         // eslint-disable-next-line
     };
 
