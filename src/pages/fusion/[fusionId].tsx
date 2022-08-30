@@ -174,34 +174,34 @@ export default function FusionEdit(props: {
         if (!wallet.publicKey || !router.query.fusionId || !router.query.mint) return;
         try {
             let id: string = router.query.fusionId as string;
-            let head = equipedAttr.filter((item: any) => item.attribute_type === "head")[0].attribute;
-            let head_accessories = equipedAttr.filter((item: any) => item.attribute_type === "head accessories")[0].attribute;
-            let l_arm = equipedAttr.filter((item: any) => item.attribute_type === "left arm")[0].attribute;
-            let r_arm = equipedAttr.filter((item: any) => item.attribute_type === "right arm")[0].attribute;
-            let torso = equipedAttr.filter((item: any) => item.attribute_type === "torso")[0].attribute;
-            let legs = equipedAttr.filter((item: any) => item.attribute_type === "legs")[0].attribute;
-            let backgroundImage = equipedAttr.filter((item: any) => item.attribute_type === "background")[0].attribute;
+            let head = equipedAttr?.filter((item: any) => item.attribute_type === "head")[0].attribute;
+            let head_accessories = equipedAttr?.filter((item: any) => item.attribute_type === "head accessories")[0].attribute;
+            let l_arm = equipedAttr?.filter((item: any) => item.attribute_type === "left arm")[0].attribute;
+            let r_arm = equipedAttr?.filter((item: any) => item.attribute_type === "right arm")[0].attribute;
+            let torso = equipedAttr?.filter((item: any) => item.attribute_type === "torso")[0].attribute;
+            let legs = equipedAttr?.filter((item: any) => item.attribute_type === "legs")[0].attribute;
+            let backgroundImage = equipedAttr?.filter((item: any) => item.attribute_type === "background")[0].attribute;
 
-            if (changesItems.filter((item: any) => item.attribute_type === "head").length > 0) {
-                head = changesItems.filter((item: any) => item.attribute_type === "head")[0].attribute;
+            if (changesItems?.filter((item: any) => item.attribute_type === "head").length > 0) {
+                head = changesItems?.filter((item: any) => item.attribute_type === "head")[0].attribute;
             }
-            if (changesItems.filter((item: any) => item.attribute_type === "head accessories").length > 0) {
-                head_accessories = changesItems.filter((item: any) => item.attribute_type === "head accessories")[0].attribute;
+            if (changesItems?.filter((item: any) => item.attribute_type === "head accessories").length > 0) {
+                head_accessories = changesItems?.filter((item: any) => item.attribute_type === "head accessories")[0].attribute;
             }
-            if (changesItems.filter((item: any) => item.attribute_type === "right arm").length > 0) {
-                r_arm = changesItems.filter((item: any) => item.attribute_type === "right arm")[0].attribute;
+            if (changesItems?.filter((item: any) => item.attribute_type === "right arm").length > 0) {
+                r_arm = changesItems?.filter((item: any) => item.attribute_type === "right arm")[0].attribute;
             }
-            if (changesItems.filter((item: any) => item.attribute_type === "left arm").length > 0) {
-                l_arm = changesItems.filter((item: any) => item.attribute_type === "left arm")[0].attribute;
+            if (changesItems?.filter((item: any) => item.attribute_type === "left arm").length > 0) {
+                l_arm = changesItems?.filter((item: any) => item.attribute_type === "left arm")[0].attribute;
             }
-            if (changesItems.filter((item: any) => item.attribute_type === "torso").length > 0) {
-                torso = changesItems.filter((item: any) => item.attribute_type === "torso")[0].attribute;
+            if (changesItems?.filter((item: any) => item.attribute_type === "torso").length > 0) {
+                torso = changesItems?.filter((item: any) => item.attribute_type === "torso")[0].attribute;
             }
-            if (changesItems.filter((item: any) => item.attribute_type === "legs").length > 0) {
-                legs = changesItems.filter((item: any) => item.attribute_type === "legs")[0].attribute;
+            if (changesItems?.filter((item: any) => item.attribute_type === "legs").length > 0) {
+                legs = changesItems?.filter((item: any) => item.attribute_type === "legs")[0].attribute;
             }
-            if (changesItems.filter((item: any) => item.attribute_type === "background").length > 0) {
-                backgroundImage = changesItems.filter((item: any) => item.attribute_type === "background")[0].attribute;
+            if (changesItems?.filter((item: any) => item.attribute_type === "background").length > 0) {
+                backgroundImage = changesItems?.filter((item: any) => item.attribute_type === "background")[0].attribute;
             }
             let changed: any = [];
             let post: any = [];
@@ -212,8 +212,8 @@ export default function FusionEdit(props: {
                 })
                 let p_type = "";
                 let p_attr = "";
-                p_type = equipedAttr.filter((post: any) => post.attribute_type === item.attribute_type)[0].attribute_type;
-                p_attr = equipedAttr.filter((post: any) => post.attribute_type === item.attribute_type)[0].attribute;
+                p_type = equipedAttr?.filter((post: any) => post.attribute_type === item.attribute_type)[0].attribute_type;
+                p_attr = equipedAttr?.filter((post: any) => post.attribute_type === item.attribute_type)[0].attribute;
                 post.push({
                     attribute_type: p_type,
                     attribute: p_attr
@@ -275,7 +275,7 @@ export default function FusionEdit(props: {
         // if (equipedAttr && selectedKind === "head") {
         //     const item = equipedAttr?.find((item: any) => selectedKind === "head");
         //     setSelectedName(item);
-        //     const names = ableInventories?.filter((attr) => attr.attribute_type === "head");
+        //     const names = ableInventories??.filter((attr) => attr.attribute_type === "head");
         //     setSelectAbled(names);
         // }
         const eTotal = equipedAttr?.reduce((attr: any, { points }: any) => attr + parseFloat(points), 0);
@@ -314,7 +314,7 @@ export default function FusionEdit(props: {
 
     useEffect(() => {
         let cTotal = 0;
-        if (equipedAttr) {
+        if (equipedAttr && changesItems) {
             for (let item of equipedAttr) {
                 const filtered = changesItems?.filter((attr: any) => attr.attribute_type === item.attribute_type);
                 if (filtered.length !== 0) {
@@ -381,11 +381,13 @@ export default function FusionEdit(props: {
                     <div className="attributes">
                         <div className="kind">
                             <h4>Type</h4>
-                            <FusionType
-                                ableInventories={ableInventories}
-                                selectedKind={selectedKind}
-                                handleAttribute={handleAttribute}
-                            />
+                            {ableInventories &&
+                                <FusionType
+                                    ableInventories={ableInventories}
+                                    selectedKind={selectedKind}
+                                    handleAttribute={handleAttribute}
+                                />
+                            }
                         </div>
                         <div className="options">
                             <div className="option-header">
@@ -408,7 +410,7 @@ export default function FusionEdit(props: {
                                     {selectAbled && selectAbled.length !== 0 && selectAbled.map((item, key) => (
                                         selectedName?.attribute !== item.attribute &&
                                         <li
-                                            className={`option-item ${changesItems.filter((attr) => attr.attribute === item.attribute && attr.attribute_type === item.attribute_type).length === 1 ? "selected" : ""}`}
+                                            className={`option-item ${changesItems?.filter((attr) => attr.attribute === item.attribute && attr.attribute_type === item.attribute_type).length === 1 ? "selected" : ""}`}
                                             key={key}
                                             onClick={() => handleNameSelect(item.attribute_type, item.attribute, item.points, item.rarity, item.url)}
                                         >
@@ -416,7 +418,7 @@ export default function FusionEdit(props: {
                                             <p className="points">
                                                 <span className="universal">{item.rarity}</span>
                                                 &nbsp;{item.points}&nbsp;
-                                                {changesItems.filter((attr) => attr.attribute === item.attribute && attr.attribute_type === item.attribute_type).length === 1 &&
+                                                {changesItems?.filter((attr) => attr.attribute === item.attribute && attr.attribute_type === item.attribute_type).length === 1 &&
                                                     <span className="selected-dot"></span>
                                                 }
                                             </p>
