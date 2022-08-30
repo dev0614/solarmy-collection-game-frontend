@@ -36,26 +36,14 @@ export default function FusionPage() {
             const data = await getAvailableInventory(wallet.publicKey?.toBase58());
             if (data.length !== 0) {
                 setAbleInventoris(data)
-                console.log(data, "=======> consol.log")
             }
         } catch (error) {
             console.log(error);
         }
     };
 
-    const handleAttribute = (e: any) => {
-        const attr = e.target.innerText;
-        setSelectedKind(titleCamel(attr as string));
-        let attrName = '';
-        if (attr === 'L Arm') {
-            attrName = 'left arm';
-        } else if (attr === 'R Arm') {
-            attrName = 'right arm';
-        } else if (attr === 'Head' && attr !== "Head Accessories") {
-            attrName = 'head';
-        } else {
-            attrName = titleLowerCase(attr);
-        }
+    const handleAttribute = (attrName: string) => {
+        setSelectedKind(titleCamel(attrName as string));
         const names = ableInventories?.filter((attr) => attr.attribute_type === attrName);
         setSelectAbled(names)
         // eslint-disable-next-line
@@ -78,30 +66,31 @@ export default function FusionPage() {
             }
             if (list.length !== 0) {
                 let promise: any = [];
-                console.log(list, "===> list")
                 for (let item of list) {
                     const metadata = fetch(item.uri)
                         .then(resp =>
                             resp.json()
                         ).then((json) => {
-                            return json
+                            return json;
                         })
                         .catch((error) => {
-                            console.log(error);
                             return null;
                         })
-                    promise.push(metadata)
+                    if (metadata)
+                        promise.push(metadata)
                 }
                 let data = await Promise.all(promise);
-                for (let i = 0; i < data.length; i++) {
-                    data[i].nftMint = list[i].nftMint
-                }
-                for (let item of data) {
-                    feched.push({
-                        nftMint: item.nftMint,
-                        image: item.image,
-                        name: item.name
-                    })
+                if (data[0]) {
+                    for (let i = 0; i < data.length; i++) {
+                        data[i].nftMint = list[i].nftMint
+                    }
+                    for (let item of data) {
+                        feched.push({
+                            nftMint: item.nftMint,
+                            image: item.image,
+                            name: item.name
+                        })
+                    }
                 }
             }
             setPostNfts(feched);
@@ -211,6 +200,7 @@ export default function FusionPage() {
                                         <FusionType
                                             selectedKind={selectedKind}
                                             handleAttribute={handleAttribute}
+                                            ableInventories={ableInventories}
                                         />
                                     </div>
                                     <div className="options">

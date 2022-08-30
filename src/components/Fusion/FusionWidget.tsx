@@ -5,54 +5,62 @@ import { CategoryTwoToneIcon } from "../svgIcons";
 export function FusionType(props:
     {
         selectedKind: string,
-        handleAttribute: MouseEventHandler<HTMLLIElement>
+        ableInventories: any,
+        handleAttribute: Function
     }
 ) {
-    const { selectedKind, handleAttribute } = props;
+    const { selectedKind, ableInventories, handleAttribute } = props;
     return (
         <ul>
             <li
                 className={`${selectedKind === "head" ? "selected" : ""}`}
-                onClick={handleAttribute}
+                onClick={() => handleAttribute("head")}
             >
                 Head
+                ({ableInventories.filter((item: any) => item.attribute_type === "head").length})
             </li>
             {/* <li className="selected activated">Head</li> */}
             <li
                 className={`${selectedKind === "head_accessories" ? "selected" : ""}`}
-                onClick={handleAttribute}
+                onClick={() => handleAttribute("head accessories")}
             >
                 Head Accessories
+                ({ableInventories.filter((item: any) => item.attribute_type === "head accessories").length})
             </li>
             <li
                 className={`${selectedKind === "torso" ? "selected" : ""}`}
-                onClick={handleAttribute}
+                onClick={() => handleAttribute("torso")}
             >
                 Torso
+                ({ableInventories.filter((item: any) => item.attribute_type === "torso").length})
             </li>
             <li
                 className={`${selectedKind === "l_arm" ? "selected" : ""}`}
-                onClick={handleAttribute}
+                onClick={() => handleAttribute("left arm")}
             >
                 L Arm
+                ({ableInventories.filter((item: any) => item.attribute_type === "left arm").length})
             </li>
             <li
                 className={`${selectedKind === "r_arm" ? "selected" : ""}`}
-                onClick={handleAttribute}
+                onClick={() => handleAttribute("right arm")}
             >
                 R Arm
+                ({ableInventories.filter((item: any) => item.attribute_type === "right arm").length})
             </li>
             <li
                 className={`${selectedKind === "legs" ? "selected" : ""}`}
-                onClick={handleAttribute}
+                onClick={() => handleAttribute("legs")}
             >
                 Legs
+                ({ableInventories.filter((item: any) => item.attribute_type === "legs").length})
             </li>
             <li
                 className={`${selectedKind === "background" ? "selected" : ""}`}
-                onClick={handleAttribute}
+                onClick={() => handleAttribute("background")}
             >
                 Background
+                ({ableInventories.filter((item: any) => item.attribute_type === "background").length})
             </li>
         </ul>
     )

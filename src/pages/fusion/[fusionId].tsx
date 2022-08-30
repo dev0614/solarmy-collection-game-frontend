@@ -382,6 +382,7 @@ export default function FusionEdit(props: {
                         <div className="kind">
                             <h4>Type</h4>
                             <FusionType
+                                ableInventories={ableInventories}
                                 selectedKind={selectedKind}
                                 handleAttribute={handleAttribute}
                             />
