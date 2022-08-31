@@ -14,7 +14,7 @@ import { errorAlert } from '../components/toastGroup';
 
 export const METAPLEX = new PublicKey('metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s');
 
-export const solConnection = new web3.Connection("https://a2-mind-prd-api.azurewebsites.net/rpc");
+export const solConnection = new web3.Connection(web3.clusterApiUrl(NETWORK));
 
 export const getOwnerOfNFT = async (nftMintPk: PublicKey, connection: Connection): Promise<PublicKey> => {
     let tokenAccountPK = await getNFTTokenAccount(nftMintPk, connection);
