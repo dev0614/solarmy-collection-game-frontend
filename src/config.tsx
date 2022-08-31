@@ -1,7 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 
 //mainnet-beta | devnet
-export const NETWORK = "mainnet-beta";
+export const NETWORK = "`mainnet-beta";
 export const LIVE_URL = "https://solarmy.herokuapp.com/";
 export const CREATOR_2D_ADDRESS = "C3t2xtqA2NFTDqs1SJgcHxyaNqCE4JYnT9EqRySVXYfK";
 export const CREATOR_3D_ADDRESS = "Am9xhPPVCfDZFDabcGgmQ8GTMdsbqEt1qVXbyhTxybAp";
@@ -12,8 +12,8 @@ export const MAIN_3D_CEATOR = "9VYHEsB5k9CA1gbUbxJ7CsnxhV9GgegjqiCCSy1APNF1";
 //Howrare API
 export const COLLECTION_RARITY_API = "https://api.howrare.is/v0.1/collections/solarmy2d"
 
-export const API_URL = "https://satestapi.herokuapp.com/";
-// export const API_URL = "http://localhost:3002/";
+// export const API_URL = "https://satestapi.herokuapp.com/";
+export const API_URL = "http://13.231.24.204:3002/";
 export const VAULT_SEED = "vault-seed";
 
 export const GLOBAL_AUTHORITY_SEED = "global-authority";
