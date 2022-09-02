@@ -7,6 +7,7 @@ import { TOPPLAYER2D, TOPPLAYER3D, WALLET_NFTS } from "../config"
 import { AttributeFilterTypes } from "../solana/types"
 import { ArrowRightTwoTone, InfoTwoTone, SettingIcon } from "./svgIcons"
 import { ToggleSwitch } from "./WidgetJs"
+
 export const MainPage = (props: { children: any }) => {
     return (
         <main className="main-page">
