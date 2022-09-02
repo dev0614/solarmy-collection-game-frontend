@@ -52,8 +52,8 @@ export default function Header(props: {
                             {/* eslint-disable-next-line */}
                             <img
                                 src="/img/badge/special-forces-sm.png"
-                                alt=""
                                 className="badge-sm"
+                                alt=""
                             />
                         </div>
                         <div className="username-box">

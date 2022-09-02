@@ -253,8 +253,8 @@ export default function MePage() {
             {/* eslint-disable-next-line */}
             <img
                 src="/img/main-bg.png"
-                alt=""
                 className="page-bg"
+                alt=""
             />
             <div className="page-content non-padding">
                 <MeHeader />
@@ -270,8 +270,8 @@ export default function MePage() {
                                     soldiers={soldiers}
                                     setTab={setFilterTab}
                                 />
-                                <div className='soldier-me-detail'>
-                                    <div className='soldier-me-media'>
+                                <div className="soldier-me-detail">
+                                    <div className="soldier-me-media">
                                         <a onClick={() => {setIsModal(true)
                                         console.log(selectedId)}}>
                                             {/* eslint-disable-next-line */}

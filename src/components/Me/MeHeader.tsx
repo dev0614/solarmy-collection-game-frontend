@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
-import { useUserContext } from '../../context/UserProvider';
-import { DiscordIcon } from '../svgIcons';
-import Link from 'next/link';
-import { ArrowBackIosTwoTone } from '@material-ui/icons';
+import { useEffect, useState } from "react"
+import { useUserContext } from "../../context/UserProvider";
+import { ArrowBackIosTwoTone, DiscordIcon } from "../svgIcons";
+import Link from "next/link";
 
 export default function MeHeader() {
   const userData = useUserContext();
@@ -13,17 +12,17 @@ export default function MeHeader() {
   }, [userData])
 
   return (
-    <div className='me-header'>
-      <div className='head-front'>
-        <ArrowBackIosTwoTone style={{'color' : 'white'}}/>
+    <div className="me-header">
+      <div className="head-front">
+        <ArrowBackIosTwoTone />
       </div>
-      <div className='head-center'>
+      <div className="head-center">
         <div className="username-box">
-          <p className='head-name'>{userName === "" ? "Player" : userName}</p>
-          <label className='head-discord'><DiscordIcon /><span>Username</span></label>
+          <p className="head-name">{userName === "" ? "Player" : userName}</p>
+          <label className="head-discord"><DiscordIcon /><span>Username</span></label>
         </div>
       </div>
-      <div className='head-end'>
+      <div className="head-end">
         <Link href="/">
           <a>
               {/* eslint-disable-next-line */}
