@@ -11,8 +11,13 @@ import {
   TranscendentalIcon,
   UniversalIcon,
 } from "../../components/svgIcons";
-import { MAIN_2D_CEATOR, MAIN_3D_CEATOR } from "../../config";
-import { getAttributeItemData } from "../../solana/server";
+import {
+  CREATOR_2D_ADDRESS,
+  CREATOR_3D_ADDRESS,
+  MAIN_2D_CEATOR,
+  MAIN_3D_CEATOR,
+} from "../../config";
+import { getAttributeItemData, getTopSoldiers } from "../../solana/server";
 import {
   AttributeFilterTypes,
   Default3dData,
@@ -25,6 +30,7 @@ import { BattalionView } from "../../components/Me/BattalionView";
 
 export default function MePage() {
   const wallet = useWallet();
+  const [lastPage, setLastPage] = useState<string | null>("/dashboard");
   const handleAttr = (
     mint: string,
     id: string,
@@ -294,8 +300,8 @@ export default function MePage() {
     if (nftList.length !== 0) {
       for (let item of nftList) {
         if (
-          item.data?.creators[0]?.address === MAIN_2D_CEATOR ||
-          item.data?.creators[0]?.address === MAIN_3D_CEATOR
+          item.data?.creators[0]?.address === CREATOR_2D_ADDRESS ||
+          item.data?.creators[0]?.address === CREATOR_3D_ADDRESS
         ) {
           const image = await fetch(item.data.uri)
             .then((resp) => resp.json())
@@ -339,8 +345,21 @@ export default function MePage() {
     }
   };
 
+  const [topLoading, setTopLoading] = useState(false);
+  const [top2dNft, setTop2dNft] = useState("");
+  const [top3dNft, setTop3dNft] = useState("");
+  const getTopNfts = async () => {
+    if (!wallet.publicKey) return;
+    setTopLoading(true);
+    const { top2D, top3D } = await getTopSoldiers(wallet.publicKey.toBase58());
+    setTop2dNft(top2D);
+    setTop3dNft(top3D);
+    setTopLoading(false);
+  };
+
   useEffect(() => {
     getUserNfts();
+    getTopNfts();
     // eslint-disable-next-line
   }, [wallet.connected, wallet.publicKey]);
 
@@ -349,46 +368,52 @@ export default function MePage() {
       {/* eslint-disable-next-line */}
       <img src="/img/main-bg.png" className="page-bg" alt="" />
       <div className="page-content non-padding">
-        <MeHeader />
+        <MeHeader back={{ title: "Store", backUrl: lastPage }} />
         {wallet.publicKey && (
           <div className="me-page">
             {soldiers && (
-              <>
-                <BattalionView
-                  attributes={filterAttr}
-                  onSelect={handleAttr}
-                  selectedId={selectedId}
-                  currentTab={filterTab}
-                  soldiers={soldiers}
-                  setTab={setFilterTab}
-                />
-                <div className="soldier-me-detail">
-                  <div className="soldier-me-media">
-                    <a
-                      onClick={() => {
-                        setIsModal(true);
-                        console.log(selectedId);
-                      }}
-                    >
-                      {/* eslint-disable-next-line */}
-                      <img src={selectedImage} alt="" />
-                    </a>
+              <div className="container">
+                <div className="me-content">
+                  <BattalionView
+                    attributes={filterAttr}
+                    onSelect={handleAttr}
+                    selectedId={selectedId}
+                    currentTab={filterTab}
+                    soldiers={soldiers}
+                    setTab={setFilterTab}
+                  />
+                  <div className="soldier-me-detail">
+                    <div className="soldier-me-media">
+                      <a
+                        onClick={() => {
+                          setIsModal(true);
+                          console.log(selectedId);
+                        }}
+                      >
+                        {/* eslint-disable-next-line */}
+                        <img src={selectedImage} alt="" />
+                      </a>
+                    </div>
                   </div>
+                  <DetailDialog
+                    opened={isModal}
+                    close={() => setIsModal(false)}
+                    id={selectedId}
+                    collection={selectedCollection}
+                    score={score}
+                    totalPoints={totalPoints}
+                    rank={rank}
+                    rarity3d={rarity3d}
+                    tableData2D={tableData2D}
+                    tableData3D={tableData3D}
+                  />
+                  <Badge
+                    topLoading={topLoading}
+                    top2dNft={top2dNft}
+                    top3dNft={top3dNft}
+                  />
                 </div>
-                <DetailDialog
-                  opened={isModal}
-                  close={() => setIsModal(false)}
-                  id={selectedId}
-                  collection={selectedCollection}
-                  score={score}
-                  totalPoints={totalPoints}
-                  rank={rank}
-                  rarity3d={rarity3d}
-                  tableData2D={tableData2D}
-                  tableData3D={tableData3D}
-                />
-                <Badge />
-              </>
+              </div>
             )}
           </div>
         )}
