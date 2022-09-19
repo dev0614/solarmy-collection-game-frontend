@@ -10,6 +10,7 @@ import {
   TOPPLAYER2D,
   TOPPLAYER3D,
 } from "../config";
+import { getRanks } from "../solana/server";
 import { AttributeFilterTypes } from "../solana/types";
 import { solConnection } from "../solana/utils";
 import { ArrowRightTwoTone, InfoTwoTone, SettingIcon } from "./svgIcons";
@@ -52,19 +53,39 @@ export const TopSoldier = (props: { title: string; image: string }) => {
   );
 };
 
+type TableData = {
+  rate: string;
+  rateFormat: string;
+  userName: string;
+  userAddress: string;
+  points: string;
+}[];
 export const LeaderboardState = (props: {
   router: NextRouter;
   wallet: WalletContextState;
 }) => {
   const [topTab, setTopTab] = useState("soldier");
   const [subTab, setSubTab] = useState("2d");
-  const [tableData, setTableData] = useState(TOPPLAYER2D);
-  useEffect(() => {
-    if (subTab === "2d") {
-      setTableData(TOPPLAYER2D);
-    } else {
-      setTableData(TOPPLAYER3D);
+  const [tableData, setTableData] = useState<TableData>();
+
+  const getRankList = async () => {
+    const data = await getRanks();
+    if (data) {
+      let list: any = [];
+      for (let item of data) {
+        list.push({
+          rate: item.rate,
+          rateFormat: item.rate,
+          userName: item.name,
+          userAddress: item.wallet,
+          points: item.points,
+        });
+      }
+      setTableData(list);
     }
+  };
+  useEffect(() => {
+    getRankList();
   }, [topTab, subTab]);
 
   return (
@@ -113,20 +134,22 @@ export const LeaderboardState = (props: {
           <div className="th">Points</div>
         </div>
         <div className="table-tbody">
-          {tableData.slice(0, 5).map((item, key) => (
-            <div
-              className={
-                item.userAddress === props.wallet.publicKey?.toBase58()
-                  ? "tr highlight"
-                  : "tr"
-              }
-              key={key}
-            >
-              <div className="td">{item.rateFormat}</div>
-              <div className="td">{item.userName}</div>
-              <div className="td">{item.points}</div>
-            </div>
-          ))}
+          {tableData &&
+            tableData.length !== 0 &&
+            tableData.slice(0, 5).map((item, key) => (
+              <div
+                className={
+                  item.userAddress === props.wallet.publicKey?.toBase58()
+                    ? "tr highlight"
+                    : "tr"
+                }
+                key={key}
+              >
+                <div className="td">{item.rateFormat}</div>
+                <div className="td">{item.userName}</div>
+                <div className="td">{item.points}</div>
+              </div>
+            ))}
         </div>
       </div>
       <p className="dashboard-updated-time">{moment("2022-7-10").fromNow()}</p>

@@ -10,7 +10,8 @@ import { LIVE_URL, POSITION_TABLE_DATA } from "../../config";
 import { getRanks, setRegisterLeaderboard } from "../../solana/server";
 import { useUserContext } from "../../context/UserProvider";
 import { ClipLoader } from "react-spinners";
-type TableData = {
+
+export type TableData = {
   rate: string;
   rateFormat: string;
   userName: string;

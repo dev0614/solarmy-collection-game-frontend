@@ -90,11 +90,18 @@ export default function DashboardPage() {
             <LeaderboardState router={router} wallet={wallet} />
           </div>
           <div className="col-4">
-            {wallet.publicKey && (
-              <BattalionDashboardBox
-                router={router}
-                wallet={wallet.publicKey.toBase58()}
-              />
+            {NETWORK === "devnet" ? (
+              <div className="network-alert">
+                <h5>Battalion</h5>
+                <p>Please Switch to Mainnet</p>
+              </div>
+            ) : (
+              wallet.publicKey && (
+                <BattalionDashboardBox
+                  router={router}
+                  wallet={wallet.publicKey.toBase58()}
+                />
+              )
             )}
           </div>
         </div>

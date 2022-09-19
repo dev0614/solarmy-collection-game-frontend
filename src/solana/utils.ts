@@ -14,7 +14,6 @@ import {
   MintLayout,
 } from "@solana/spl-token";
 import { web3 } from "@project-serum/anchor";
-import { NETWORK } from "../config";
 import { errorAlert } from "../components/toastGroup";
 import { programs } from "@metaplex/js";
 
@@ -22,7 +21,7 @@ export const METAPLEX = new PublicKey(
   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
 );
 
-export const solConnection = new web3.Connection(web3.clusterApiUrl(NETWORK));
+export const solConnection = new web3.Connection(web3.clusterApiUrl("devnet"));
 
 export const getOwnerOfNFT = async (
   nftMintPk: PublicKey,
