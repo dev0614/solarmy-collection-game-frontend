@@ -4,12 +4,7 @@ import { WalletContextState } from "@solana/wallet-adapter-react";
 import moment from "moment";
 import { NextRouter } from "next/router";
 import { useEffect, useState } from "react";
-import {
-  MAIN_2D_CEATOR,
-  MAIN_3D_CEATOR,
-  TOPPLAYER2D,
-  TOPPLAYER3D,
-} from "../config";
+import { MAIN_2D_CEATOR, MAIN_3D_CEATOR } from "../config";
 import { getRanks } from "../solana/server";
 import { AttributeFilterTypes } from "../solana/types";
 import { solConnection } from "../solana/utils";
@@ -211,6 +206,7 @@ export const BattalionDashboardBox = (props: {
   };
   useEffect(() => {
     getWalletNfts();
+    //   eslint-disable-next-line
   }, []);
   return (
     <div className="dashboard-box">
