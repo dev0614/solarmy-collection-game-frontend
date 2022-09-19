@@ -10,11 +10,9 @@ import {
   DiscordIcon,
   EditTwoTone,
 } from "./svgIcons";
-import { API_URL } from "../config";
 
-import socketIOClient from "socket.io-client";
 import { useUserContext } from "../context/UserProvider";
-const socket = socketIOClient(API_URL);
+import { getBadgeImage } from "../solana/utils";
 
 export default function Header(props: {
   back?: {
@@ -27,6 +25,7 @@ export default function Header(props: {
   const userData = useUserContext();
   const [isEdit, setIsEdit] = useState(false);
   const [userName, setName] = useState(userData.userName);
+  const [badgeImage, setBadgeImage] = useState("");
 
   const updateUserName = async () => {
     if (wallet.publicKey) {
@@ -36,6 +35,9 @@ export default function Header(props: {
   };
   useEffect(() => {
     setName(userData.userName);
+    const badge = getBadgeImage(userData.badge);
+    console.log(badge);
+    if (badge) setBadgeImage(badge);
   }, [userData]);
 
   return (
@@ -60,11 +62,7 @@ export default function Header(props: {
           <div className="header-control">
             <div className="user-badge" onClick={() => router.push("/me")}>
               {/* eslint-disable-next-line */}
-              <img
-                src="/img/badge/special-forces-sm.png"
-                className="badge-sm"
-                alt=""
-              />
+              <img src={badgeImage} className="badge-sm" alt="" />
             </div>
             <div className="username-box">
               {isEdit ? (
@@ -102,7 +100,10 @@ export default function Header(props: {
                 </>
               )}
             </div>
-            <button className="special-effect">
+            <button
+              className="special-effect"
+              onClick={() => router.push("/me")}
+            >
               {/* eslint-disable-next-line */}
               <img src="/img/special-effects.png" alt="" />
             </button>

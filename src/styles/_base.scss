@@ -2775,6 +2775,8 @@ button.claim-all {
                                 align-items: center;
                                 img {
                                     border-radius: 4px;
+                                    width: 32px;
+                                    height: 32px;
                                 }
                             }
                         }
@@ -3334,4 +3336,39 @@ button.claim-all {
             }
         }
     }
+}
+.leaderboard-title {
+    font-family: "Oxanium";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 117%;
+    text-align: center;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.6);
+}
+.leaderboard-timer {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.btn-register {
+    padding: 12px 24px;
+    border-radius: 60px;
+    font-family: "Oxanium";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 160%;
+    background-color: #0dcf65;
+    border: none;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fff;
+    margin-top: 12px;
 }

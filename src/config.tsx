@@ -290,10 +290,10 @@ export const POSITION_TABLE_DATA = [
     label: "1",
     content: (
       <p>
-        X AMMO + Elite Grade Loot Box&nbsp;
+        3000 AMMO + 2 Loot boxes&nbsp;
         <span>
           {/* eslint-disable-next-line */}
-          <img src="/img/badge/special-forces-lgx28.png" alt="" />
+          <img src="/img/badge/general.svg" alt="" />
         </span>
       </p>
     ),
@@ -302,10 +302,10 @@ export const POSITION_TABLE_DATA = [
     label: "2-3",
     content: (
       <p>
-        X AMMO + Company Grade Loot Box&nbsp;
+        1500 AMMO + 1 Loot box&nbsp;
         <span>
           {/* eslint-disable-next-line */}
-          <img src="/img/badge/ltx28.png " alt="" />
+          <img src="/img/badge/colonel.svg" alt="" />
         </span>
       </p>
     ),
@@ -314,10 +314,10 @@ export const POSITION_TABLE_DATA = [
     label: "4-10",
     content: (
       <p>
-        X AMMO + Field Grade Loot Box&nbsp;
+        1800 AMMO&nbsp;
         <span>
           {/* eslint-disable-next-line */}
-          <img src="/img/badge/sergeantx28.png" alt="" />
+          <img src="/img/badge/major.svg" alt="" />
         </span>
       </p>
     ),
@@ -326,10 +326,10 @@ export const POSITION_TABLE_DATA = [
     label: "11-50",
     content: (
       <p>
-        X AMMO&nbsp;
+        800 AMMO&nbsp;
         <span>
           {/* eslint-disable-next-line */}
-          <img src="/img/badge/fusing-loverx28.png" alt="" />
+          <img src="/img/badge/captain.svg" alt="" />
         </span>
       </p>
     ),
@@ -338,22 +338,45 @@ export const POSITION_TABLE_DATA = [
     label: "51-100",
     content: (
       <p>
-        X AMMO&nbsp;
+        500 AMMO&nbsp;
         <span>
           {/* eslint-disable-next-line */}
-          <img src="/img/badge/mint-editionsx28.png" alt="" />
+          <img src="/img/badge/lieutenant.svg" alt="" />
         </span>
       </p>
     ),
   },
   {
-    label: "101-300",
+    label: "101-200",
     content: (
       <p>
-        X AMMO&nbsp;
+        300 AMMO&nbsp;
         <span>
           {/* eslint-disable-next-line */}
-          <img src="/img/badge/fusion-expertx28.png" alt="" />
+          <img src="/img/badge/master sergeant.svg" alt="" />
+        </span>
+      </p>
+    ),
+  },
+  {
+    label: "201-400",
+    content: (
+      <p>
+        150 AMMO&nbsp;
+        <span>
+          {/* eslint-disable-next-line */}
+          <img src="/img/badge/sergeant.svg" alt="" />
+        </span>
+      </p>
+    ),
+  },
+  {
+    label: "401-700",
+    content: (
+      <p>
+        <span>
+          {/* eslint-disable-next-line */}
+          <img src="/img/badge/corporal.svg" alt="" />
         </span>
       </p>
     ),

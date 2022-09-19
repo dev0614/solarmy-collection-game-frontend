@@ -204,3 +204,65 @@ export const getTopSoldiers = async (wallet: string) => {
     });
   return { top2D, top3D };
 };
+
+export const getBadge = async (wallet: string) => {
+  let badgeNum = 0;
+  await axios
+    .post(`${API_URL}getBadge`, {
+      wallet: wallet,
+    })
+    .then((res) => {
+      res.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  return badgeNum;
+};
+
+export const getRanks = async () => {
+  let rankList: any = [];
+  await axios
+    .post(`${API_URL}getRank`)
+    .then((res) => {
+      rankList = res.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  return rankList;
+};
+
+export const setRegisterLeaderboard = async (
+  username: string,
+  wallet: string
+) => {
+  let result = undefined;
+  await axios
+    .post(`${API_URL}register`, {
+      wallet: wallet,
+      name: username,
+    })
+    .then((res) => {
+      result = res.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  return result;
+};
+
+export const getUserBadge = async (wallet: string) => {
+  let result = undefined;
+  await axios
+    .post(`${API_URL}getBadge`, {
+      wallet: wallet,
+    })
+    .then((res) => {
+      result = res.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  return result;
+};

@@ -378,3 +378,24 @@ export function removeItemFromArray(
     }
   }
 }
+
+export const getBadgeImage = (number: number) => {
+  switch (number) {
+    case 8:
+      return "/img/badge/general.svg";
+    case 7:
+      return "/img/badge/colonel.svg";
+    case 6:
+      return "/img/badge/major.svg";
+    case 5:
+      return "/img/badge/captain.svg";
+    case 4:
+      return "/img/badge/lieutenant.svg";
+    case 3:
+      return "/img/badge/master sergeant.svg";
+    case 2:
+      return "/img/badge/sergeant.svg";
+    case 1:
+      return "/img/badge/corporal.svg";
+  }
+};

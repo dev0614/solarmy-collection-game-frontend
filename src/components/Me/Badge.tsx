@@ -2,12 +2,18 @@ import { Skeleton } from "@mui/material";
 import { getParsedAccountByMint } from "@nfteyez/sol-rayz";
 import { PublicKey } from "@solana/web3.js";
 import { useEffect, useState } from "react";
-import { getMetadata, getNftMetaData, solConnection } from "../../solana/utils";
+import {
+  getBadgeImage,
+  getMetadata,
+  getNftMetaData,
+  solConnection,
+} from "../../solana/utils";
 import { InfoTwoTone } from "../svgIcons";
 
 export default function Badge(props: {
   topLoading: boolean;
   top2dNft: string;
+  badgeNum: number;
   top3dNft: string;
 }) {
   const { topLoading, top2dNft, top3dNft } = props;
@@ -20,7 +26,7 @@ export default function Badge(props: {
     image: "",
     nftMint: "",
   });
-
+  const [badgeImage, setBadgeImage] = useState("");
   const getNftDetail = async (uri: string, setData: Function) => {
     setLoading(true);
     await fetch(uri)
@@ -33,6 +39,8 @@ export default function Badge(props: {
 
   const getDetail = async (mint: string, setData: Function) => {
     const metadata = await getNftMetaData(new PublicKey(mint));
+    const badge = getBadgeImage(props.badgeNum);
+    if (badge) setBadgeImage(badge);
     console.log(metadata);
     await fetch(metadata)
       .then((resp) => resp.json())
@@ -52,6 +60,7 @@ export default function Badge(props: {
     console.log(top3dNft);
     if (top2dNft !== "") getDetail(top2dNft, setTop2dData);
     if (top3dNft !== "") getDetail(top3dNft, setTop3dData);
+    // eslint-disable-next-line
   }, [top2dNft, top3dNft]);
 
   return (
@@ -63,11 +72,7 @@ export default function Badge(props: {
             <InfoTwoTone />
           </div>
           {/* eslint-disable-next-line */}
-          <img
-            src="/img/badge/special-forces-sm.png"
-            alt=""
-            className="slider-img"
-          />
+          <img src={badgeImage} alt="" className="slider-img" />
         </div>
         {topLoading ? (
           <>

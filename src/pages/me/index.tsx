@@ -11,12 +11,7 @@ import {
   TranscendentalIcon,
   UniversalIcon,
 } from "../../components/svgIcons";
-import {
-  CREATOR_2D_ADDRESS,
-  CREATOR_3D_ADDRESS,
-  MAIN_2D_CEATOR,
-  MAIN_3D_CEATOR,
-} from "../../config";
+import { CREATOR_2D_ADDRESS, CREATOR_3D_ADDRESS } from "../../config";
 import { getAttributeItemData, getTopSoldiers } from "../../solana/server";
 import {
   AttributeFilterTypes,
@@ -27,10 +22,13 @@ import {
 import { getSum, solConnection } from "../../solana/utils";
 import { Soldier2DRarity } from "../../soldier2d_rarity";
 import { BattalionView } from "../../components/Me/BattalionView";
+import { useUserContext } from "../../context/UserProvider";
 
 export default function MePage() {
   const wallet = useWallet();
   const [lastPage, setLastPage] = useState<string | null>("/dashboard");
+  const userData = useUserContext();
+
   const handleAttr = (
     mint: string,
     id: string,
@@ -410,6 +408,7 @@ export default function MePage() {
                   <Badge
                     topLoading={topLoading}
                     top2dNft={top2dNft}
+                    badgeNum={userData.badge}
                     top3dNft={top3dNft}
                   />
                 </div>
