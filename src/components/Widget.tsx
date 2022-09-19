@@ -1,10 +1,17 @@
 import { ClickAwayListener } from "@mui/material";
+import { getParsedNftAccountsByOwner } from "@nfteyez/sol-rayz";
 import { WalletContextState } from "@solana/wallet-adapter-react";
 import moment from "moment";
 import { NextRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { TOPPLAYER2D, TOPPLAYER3D, WALLET_NFTS } from "../config";
+import {
+  MAIN_2D_CEATOR,
+  MAIN_3D_CEATOR,
+  TOPPLAYER2D,
+  TOPPLAYER3D,
+} from "../config";
 import { AttributeFilterTypes } from "../solana/types";
+import { solConnection } from "../solana/utils";
 import { ArrowRightTwoTone, InfoTwoTone, SettingIcon } from "./svgIcons";
 import { ToggleSwitch } from "./WidgetJs";
 
@@ -127,8 +134,61 @@ export const LeaderboardState = (props: {
   );
 };
 
-export const BattalionDashboardBox = (props: { router: NextRouter }) => {
+export const BattalionDashboardBox = (props: {
+  router: NextRouter;
+  wallet: string;
+}) => {
   const [topTab, setTopTab] = useState("all");
+  const [nfts, setNfts] = useState<
+    {
+      image: string;
+      collection: string;
+    }[]
+  >();
+  const [selectedCollection, setSelectedCollection] = useState("2d");
+
+  const getWalletNfts = async () => {
+    let nfts: {
+      image: string;
+      collection: string;
+    }[] = [];
+    const nftList = await getParsedNftAccountsByOwner({
+      publicAddress: props.wallet,
+      connection: solConnection,
+    });
+
+    if (nftList.length !== 0) {
+      for (let item of nftList) {
+        console.log(item);
+        if (
+          item.data?.creators[0]?.address === MAIN_2D_CEATOR ||
+          item.data?.creators[0]?.address === MAIN_3D_CEATOR
+        ) {
+          const image = await fetch(item.data.uri)
+            .then((resp) => resp.json())
+            .then((json) => {
+              return json.image;
+            })
+            .catch((error) => {
+              console.log(error);
+              return "";
+            });
+          console.log(item.data.name.slice(0, 2));
+          nfts.push({
+            collection: item.data.name.slice(0, 2),
+            image: image,
+          });
+        }
+      }
+      if (nfts.length !== 0) {
+        setNfts(nfts);
+        setSelectedCollection(nfts[0].collection);
+      }
+    }
+  };
+  useEffect(() => {
+    getWalletNfts();
+  }, []);
   return (
     <div className="dashboard-box">
       <div
@@ -162,15 +222,18 @@ export const BattalionDashboardBox = (props: { router: NextRouter }) => {
       </div>
       <div className="battalion-box">
         <div className="battalion-content">
-          {WALLET_NFTS.map(
-            (item, key) =>
-              (topTab === "all" || topTab === item.collection) && (
-                <div className="nft-media" key={key}>
-                  {/* eslint-disable-next-line */}
-                  <img src={item.image} style={{ width: "100%" }} alt="" />
-                </div>
-              )
-          )}
+          {nfts &&
+            nfts.length !== 0 &&
+            nfts.map(
+              (item, key) =>
+                (topTab === "all" ||
+                  topTab === item.collection.toLowerCase()) && (
+                  <div className="nft-media" key={key}>
+                    {/* eslint-disable-next-line */}
+                    <img src={item.image} style={{ width: "100%" }} alt="" />
+                  </div>
+                )
+            )}
         </div>
       </div>
     </div>

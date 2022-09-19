@@ -3372,3 +3372,24 @@ button.claim-all {
     color: #fff;
     margin-top: 12px;
 }
+
+.network-alert {
+    border: 1px solid #e68a3f;
+    background: #e68a3f20;
+    border-radius: 24px;
+    padding: 20px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    h5 {
+        color: #fff;
+        font-size: 42px;
+        margin-bottom: 12px;
+    }
+    p {
+        color: #fff6;
+        font-size: 30px;
+    }
+}

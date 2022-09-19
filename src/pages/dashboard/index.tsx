@@ -11,7 +11,7 @@ import {
   MainPage,
   TopSoldier,
 } from "../../components/Widget";
-import { LIVE_URL } from "../../config";
+import { LIVE_URL, NETWORK } from "../../config";
 import { useUserContext } from "../../context/UserProvider";
 import { getTopSoldiers } from "../../solana/server";
 import { getBadgeInfo } from "../../solana/utils";
@@ -72,18 +72,30 @@ export default function DashboardPage() {
       <MainPage>
         <div className="dashboard">
           <div className="col-4">
-            <Badge
-              topLoading={topLoading}
-              top2dNft={top2dNft}
-              badgeNum={userData.badge}
-              top3dNft={top3dNft}
-            />
+            {NETWORK === "mainnet-beta" ? (
+              <div className="network-alert">
+                <h5>Badge &#38; Top Soliders</h5>
+                <p>Please Switch to Devnet</p>
+              </div>
+            ) : (
+              <Badge
+                topLoading={topLoading}
+                top2dNft={top2dNft}
+                badgeNum={userData.badge}
+                top3dNft={top3dNft}
+              />
+            )}
           </div>
           <div className="col-4">
             <LeaderboardState router={router} wallet={wallet} />
           </div>
           <div className="col-4">
-            <BattalionDashboardBox router={router} />
+            {wallet.publicKey && (
+              <BattalionDashboardBox
+                router={router}
+                wallet={wallet.publicKey.toBase58()}
+              />
+            )}
           </div>
         </div>
       </MainPage>

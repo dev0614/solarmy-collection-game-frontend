@@ -299,6 +299,7 @@ export default function BattalionPage() {
     });
     if (nftList.length !== 0) {
       for (let item of nftList) {
+        console.log(item);
         if (
           item.data?.creators[0]?.address === MAIN_2D_CEATOR ||
           item.data?.creators[0]?.address === MAIN_3D_CEATOR
