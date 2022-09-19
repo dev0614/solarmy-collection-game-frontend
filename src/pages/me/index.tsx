@@ -410,6 +410,7 @@ export default function MePage() {
                     top2dNft={top2dNft}
                     badgeNum={userData.badge}
                     top3dNft={top3dNft}
+                    me
                   />
                 </div>
               </div>

@@ -1,13 +1,7 @@
 import { Skeleton } from "@mui/material";
-import { getParsedAccountByMint } from "@nfteyez/sol-rayz";
 import { PublicKey } from "@solana/web3.js";
 import { useEffect, useState } from "react";
-import {
-  getBadgeImage,
-  getMetadata,
-  getNftMetaData,
-  solConnection,
-} from "../../solana/utils";
+import { getBadgeInfo, getNftMetaData } from "../../solana/utils";
 import { InfoTwoTone } from "../svgIcons";
 
 export default function Badge(props: {
@@ -15,6 +9,7 @@ export default function Badge(props: {
   top2dNft: string;
   badgeNum: number;
   top3dNft: string;
+  me?: boolean;
 }) {
   const { topLoading, top2dNft, top3dNft } = props;
   const [loading, setLoading] = useState(false);
@@ -27,21 +22,14 @@ export default function Badge(props: {
     nftMint: "",
   });
   const [badgeImage, setBadgeImage] = useState("");
-  const getNftDetail = async (uri: string, setData: Function) => {
-    setLoading(true);
-    await fetch(uri)
-      .then((resp) => resp.json())
-      .then((json) => {})
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  const [badgeNmae, setBadgeName] = useState("");
 
   const getDetail = async (mint: string, setData: Function) => {
+    setLoading(true);
     const metadata = await getNftMetaData(new PublicKey(mint));
-    const badge = getBadgeImage(props.badgeNum);
-    if (badge) setBadgeImage(badge);
-    console.log(metadata);
+    const { image, name } = getBadgeInfo(props.badgeNum);
+    if (image) setBadgeImage(image);
+    if (name) setBadgeName(name);
     await fetch(metadata)
       .then((resp) => resp.json())
       .then((json) => {
@@ -54,6 +42,7 @@ export default function Badge(props: {
       .catch((error) => {
         console.log(error);
       });
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -65,14 +54,35 @@ export default function Badge(props: {
 
   return (
     <>
-      <div className="badge-me">
+      <div className="badge-me" style={{ width: props.me ? 330 : "auto" }}>
         <div className="badge-header">
           <div className="badge-title">
-            <p className="badge-text">Badge</p>
+            <p className="badge-text">{badgeNmae} Badge</p>
             <InfoTwoTone />
           </div>
-          {/* eslint-disable-next-line */}
-          <img src={badgeImage} alt="" className="slider-img" />
+          {badgeImage === "" ? (
+            <Skeleton
+              style={{
+                width: props.me ? 306 : "100%",
+                height: 306,
+                borderRadius: "24px",
+                background: "#413f3f6b",
+              }}
+              variant="rectangular"
+            />
+          ) : (
+            <>
+              {/* eslint-disable-next-line */}
+              <img
+                src={badgeImage}
+                alt=""
+                className="slider-img"
+                style={{
+                  width: props.me ? 306 : "100%",
+                }}
+              />
+            </>
+          )}
         </div>
         {topLoading ? (
           <>
@@ -80,7 +90,7 @@ export default function Badge(props: {
               variant="rectangular"
               animation="wave"
               style={{
-                width: 330,
+                width: "100%",
                 height: 80,
                 borderRadius: 100,
                 marginTop: 12,
@@ -91,7 +101,7 @@ export default function Badge(props: {
               variant="rectangular"
               animation="wave"
               style={{
-                width: 330,
+                width: "100%",
                 height: 80,
                 borderRadius: 100,
                 marginTop: 12,

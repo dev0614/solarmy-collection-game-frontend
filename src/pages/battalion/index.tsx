@@ -1,6 +1,5 @@
 import { getParsedNftAccountsByOwner } from "@nfteyez/sol-rayz";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey } from "@solana/web3.js";
 import { NextSeo } from "next-seo";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -11,7 +10,6 @@ import Soldier3DAttributeTable from "../../components/Battalion/Soldier3DAttribu
 import BattalionDetailLoading from "../../components/BattalionDetailLoading";
 import Header from "../../components/Header";
 import Menu from "../../components/Menu";
-import PageLoading from "../../components/PageLoading";
 import {
   CommonIcon,
   FirstClassIcon,
@@ -28,7 +26,7 @@ import {
   SoldierItem,
   TableFirstData2D,
 } from "../../solana/types";
-import { getMetadata, getSum, solConnection } from "../../solana/utils";
+import { getSum, solConnection } from "../../solana/utils";
 import { Soldier2DRarity } from "../../soldier2d_rarity";
 
 export default function BattalionPage() {
@@ -53,6 +51,7 @@ export default function BattalionPage() {
   const [selectedCollection, setSelectedCollection] = useState("2d");
   const [detailLoading, setDetailLoading] = useState(false);
   const [rarity3d, setRarity3d] = useState<any>();
+
   const handleAttr = (
     mint: string,
     id: string,

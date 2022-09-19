@@ -12,7 +12,7 @@ import {
 } from "./svgIcons";
 
 import { useUserContext } from "../context/UserProvider";
-import { getBadgeImage } from "../solana/utils";
+import { getBadgeInfo } from "../solana/utils";
 
 export default function Header(props: {
   back?: {
@@ -35,9 +35,8 @@ export default function Header(props: {
   };
   useEffect(() => {
     setName(userData.userName);
-    const badge = getBadgeImage(userData.badge);
-    console.log(badge);
-    if (badge) setBadgeImage(badge);
+    const { image } = getBadgeInfo(userData.badge);
+    if (image) setBadgeImage(image);
   }, [userData]);
 
   return (

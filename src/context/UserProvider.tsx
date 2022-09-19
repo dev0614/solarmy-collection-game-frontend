@@ -42,7 +42,6 @@ export function UserProvider(props: { children: ReactNode }) {
     const ammo = await getAmmo(wallet.publicKey);
     const txData = await getUserTransactions(wallet.publicKey?.toBase58());
     const badgeNum = await getUserBadge(wallet.publicKey.toBase58());
-    console.log(badgeNum, "---badgenumb");
     setUserData({
       userName: name,
       balance: ammo,

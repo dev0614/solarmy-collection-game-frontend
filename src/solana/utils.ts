@@ -379,23 +379,34 @@ export function removeItemFromArray(
   }
 }
 
-export const getBadgeImage = (number: number) => {
+export const getBadgeInfo = (number: number) => {
+  let image = "",
+    name = "";
   switch (number) {
     case 8:
-      return "/img/badge/general.svg";
+      image = "/img/badge/general.svg";
+      name = "General";
     case 7:
-      return "/img/badge/colonel.svg";
+      image = "/img/badge/colonel.svg";
+      name = "Colonel";
     case 6:
-      return "/img/badge/major.svg";
+      image = "/img/badge/major.svg";
+      name = "Major";
     case 5:
-      return "/img/badge/captain.svg";
+      image = "/img/badge/captain.svg";
+      name = "Captain";
     case 4:
-      return "/img/badge/lieutenant.svg";
+      image = "/img/badge/lieutenant.svg";
+      name = "Lieutenant";
     case 3:
-      return "/img/badge/master sergeant.svg";
+      image = "/img/badge/master sergeant.svg";
+      name = "Master Sergeant";
     case 2:
-      return "/img/badge/sergeant.svg";
+      image = "/img/badge/sergeant.svg";
+      name = "Sergeant";
     case 1:
-      return "/img/badge/corporal.svg";
+      image = "/img/badge/corporal.svg";
+      name = "Corporal";
   }
+  return { image, name };
 };
