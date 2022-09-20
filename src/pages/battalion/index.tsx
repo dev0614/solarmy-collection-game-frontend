@@ -299,37 +299,37 @@ export default function BattalionPage() {
     });
     if (nftList.length !== 0) {
       for (let item of nftList) {
-        console.log(item);
-        if (
-          item.data?.creators[0]?.address === MAIN_2D_CEATOR ||
-          item.data?.creators[0]?.address === MAIN_3D_CEATOR
-        ) {
-          const image = await fetch(item.data.uri)
-            .then((resp) => resp.json())
-            .then((json) => {
-              return json.image;
-            })
-            .catch((error) => {
-              console.log(error);
-              return "";
+        if (item.data?.creators)
+          if (
+            item.data?.creators[0]?.address === MAIN_2D_CEATOR ||
+            item.data?.creators[0]?.address === MAIN_3D_CEATOR
+          ) {
+            const image = await fetch(item.data.uri)
+              .then((resp) => resp.json())
+              .then((json) => {
+                return json.image;
+              })
+              .catch((error) => {
+                console.log(error);
+                return "";
+              });
+            nfts.push({
+              collection: item.data.name.slice(0, 2),
+              mint: item.mint,
+              name: item.data.name,
+              uri: item.data.uri,
+              image: image,
+              selected: false,
+              id: item.data.name.split("#")[1],
             });
-          nfts.push({
-            collection: item.data.name.slice(0, 2),
-            mint: item.mint,
-            name: item.data.name,
-            uri: item.data.uri,
-            image: image,
-            selected: false,
-            id: item.data.name.split("#")[1],
-          });
-          nfts.sort((a, b) =>
-            (a.name + a.id).toLowerCase() < (b.name + b.id).toLowerCase()
-              ? -1
-              : (a.name + a.id).toLowerCase() > (b.name + b.id).toLowerCase()
-              ? 1
-              : 0
-          );
-        }
+            nfts.sort((a, b) =>
+              (a.name + a.id).toLowerCase() < (b.name + b.id).toLowerCase()
+                ? -1
+                : (a.name + a.id).toLowerCase() > (b.name + b.id).toLowerCase()
+                ? 1
+                : 0
+            );
+          }
       }
       if (nfts.length !== 0) {
         setSoldiers(nfts);
