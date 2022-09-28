@@ -52,7 +52,7 @@ export const initUserPool = async (wallet: WalletContextState) => {
   );
   try {
     const tx = await createInitUserPoolTx(userAddress, program);
-    const { blockhash } = await solConnection.getRecentBlockhash("finalized");
+    const { blockhash } = await solConnection.getLatestBlockhash("finalized");
     tx.feePayer = userAddress;
     tx.recentBlockhash = blockhash;
     const txId = await wallet.sendTransaction(tx, solConnection);
@@ -104,7 +104,7 @@ export const depositToAccount = async (
       solConnection
     );
 
-    const { blockhash } = await solConnection.getRecentBlockhash("confirmed");
+    const { blockhash } = await solConnection.getLatestBlockhash("confirmed");
     tx.feePayer = userAddress;
     tx.recentBlockhash = blockhash;
 
@@ -163,7 +163,7 @@ export const withdrawFromAccount = async (
       program,
       solConnection
     );
-    const { blockhash } = await solConnection.getRecentBlockhash("confirmed");
+    const { blockhash } = await solConnection.getLatestBlockhash("confirmed");
     tx.feePayer = userAddress;
     tx.recentBlockhash = blockhash;
     const txId = await wallet.sendTransaction(tx, solConnection);
@@ -217,7 +217,7 @@ export const depositToVault = async (
         break;
     }
     const tx = await createDepositToVaultTx(userAddress, amount, program);
-    const { blockhash } = await solConnection.getRecentBlockhash("confirmed");
+    const { blockhash } = await solConnection.getLatestBlockhash("confirmed");
     tx.feePayer = userAddress;
     tx.recentBlockhash = blockhash;
     const txId = await wallet.sendTransaction(tx, solConnection);
@@ -508,7 +508,7 @@ export const stakeAllNFT = async (
       if (tx) transactions.push(tx);
     }
     if (transactions.length !== 0) {
-      let { blockhash } = await provider.connection.getRecentBlockhash(
+      let { blockhash } = await provider.connection.getLatestBlockhash(
         "confirmed"
       );
       transactions.forEach((transaction) => {
@@ -589,7 +589,7 @@ export const stakeNFT = async (
       solConnection,
       duration
     );
-    const { blockhash } = await solConnection.getRecentBlockhash("confirmed");
+    const { blockhash } = await solConnection.getLatestBlockhash("confirmed");
     tx.feePayer = userAddress;
     tx.recentBlockhash = blockhash;
     const txId = await wallet.sendTransaction(tx, solConnection);
@@ -632,7 +632,7 @@ export const withdrawNft = async (
       program,
       solConnection
     );
-    const { blockhash } = await solConnection.getRecentBlockhash("confirmed");
+    const { blockhash } = await solConnection.getLatestBlockhash("confirmed");
     tx.feePayer = userAddress;
     tx.recentBlockhash = blockhash;
     const txId = await wallet.sendTransaction(tx, solConnection);
@@ -680,7 +680,7 @@ export const claimAllNFT = async (
       if (tx) transactions.push(tx);
     }
     if (transactions.length !== 0) {
-      let { blockhash } = await provider.connection.getRecentBlockhash(
+      let { blockhash } = await provider.connection.getLatestBlockhash(
         "confirmed"
       );
       transactions.forEach((transaction) => {
@@ -748,7 +748,7 @@ export const withdrawToken = async (
       program,
       solConnection
     );
-    const { blockhash } = await solConnection.getRecentBlockhash("confirmed");
+    const { blockhash } = await solConnection.getLatestBlockhash("confirmed");
     tx.feePayer = userAddress;
     tx.recentBlockhash = blockhash;
 
@@ -763,37 +763,34 @@ export const withdrawToken = async (
     filterError(error);
   }
 };
-
 export const createWithdrawNftTx = async (
   mint: PublicKey,
   userAddress: PublicKey,
   program: anchor.Program,
   connection: Connection
 ) => {
+  const [userVault, userBump] = await PublicKey.findProgramAddress(
+    [Buffer.from(VAULT_SEED), userAddress.toBuffer()],
+    STAKING_PROGRAM_ID
+  );
   let ret = await getATokenAccountsNeedCreate(
     connection,
     userAddress,
     userAddress,
     [mint]
   );
-  let userTokenAccount = ret.destinationAccounts[0];
-  console.log(userAddress.toBase58());
-  console.log("User NFT = ", mint.toBase58(), userTokenAccount.toBase58());
-
-  const [globalAuthority, bump] = await PublicKey.findProgramAddress(
-    [Buffer.from(GLOBAL_AUTHORITY_SEED)],
-    STAKING_PROGRAM_ID
-  );
-
-  const [userVault, userbump] = await PublicKey.findProgramAddress(
-    [Buffer.from(VAULT_SEED), userAddress.toBuffer()],
-    STAKING_PROGRAM_ID
-  );
   let ret1 = await getATokenAccountsNeedCreate(
     connection,
     userAddress,
     userVault,
     [AMMO_TOKEN_MINT]
+  );
+  let userTokenAccount = ret.destinationAccounts[0];
+  console.log("User NFT = ", mint.toBase58(), userTokenAccount.toBase58());
+
+  const [globalAuthority, bump] = await PublicKey.findProgramAddress(
+    [Buffer.from(GLOBAL_AUTHORITY_SEED)],
+    STAKING_PROGRAM_ID
   );
   let rewardVault = await getAssociatedTokenAccount(
     globalAuthority,
@@ -804,9 +801,6 @@ export const createWithdrawNftTx = async (
     mint
   );
 
-  console.log(globalAuthority.toBase58(), "+++>UserVault");
-  console.log(ret1.destinationAccounts[0].toBase58());
-
   let userPoolKey = await anchor.web3.PublicKey.createWithSeed(
     userAddress,
     "user-pool",
@@ -816,8 +810,7 @@ export const createWithdrawNftTx = async (
   let tx = new Transaction();
 
   if (ret.instructions.length > 0) ret.instructions.map((ix) => tx.add(ix));
-  if (ret1.instructions.length > 0) ret1.instructions.map((ix) => tx.add(ix));
-
+  if (ret1.instructions.length > 0) ret.instructions.map((ix) => tx.add(ix));
   console.log("==> Withdrawing ... ", mint.toBase58());
 
   tx.add(
@@ -841,7 +834,6 @@ export const createWithdrawNftTx = async (
 
   return tx;
 };
-
 export const createWithdrawTx = async (
   userAddress: PublicKey,
   amount: number,
@@ -1137,7 +1129,7 @@ export const createFusionTx = async (
     )
   );
 
-  const { blockhash } = await solConnection.getRecentBlockhash("finalized");
+  const { blockhash } = await solConnection.getLatestBlockhash("finalized");
   tx.feePayer = userAddress;
   tx.recentBlockhash = blockhash;
 
