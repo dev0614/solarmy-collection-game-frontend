@@ -4,7 +4,7 @@ import { PublicKey } from "@solana/web3.js";
 export let NETWORK = "devnet";
 export const LIVE_URL = "https://solarmy.herokuapp.com/";
 export const CREATOR_2D_ADDRESS =
-  "C3t2xtqA2NFTDqs1SJgcHxyaNqCE4JYnT9EqRySVXYfK";
+  "3ZaVUqfzVvhTpRgMzDD4ovytksUofFBofPxinezjNoRd";
 export const CREATOR_3D_ADDRESS =
   "Am9xhPPVCfDZFDabcGgmQ8GTMdsbqEt1qVXbyhTxybAp";
 
