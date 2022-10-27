@@ -72,36 +72,22 @@ export default function DashboardPage() {
       <MainPage>
         <div className="dashboard">
           <div className="col-4">
-            {NETWORK === "mainnet-beta" ? (
-              <div className="network-alert">
-                <h5>Badge &#38; Top Soliders</h5>
-                <p>Please Switch to Devnet</p>
-              </div>
-            ) : (
-              <Badge
-                topLoading={topLoading}
-                top2dNft={top2dNft}
-                badgeNum={userData.badge}
-                top3dNft={top3dNft}
-              />
-            )}
+            <Badge
+              topLoading={topLoading}
+              top2dNft={top2dNft}
+              badgeNum={userData.badge}
+              top3dNft={top3dNft}
+            />
           </div>
           <div className="col-4">
             <LeaderboardState router={router} wallet={wallet} />
           </div>
           <div className="col-4">
-            {NETWORK === "devnet" ? (
-              <div className="network-alert">
-                <h5>Battalion</h5>
-                <p>Please Switch to Mainnet</p>
-              </div>
-            ) : (
-              wallet.publicKey && (
-                <BattalionDashboardBox
-                  router={router}
-                  wallet={wallet.publicKey.toBase58()}
-                />
-              )
+            {wallet.publicKey && (
+              <BattalionDashboardBox
+                router={router}
+                wallet={wallet.publicKey.toBase58()}
+              />
             )}
           </div>
         </div>

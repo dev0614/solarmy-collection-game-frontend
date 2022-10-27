@@ -1,7 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 
 //mainnet-beta | devnet
-export let NETWORK = "devnet";
+export let NETWORK = "mainnet";
 export const LIVE_URL = "https://solarmy.herokuapp.com/";
 export const CREATOR_2D_ADDRESS =
   "3ZaVUqfzVvhTpRgMzDD4ovytksUofFBofPxinezjNoRd";
@@ -26,7 +26,7 @@ export const STAKING_PROGRAM_ID = new PublicKey(
   "2RbwYVj8gmYf8TRNukd34fGJgT7X4X4K3t6gLGwJkNQD"
 );
 export const AMMO_TOKEN_MINT = new PublicKey(
-  "H3rmqbVz8NTCkGABeue3yc9PgioL2i1RPrQM45itdKMu"
+  "H1X2quMc8ZesCE4afDQhWAmFssENprmmz9a6SXvHWPoN"
 );
 export const AMMO_TOKEN_DECIMAL = 1_000_000_000;
 

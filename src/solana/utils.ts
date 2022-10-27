@@ -21,7 +21,9 @@ export const METAPLEX = new PublicKey(
   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
 );
 
-export const solConnection = new web3.Connection(web3.clusterApiUrl("devnet"));
+export const solConnection = new web3.Connection(
+  web3.clusterApiUrl("mainnet-beta")
+);
 
 export const getOwnerOfNFT = async (
   nftMintPk: PublicKey,
