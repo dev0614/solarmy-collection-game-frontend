@@ -11,7 +11,7 @@ import {
   TranscendentalIcon,
   UniversalIcon,
 } from "../../components/svgIcons";
-import { CREATOR_2D_ADDRESS, CREATOR_3D_ADDRESS } from "../../config";
+import { MAIN_2D_CEATOR, MAIN_3D_CEATOR } from "../../config";
 import { getAttributeItemData, getTopSoldiers } from "../../solana/server";
 import {
   AttributeFilterTypes,
@@ -298,8 +298,8 @@ export default function MePage() {
     if (nftList.length !== 0) {
       for (let item of nftList) {
         if (
-          item.data?.creators[0]?.address === CREATOR_2D_ADDRESS ||
-          item.data?.creators[0]?.address === CREATOR_3D_ADDRESS
+          item.data?.creators[0]?.address === MAIN_2D_CEATOR ||
+          item.data?.creators[0]?.address === MAIN_3D_CEATOR
         ) {
           const image = await fetch(item.data.uri)
             .then((resp) => resp.json())

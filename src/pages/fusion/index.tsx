@@ -18,7 +18,7 @@ import {
   FusionIconlg,
 } from "../../components/svgIcons";
 import { AttributeSetting, MainPage } from "../../components/Widget";
-import { CREATOR_3D_ADDRESS } from "../../config";
+import { MAIN_3D_CEATOR } from "../../config";
 import { getAvailableInventory } from "../../solana/server";
 import {
   AbleFetchedItem,
@@ -79,7 +79,7 @@ export default function FusionPage() {
       let feched: FusionNftDetail[] = [];
       for (let item of nftList) {
         if (item.data?.creators)
-          if (item.data?.creators[0].address === CREATOR_3D_ADDRESS)
+          if (item.data?.creators[0].address === MAIN_3D_CEATOR)
             list.push({
               nftMint: item?.mint,
               uri: item?.data?.uri,
