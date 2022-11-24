@@ -179,8 +179,9 @@ export const BattalionDashboardBox = (props: {
       for (let item of nftList) {
         console.log(item);
         if (
-          item.data?.creators[0]?.address === MAIN_2D_CEATOR ||
-          item.data?.creators[0]?.address === MAIN_3D_CEATOR
+          item.data?.creators &&
+          (item.data?.creators[0]?.address === MAIN_2D_CEATOR ||
+            item.data?.creators[0]?.address === MAIN_3D_CEATOR)
         ) {
           const image = await fetch(item.data.uri)
             .then((resp) => resp.json())

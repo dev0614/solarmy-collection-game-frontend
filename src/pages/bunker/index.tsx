@@ -12,6 +12,8 @@ import { ClipLoader } from "react-spinners";
 import socketIOClient from "socket.io-client";
 import { useUserContext } from "../../context/UserProvider";
 import { useRouter } from "next/router";
+import Menu from "../../components/Menu";
+
 const socket = socketIOClient(API_URL);
 
 export default function BunkerPage() {
@@ -192,6 +194,7 @@ export default function BunkerPage() {
                     </div>
                 </div>
             </MainPage>
+            <Menu />
         </>
     )
 }

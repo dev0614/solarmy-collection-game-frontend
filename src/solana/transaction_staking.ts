@@ -810,8 +810,15 @@ export const createWithdrawNftTx = async (
   let tx = new Transaction();
 
   if (ret.instructions.length > 0) ret.instructions.map((ix) => tx.add(ix));
-  if (ret1.instructions.length > 0) ret.instructions.map((ix) => tx.add(ix));
+  if (ret1.instructions.length > 0) ret1.instructions.map((ix) => tx.add(ix));
   console.log("==> Withdrawing ... ", mint.toBase58());
+  console.log(globalAuthority.toBase58());
+  console.log(userTokenAccount.toBase58());
+  console.log(destNftTokenAccount.toBase58());
+  console.log(rewardVault.toBase58());
+  console.log(userVault.toBase58());
+  console.log(ret1.destinationAccounts[0].toBase58());
+  
 
   tx.add(
     program.instruction.withdrawNftFromPool(bump, {

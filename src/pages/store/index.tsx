@@ -5,6 +5,7 @@ import Header from "../../components/Header";
 import PlanItem from "../../components/Store/PlanItem";
 import { MainPage } from "../../components/Widget";
 import { LIVE_URL } from "../../config";
+import Menu from "../../components/Menu";
 
 export default function StorePage() {
     const router = useRouter();
@@ -43,6 +44,7 @@ export default function StorePage() {
                     <PlanItem id={3} />
                 </div>
             </MainPage>
+            <Menu />
         </>
     )
 }

@@ -2,7 +2,7 @@ import { PublicKey } from "@solana/web3.js";
 
 //mainnet-beta | devnet
 export let NETWORK = "mainnet";
-export const LIVE_URL = "https://solarmy.herokuapp.com/";
+export const LIVE_URL = "https://game.solarmy.com/";
 export const CREATOR_2D_ADDRESS =
   "3ZaVUqfzVvhTpRgMzDD4ovytksUofFBofPxinezjNoRd";
 export const CREATOR_3D_ADDRESS =
@@ -32,7 +32,7 @@ export const AMMO_TOKEN_DECIMAL = 1_000_000_000;
 
 export const USER_POOL_SIZE = 5648; // 8 + 5640
 
-export const DAY_LENGTH = 100; //86400
+export const DAY_LENGTH = 86400;
 // export const DAY_LENGTH = 60 * 60 * 24 //86400
 export const DEPLOY_LEVEL = [
   {

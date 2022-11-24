@@ -22,7 +22,7 @@ export const METAPLEX = new PublicKey(
 );
 
 export const solConnection = new web3.Connection(
-  web3.clusterApiUrl("mainnet-beta")
+  'https://delicate-attentive-silence.solana-mainnet.quiknode.pro/95b6a731ab28cf055accc29fdd2a78abe8dd1e6b/'
 );
 
 export const getOwnerOfNFT = async (

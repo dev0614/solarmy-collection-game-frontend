@@ -26,22 +26,25 @@ export default function Badge(props: {
 
   const getDetail = async (mint: string, setData: Function) => {
     setLoading(true);
-    const metadata = await getNftMetaData(new PublicKey(mint));
-    const { image, name } = getBadgeInfo(props.badgeNum);
-    if (image) setBadgeImage(image);
-    if (name) setBadgeName(name);
-    await fetch(metadata)
-      .then((resp) => resp.json())
-      .then((json) => {
-        console.log(json);
-        setData({
-          image: json.image,
-          nftMint: mint,
+    if(mint) {
+      const metadata = await getNftMetaData(new PublicKey(mint));
+      const { image, name } = getBadgeInfo(props.badgeNum);
+      if (image) setBadgeImage(image);
+      if (name) setBadgeName(name);
+      await fetch(metadata)
+        .then((resp) => resp.json())
+        .then((json) => {
+          console.log(json);
+          setData({
+            image: json.image,
+            nftMint: mint,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
         });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    }
+    
     setLoading(false);
   };
 

@@ -37,7 +37,19 @@ export default function Header(props: {
     setName(userData.userName);
     const { image } = getBadgeInfo(userData.badge);
     if (image) setBadgeImage(image);
+    else setBadgeImage("/img/badge/corporal.svg");
   }, [userData]);
+
+  const goBack = () => {
+    const prevPage = props.back?.backUrl;
+    const currentPage = router.pathname;
+
+    if (prevPage === currentPage) {
+      router.push('/')
+    } else {
+      router.back()
+    }
+  }
 
   return (
     <header>
@@ -46,9 +58,7 @@ export default function Header(props: {
           {props.back && (
             <button
               className="btn-back"
-              onClick={() =>
-                router.push(props.back?.backUrl ? props.back?.backUrl : "/")
-              }
+              onClick={goBack}
             >
               <div className="btn-body">
                 <ArrowBackIosTwoTone />
