@@ -382,3 +382,4 @@ export const POSITION_TABLE_DATA = [
     ),
   },
 ];
+

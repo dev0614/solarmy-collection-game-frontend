@@ -116,13 +116,6 @@ export const FusionMediaImage = (props: {
                     alt=""
                 />
             }
-            {props.headAccessoriesImage !== "" &&
-                // eslint-disable-next-line
-                <img
-                    src={props.headAccessoriesImage}
-                    alt=""
-                />
-            }
             {props.headImage !== "" &&
                 // eslint-disable-next-line
                 <img
@@ -130,6 +123,14 @@ export const FusionMediaImage = (props: {
                     alt=""
                 />
             }
+            {!props.headAccessoriesImage || props.headAccessoriesImage !== "" &&
+                // eslint-disable-next-line
+                <img
+                    src={props.headAccessoriesImage}
+                    alt=""
+                />
+            }
+
         </div>
     )
 }

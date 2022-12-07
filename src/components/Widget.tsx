@@ -1,11 +1,17 @@
 import { ClickAwayListener } from "@mui/material";
 import { getParsedNftAccountsByOwner } from "@nfteyez/sol-rayz";
 import { WalletContextState } from "@solana/wallet-adapter-react";
-import moment from "moment";
 import { NextRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { MAIN_2D_CEATOR, MAIN_3D_CEATOR } from "../config";
-import { getRanks } from "../solana/server";
+import { TableCollectionData, TableData } from "../pages/leaderboard";
+import {
+  get2dCollectionRank,
+  get2dTopRank,
+  get3dCollectionRank,
+  get3dTopRank,
+} from "../solana/server";
+
 import { AttributeFilterTypes } from "../solana/types";
 import { solConnection } from "../solana/utils";
 import { ArrowRightTwoTone, InfoTwoTone, SettingIcon } from "./svgIcons";
@@ -48,23 +54,28 @@ export const TopSoldier = (props: { title: string; image: string }) => {
   );
 };
 
-type TableData = {
-  rate: string;
-  rateFormat: string;
-  userName: string;
-  userAddress: string;
-  points: string;
-}[];
 export const LeaderboardState = (props: {
   router: NextRouter;
   wallet: WalletContextState;
 }) => {
   const [topTab, setTopTab] = useState("soldier");
   const [subTab, setSubTab] = useState("2d");
-  const [tableData, setTableData] = useState<TableData>();
+  const [tableData, setTableData] = useState<TableData[]>();
+  const [tableCollectionData, setTableCollectionData] =
+    useState<TableCollectionData[]>();
 
   const getRankList = async () => {
-    const data = await getRanks();
+    let data: any[] = [];
+    let dataCollection: any[] = [];
+    if (topTab === "soldier" && subTab === "2d") {
+      data = await get2dTopRank();
+    } else if (topTab === "collection" && subTab === "2d") {
+      dataCollection = await get2dCollectionRank();
+    } else if (topTab === "soldier" && subTab === "3d") {
+      data = await get3dTopRank();
+    } else if (topTab === "collection" && subTab === "3d") {
+      dataCollection = await get3dCollectionRank();
+    }
     if (data) {
       let list: any = [];
       for (let item of data) {
@@ -74,13 +85,29 @@ export const LeaderboardState = (props: {
           userName: item.name,
           userAddress: item.wallet,
           points: item.points,
+          mint: item.mint,
         });
       }
       setTableData(list);
     }
+    if (dataCollection) {
+      let list: any = [];
+      for (let item of dataCollection) {
+        list.push({
+          id: item._id,
+          name:
+            item.name.length > 30
+              ? item.name.slice(0, 4) + ".." + item.name.slice(-4)
+              : item.name,
+          count: item.count,
+        });
+      }
+      setTableCollectionData(list);
+    }
   };
   useEffect(() => {
     getRankList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topTab, subTab]);
 
   return (
@@ -122,32 +149,61 @@ export const LeaderboardState = (props: {
           3d
         </button>
       </div>
-      <div className="dashboard-list-table">
-        <div className="table-header">
-          <div className="th"></div>
-          <div className="th">Playername</div>
-          <div className="th">Points</div>
+
+      {topTab === "soldier" && (
+        <div className="dashboard-list-table">
+          <div className="table-header">
+            <div className="th"></div>
+            <div className="th">Playername</div>
+            <div className="th">Points</div>
+          </div>
+          <div className="table-tbody">
+            {tableData &&
+              tableData.length !== 0 &&
+              tableData.slice(0, 5).map((item, key) => (
+                <div
+                  className={
+                    item.userAddress === props.wallet.publicKey?.toBase58()
+                      ? "tr highlight"
+                      : "tr"
+                  }
+                  key={key}
+                >
+                  <div className="td"></div>
+                  <div className="td">{item.mint}</div>
+                  <div className="td">{item.points}</div>
+                </div>
+              ))}
+          </div>
         </div>
-        <div className="table-tbody">
-          {tableData &&
-            tableData.length !== 0 &&
-            tableData.slice(0, 5).map((item, key) => (
-              <div
-                className={
-                  item.userAddress === props.wallet.publicKey?.toBase58()
-                    ? "tr highlight"
-                    : "tr"
-                }
-                key={key}
-              >
-                <div className="td">{item.rateFormat}</div>
-                <div className="td">{item.userName}</div>
-                <div className="td">{item.points}</div>
-              </div>
-            ))}
+      )}
+      {topTab === "collection" && (
+        <div className="dashboard-list-table">
+          <div className="table-header">
+            <div className="th"></div>
+            <div className="th">Wallet</div>
+            <div className="th">Count</div>
+          </div>
+          <div className="table-tbody">
+            {tableCollectionData &&
+              tableCollectionData.length !== 0 &&
+              tableCollectionData.slice(0, 5).map((item, key) => (
+                <div
+                  className={
+                    item.id === props.wallet.publicKey?.toBase58()
+                      ? "tr highlight"
+                      : "tr"
+                  }
+                  key={key}
+                >
+                  <div className="td"></div>
+                  <div className="td">{item.name}</div>
+                  <div className="td">{item.count}</div>
+                </div>
+              ))}
+          </div>
         </div>
-      </div>
-      <p className="dashboard-updated-time">{moment("2022-7-10").fromNow()}</p>
+      )}
     </div>
   );
 };
@@ -177,7 +233,6 @@ export const BattalionDashboardBox = (props: {
 
     if (nftList.length !== 0) {
       for (let item of nftList) {
-        console.log(item);
         if (
           item.data?.creators &&
           (item.data?.creators[0]?.address === MAIN_2D_CEATOR ||

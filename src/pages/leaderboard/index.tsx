@@ -1,5 +1,4 @@
 import { useWallet } from "@solana/wallet-adapter-react";
-import moment from "moment";
 import { useEffect, useState } from "react";
 import { NextSeo } from "next-seo";
 import Header from "../../components/Header";
@@ -20,16 +19,17 @@ import { successAlert } from "../../components/toastGroup";
 
 export type TableData = {
   rate: string;
-  rateFormat: string;
   userName: string;
   userAddress: string;
   points: string;
-}[];
+  mint: string;
+};
 
 export type TableCollectionData = {
   id: string;
+  name: string;
   count: number;
-}[];
+};
 
 export default function DashboardPage() {
   const wallet = useWallet();
@@ -38,13 +38,12 @@ export default function DashboardPage() {
 
   const [topTab, setTopTab] = useState("soldier");
   const [subTab, setSubTab] = useState("2d");
-  const [tableData, setTableData] = useState<TableData>();
+  const [tableData, setTableData] = useState<TableData[]>();
   const [tableCollectionData, setTableCollectionData] =
-    useState<TableCollectionData>();
+    useState<TableCollectionData[]>();
   const [isStarted, setIsStarted] = useState(false);
 
   const getRankList = async (topTab: string, subTab: string) => {
-    console.log(topTab, subTab);
     let data: any[] = [];
     let dataCollection: any[] = [];
     if (topTab === "soldier" && subTab === "2d") {
@@ -56,17 +55,17 @@ export default function DashboardPage() {
     } else if (topTab === "collection" && subTab === "3d") {
       dataCollection = await get3dCollectionRank();
     }
+    console.log(data, "==> daata");
+    console.log(dataCollection, "==> dataCollection");
     if (data) {
       let list: any = [];
       for (let item of data) {
         list.push({
           rate: item.rate,
-          rateFormat: item.rate,
           userName: item.name,
           userAddress: item.wallet,
+          mint: item.mint,
           points: item.points,
-          id: item._id,
-          count: item.count,
         });
       }
       setTableData(list);
@@ -76,6 +75,10 @@ export default function DashboardPage() {
       for (let item of dataCollection) {
         list.push({
           id: item._id,
+          name:
+            item.name.length > 30
+              ? item.name.slice(0, 4) + ".." + item.name.slice(-4)
+              : item.name,
           count: item.count,
         });
       }
@@ -176,13 +179,13 @@ export default function DashboardPage() {
                 <div className="dashboard-list-table scrollbar">
                   <div className="table-header" style={{ paddingBottom: 4 }}>
                     <div className="th"></div>
-                    <div className="th">Playername</div>
+                    <div className="th">Soldiername</div>
                     <div className="th">Points</div>
                   </div>
                   <div className="tbody">
                     <div className="table-tbody">
                       {tableData &&
-                        tableData.map((item: any, key: number) => (
+                        tableData.map((item: TableData, key: number) => (
                           <div
                             className={
                               item.userAddress === wallet.publicKey?.toBase58()
@@ -191,22 +194,11 @@ export default function DashboardPage() {
                             }
                             key={key}
                           >
-                            <div className="td">{item.rateFormat}</div>
-                            <div className="td">
-                              {item.userAddress === wallet.publicKey?.toBase58()
-                                ? "You"
-                                : item.userName}
-                            </div>
+                            <div className="td"></div>
+                            <div className="td">{item.mint}</div>
                             <div className="td">{item.points}</div>
                           </div>
                         ))}
-                      {/* <div className="you-content">
-                        <div className="tr highlight you">
-                          <div className="td">{"18th"}</div>
-                          <div className="td">{"You"}</div>
-                          <div className="td">{848}</div>
-                        </div>
-                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -214,8 +206,8 @@ export default function DashboardPage() {
               {topTab === "collection" && (
                 <div className="dashboard-list-table scrollbar">
                   <div className="table-header" style={{ paddingBottom: 4 }}>
-                    <div className="th">Wallet</div>
                     <div className="th"></div>
+                    <div className="th">Wallet</div>
                     <div className="th">Count</div>
                   </div>
                   <div className="tbody">
@@ -230,12 +222,12 @@ export default function DashboardPage() {
                             }
                             key={key}
                           >
+                            <div className="td"></div>
                             <div className="td">
                               {item.id === wallet.publicKey?.toBase58()
                                 ? "You"
-                                : item.id}
+                                : item.name}
                             </div>
-                            <div className="td"></div>
                             <div className="td">{item.count}</div>
                           </div>
                         ))}

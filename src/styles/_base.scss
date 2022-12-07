@@ -1285,7 +1285,6 @@ button.claim-all {
 .leaderboard {
     margin-right: 24px;
     margin-left: 24px;
-    padding-bottom: 180px;
     display: flex;
     .left {
         width: calc(100% - 590px);
@@ -2673,6 +2672,7 @@ button.claim-all {
     margin-right: 24px;
     margin-left: 24px;
     display: flex;
+    padding-bottom: 180px;
     .left {
         width: calc(100% - 590px);
         margin-right: 24px;
@@ -3397,21 +3397,4 @@ button.claim-all {
 .user-soldiers {
     height: 500px;
     overflow: auto;
-}
-.register-mission {
-    color: #292929;
-    transition: all 0.3s;
-    background-color: #4af497;
-    padding: 12px 24px;
-    border-radius: 10px;
-    border: none;
-    font-weight: 600;
-    font-size: 15px;
-    line-height: 160%;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-top: 12px;
-    &:hover {
-        background-color: #32c976;
-    }
 }

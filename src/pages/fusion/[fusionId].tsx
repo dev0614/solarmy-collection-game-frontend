@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import React, { useEffect, useState } from "react";
 import { PublicKey } from "@solana/web3.js";
@@ -48,8 +49,8 @@ export default function FusionEdit(props: {
         rarity: string,
         url: string,
     }[]>([]);
-    const [forceRender, setForceRender] = useState(false);
 
+    const [forceRender, setForceRender] = useState(false);
     const [confirmModal, setConfirmModal] = useState(false);
 
     const [equipedTotal, setEquipedTotal] = useState(0);
@@ -114,8 +115,9 @@ export default function FusionEdit(props: {
     const handleAttribute = (attrName: any) => {
         setSelectedKind(titleCamel(attrName as string));
         const names = ableInventories?.filter((attr) => attr.attribute_type === attrName);
-        setSelectAbled(names)
-        // eslint-disable-next-line
+
+        setSelectAbled(names);
+        console.log(names);
     };
 
     const handleRemoveSelected = (attr: string, attr_type: string) => {
@@ -123,6 +125,7 @@ export default function FusionEdit(props: {
         for (var i = 0; i < selected.length; i++) {
             if (selected[i].attribute === attr && selected[i].attribute_type === attr_type) {
                 selected.splice(i, 1);
+                console.log(selected, "==> selected")
                 setChangesItems(selected);
                 setForceRender(!forceRender);
             }
@@ -294,7 +297,7 @@ export default function FusionEdit(props: {
             }
         }
         // eslint-disable-next-line
-    }, [equipedAttr, selectedKind]);
+    }, [equipedAttr, JSON.stringify(changesItems)]);
 
     useEffect(() => {
         let cTotal = 0;
@@ -335,7 +338,7 @@ export default function FusionEdit(props: {
         }
         setChangedTotal(cTotal);
         // eslint-disable-next-line
-    }, [equipedAttr, JSON.stringify(changesItems)])
+    }, [equipedAttr, JSON.stringify(changesItems), forceRender])
 
     useEffect(() => {
         startLoading();
@@ -376,12 +379,12 @@ export default function FusionEdit(props: {
                         <div className="options">
                             <div className="option-header">
                                 <h4>Name</h4>
-                                {attributeFilter &&
+                                {/* {attributeFilter &&
                                     <AttributeSetting
                                         attributeFilter={attributeFilter}
                                         setAttributeFilter={setAttributeFilter}
                                     />
-                                }
+                                } */}
                             </div>
                             <div className="option-list">
                                 <ul>

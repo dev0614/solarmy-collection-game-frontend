@@ -54,37 +54,37 @@ export default function Soldier3DAttributeTable(props: {
             <div className="tbody">
                 <div className="tr">
                     <div className="td">Head</div>
-                    <div className="td">{props.head?.value}</div>
+                    <div className="td">{props.head?.value.replaceAll("_", " ")}</div>
                     <div className="td">{props.head?.rarity} {props.head?.points}</div>
                 </div>
                 <div className="tr">
                     <div className="td">Head Accessories</div>
-                    <div className="td">{props.head_accessories?.value}</div>
+                    <div className="td">{props.head_accessories?.value.replaceAll("_", " ")}</div>
                     <div className="td">{props.head_accessories?.rarity} {props.head_accessories?.points}</div>
                 </div>
                 <div className="tr">
                     <div className="td">L Arm</div>
-                    <div className="td">{props.l_arm?.value}</div>
+                    <div className="td">{props.l_arm?.value.replaceAll("_", " ")}</div>
                     <div className="td">{props.l_arm?.rarity} {props.l_arm?.points}</div>
                 </div>
                 <div className="tr">
                     <div className="td">R Arm</div>
-                    <div className="td">{props.r_arm?.value}</div>
+                    <div className="td">{props.r_arm?.value.replaceAll("_", " ")}</div>
                     <div className="td">{props.r_arm?.rarity} {props.r_arm?.points}</div>
                 </div>
                 <div className="tr">
                     <div className="td">Legs</div>
-                    <div className="td">{props.legs?.value}</div>
+                    <div className="td">{props.legs?.value.replaceAll("_", " ")}</div>
                     <div className="td">{props.legs?.rarity} {props.legs?.points}</div>
                 </div>
                 <div className="tr">
                     <div className="td">Torso</div>
-                    <div className="td">{props.torso?.value}</div>
+                    <div className="td">{props.torso?.value.replaceAll("_", " ")}</div>
                     <div className="td">{props.torso?.rarity} {props.torso?.points}</div>
                 </div>
                 <div className="tr">
                     <div className="td">Background</div>
-                    <div className="td">{props.background?.value}</div>
+                    <div className="td">{props.background?.value.replaceAll("_", " ")}</div>
                     <div className="td">{props.background?.rarity} {props.background?.points}</div>
                 </div>
             </div>
