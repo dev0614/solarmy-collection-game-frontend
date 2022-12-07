@@ -7,9 +7,16 @@ import Menu from "../../components/Menu";
 import { AddCircleTwoTone } from "../../components/svgIcons";
 import { MainPage } from "../../components/Widget";
 import { LIVE_URL, POSITION_TABLE_DATA } from "../../config";
-import { getRanks, setRegisterLeaderboard } from "../../solana/server";
+import {
+  setRegisterLeaderboard,
+  get2dCollectionRank,
+  get2dTopRank,
+  get3dCollectionRank,
+  get3dTopRank,
+} from "../../solana/server";
 import { useUserContext } from "../../context/UserProvider";
 import { ClipLoader } from "react-spinners";
+import { successAlert } from "../../components/toastGroup";
 
 export type TableData = {
   rate: string;
@@ -18,6 +25,12 @@ export type TableData = {
   userAddress: string;
   points: string;
 }[];
+
+export type TableCollectionData = {
+  id: string;
+  count: number;
+}[];
+
 export default function DashboardPage() {
   const wallet = useWallet();
   const userData = useUserContext();
@@ -26,11 +39,23 @@ export default function DashboardPage() {
   const [topTab, setTopTab] = useState("soldier");
   const [subTab, setSubTab] = useState("2d");
   const [tableData, setTableData] = useState<TableData>();
+  const [tableCollectionData, setTableCollectionData] =
+    useState<TableCollectionData>();
   const [isStarted, setIsStarted] = useState(false);
 
-  const getRankList = async () => {
-    const data = await getRanks();
-    console.log(data);
+  const getRankList = async (topTab: string, subTab: string) => {
+    console.log(topTab, subTab);
+    let data: any[] = [];
+    let dataCollection: any[] = [];
+    if (topTab === "soldier" && subTab === "2d") {
+      data = await get2dTopRank();
+    } else if (topTab === "collection" && subTab === "2d") {
+      dataCollection = await get2dCollectionRank();
+    } else if (topTab === "soldier" && subTab === "3d") {
+      data = await get3dTopRank();
+    } else if (topTab === "collection" && subTab === "3d") {
+      dataCollection = await get3dCollectionRank();
+    }
     if (data) {
       let list: any = [];
       for (let item of data) {
@@ -40,9 +65,21 @@ export default function DashboardPage() {
           userName: item.name,
           userAddress: item.wallet,
           points: item.points,
+          id: item._id,
+          count: item.count,
         });
       }
       setTableData(list);
+    }
+    if (dataCollection) {
+      let list: any = [];
+      for (let item of dataCollection) {
+        list.push({
+          id: item._id,
+          count: item.count,
+        });
+      }
+      setTableCollectionData(list);
     }
   };
 
@@ -50,10 +87,15 @@ export default function DashboardPage() {
     if (!wallet.publicKey) return;
     try {
       setIsRegisterLoading(true);
-      await setRegisterLeaderboard(
-        userData.userName,
+      const res = await setRegisterLeaderboard(
+        userData.userName !== ""
+          ? userData.userName
+          : wallet.publicKey.toBase58(),
         wallet.publicKey.toBase58()
       );
+      if (res) {
+        successAlert("Leaderboard registration successful!");
+      }
       setIsRegisterLoading(false);
     } catch (error) {
       setIsRegisterLoading(false);
@@ -62,7 +104,7 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    getRankList();
+    getRankList(topTab, subTab);
   }, [topTab, subTab]);
 
   return (
@@ -130,69 +172,76 @@ export default function DashboardPage() {
                   3d
                 </button>
               </div>
-              {isStarted ? (
-                <div className="leaderboard-timer">
-                  <h2 className="leaderboard-title">
-                    Leaderboard starts on the 12 March 2022
-                    <br />
-                    14:00 UCT
-                  </h2>
-                  <button className="btn-register" onClick={() => onRegister()}>
-                    {isRegisterLoading ? (
-                      <ClipLoader size={20} color="#fff" />
-                    ) : (
-                      <>Register</>
-                    )}
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <p
-                    className="dashboard-updated-time"
-                    style={{ textAlign: "left" }}
-                  >
-                    {moment("2022-7-10").fromNow()}
-                  </p>
-                  <div className="dashboard-list-table scrollbar">
-                    <div className="table-header" style={{ paddingBottom: 4 }}>
-                      <div className="th"></div>
-                      <div className="th">Playername</div>
-                      <div className="th">Points</div>
-                    </div>
-                    <div className="tbody">
-                      <div className="table-tbody">
-                        {tableData &&
-                          tableData.map((item: any, key: number) => (
-                            <div
-                              className={
-                                item.userAddress ===
-                                wallet.publicKey?.toBase58()
-                                  ? "tr highlight"
-                                  : "tr"
-                              }
-                              key={key}
-                            >
-                              <div className="td">{item.rateFormat}</div>
-                              <div className="td">
-                                {item.userAddress ===
-                                wallet.publicKey?.toBase58()
-                                  ? "You"
-                                  : item.userName}
-                              </div>
-                              <div className="td">{item.points}</div>
+              {topTab === "soldier" && (
+                <div className="dashboard-list-table scrollbar">
+                  <div className="table-header" style={{ paddingBottom: 4 }}>
+                    <div className="th"></div>
+                    <div className="th">Playername</div>
+                    <div className="th">Points</div>
+                  </div>
+                  <div className="tbody">
+                    <div className="table-tbody">
+                      {tableData &&
+                        tableData.map((item: any, key: number) => (
+                          <div
+                            className={
+                              item.userAddress === wallet.publicKey?.toBase58()
+                                ? "tr highlight"
+                                : "tr"
+                            }
+                            key={key}
+                          >
+                            <div className="td">{item.rateFormat}</div>
+                            <div className="td">
+                              {item.userAddress === wallet.publicKey?.toBase58()
+                                ? "You"
+                                : item.userName}
                             </div>
-                          ))}
-                        {/* <div className="you-content">
-                          <div className="tr highlight you">
-                            <div className="td">{"18th"}</div>
-                            <div className="td">{"You"}</div>
-                            <div className="td">{848}</div>
+                            <div className="td">{item.points}</div>
                           </div>
-                        </div> */}
-                      </div>
+                        ))}
+                      {/* <div className="you-content">
+                        <div className="tr highlight you">
+                          <div className="td">{"18th"}</div>
+                          <div className="td">{"You"}</div>
+                          <div className="td">{848}</div>
+                        </div>
+                      </div> */}
                     </div>
                   </div>
-                </>
+                </div>
+              )}
+              {topTab === "collection" && (
+                <div className="dashboard-list-table scrollbar">
+                  <div className="table-header" style={{ paddingBottom: 4 }}>
+                    <div className="th">Wallet</div>
+                    <div className="th"></div>
+                    <div className="th">Count</div>
+                  </div>
+                  <div className="tbody">
+                    <div className="table-tbody">
+                      {tableCollectionData &&
+                        tableCollectionData.map((item: any, key: number) => (
+                          <div
+                            className={
+                              item.userAddress === wallet.publicKey?.toBase58()
+                                ? "tr highlight"
+                                : "tr"
+                            }
+                            key={key}
+                          >
+                            <div className="td">
+                              {item.id === wallet.publicKey?.toBase58()
+                                ? "You"
+                                : item.id}
+                            </div>
+                            <div className="td"></div>
+                            <div className="td">{item.count}</div>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           </div>
@@ -239,6 +288,14 @@ export default function DashboardPage() {
                   </>
                 )}
               </p>
+              <button className="btn-register" onClick={onRegister}>
+                {isRegisterLoading ? (
+                  <ClipLoader size={20} color="#fff" />
+                ) : (
+                  <>register for this season</>
+                )}
+              </button>
+
               <div className="position-table">
                 <div className="tr">
                   <div className="td">Position</div>

@@ -220,10 +220,49 @@ export const getBadge = async (wallet: string) => {
   return badgeNum;
 };
 
-export const getRanks = async () => {
+export const get2dCollectionRank = async () => {
   let rankList: any = [];
   await axios
-    .post(`${API_URL}getRank`)
+    .post(`${API_URL}get2dCollectionRank`)
+    .then((res) => {
+      rankList = res.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  return rankList;
+};
+
+export const get2dTopRank = async () => {
+  let rankList: any = [];
+  await axios
+    .post(`${API_URL}get2dTopRank`)
+    .then((res) => {
+      rankList = res.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  return rankList;
+};
+
+export const get3dCollectionRank = async () => {
+  let rankList: any = [];
+  await axios
+    .post(`${API_URL}get3dCollectionRank`)
+    .then((res) => {
+      rankList = res.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  return rankList;
+};
+
+export const get3dTopRank = async () => {
+  let rankList: any = [];
+  await axios
+    .post(`${API_URL}get3dTopRank`)
     .then((res) => {
       rankList = res.data;
     })
