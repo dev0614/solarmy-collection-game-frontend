@@ -411,21 +411,21 @@ button.btn-balance {
         background: rgba(255, 255, 255, 0.06);
         border-radius: 16px;
         display: flex;
+        justify-content: space-between;
         .th {
             font-weight: 600;
             font-size: 12px;
             line-height: 165%;
+            width: 33%;
             letter-spacing: 0.02em;
             font-family: $font-second;
+            text-align: center;
             color: #ffffff;
             &:first-child {
-                width: 64px;
-            }
-            &:nth-child(2) {
-                width: calc(100% - 148px);
+                text-align: left;
             }
             &:nth-child(3) {
-                width: 84px;
+                // width: 84px;
                 text-align: right;
             }
         }
@@ -446,21 +446,20 @@ button.btn-balance {
                 font-size: 15px;
                 line-height: 160%;
                 letter-spacing: 1px;
+                width: 33%;
                 color: #ffffff;
                 &:first-child {
-                    width: 64px;
                     font-weight: 500;
-                    font-size: 20px;
                     line-height: 158%;
                     letter-spacing: 1px;
                     color: #ffffff;
                 }
                 &:nth-child(2) {
-                    text-align: left;
-                    width: calc(100% - 148px);
+                    text-align: center;
+                    // width: calc(100% - 148px);
                 }
                 &:nth-child(3) {
-                    width: 84px;
+                    // width: 84px;
                     text-align: right;
                 }
             }
@@ -473,6 +472,7 @@ button.btn-balance {
         }
     }
 }
+
 .dashboard-updated-time {
     font-style: normal;
     font-weight: 500;

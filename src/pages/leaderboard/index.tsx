@@ -16,6 +16,7 @@ import {
 import { useUserContext } from "../../context/UserProvider";
 import { ClipLoader } from "react-spinners";
 import { successAlert } from "../../components/toastGroup";
+import { Skeleton } from "@mui/material";
 
 export type TableData = {
   rate: string;
@@ -35,15 +36,16 @@ export default function DashboardPage() {
   const wallet = useWallet();
   const userData = useUserContext();
   const [isRegisterLoading, setIsRegisterLoading] = useState(false);
+  const [tableLoading, setTableLoading] = useState(false);
 
   const [topTab, setTopTab] = useState("soldier");
   const [subTab, setSubTab] = useState("2d");
   const [tableData, setTableData] = useState<TableData[]>();
   const [tableCollectionData, setTableCollectionData] =
     useState<TableCollectionData[]>();
-  const [isStarted, setIsStarted] = useState(false);
 
   const getRankList = async (topTab: string, subTab: string) => {
+    setTableLoading(true);
     let data: any[] = [];
     let dataCollection: any[] = [];
     if (topTab === "soldier" && subTab === "2d") {
@@ -65,7 +67,7 @@ export default function DashboardPage() {
           userName: item.name,
           userAddress: item.wallet,
           mint: item.mint,
-          points: item.points,
+          points: item.points.toFixed(0),
         });
       }
       setTableData(list);
@@ -79,11 +81,12 @@ export default function DashboardPage() {
             item.name.length > 30
               ? item.name.slice(0, 4) + ".." + item.name.slice(-4)
               : item.name,
-          count: item.count,
+          count: item.count.toFixed(0),
         });
       }
       setTableCollectionData(list);
     }
+    setTableLoading(false);
   };
 
   const onRegister = async () => {
@@ -140,7 +143,6 @@ export default function DashboardPage() {
               className="dashboard-box"
               style={{
                 boxShadow: "none",
-                height: isStarted ? "calc(100% - 132px)" : "auto",
               }}
             >
               <div className="dashboard-tabs">
@@ -178,60 +180,138 @@ export default function DashboardPage() {
               {topTab === "soldier" && (
                 <div className="dashboard-list-table scrollbar">
                   <div className="table-header" style={{ paddingBottom: 4 }}>
-                    <div className="th"></div>
                     <div className="th">Soldiername</div>
+                    <div className="th">Username</div>
                     <div className="th">Points</div>
                   </div>
                   <div className="tbody">
-                    <div className="table-tbody">
-                      {tableData &&
-                        tableData.map((item: TableData, key: number) => (
-                          <div
-                            className={
-                              item.userAddress === wallet.publicKey?.toBase58()
-                                ? "tr highlight"
-                                : "tr"
-                            }
-                            key={key}
-                          >
-                            <div className="td"></div>
-                            <div className="td">{item.mint}</div>
-                            <div className="td">{item.points}</div>
+                    {!tableLoading ? (
+                      <div className="table-tbody">
+                        {tableData &&
+                          tableData.map((item: TableData, key: number) => (
+                            <div
+                              className={
+                                item.userAddress ===
+                                wallet.publicKey?.toBase58()
+                                  ? "tr highlight"
+                                  : "tr"
+                              }
+                              key={key}
+                            >
+                              <div className="td">{item.mint}</div>
+                              <div className="td">
+                                {item.userName.length > 20
+                                  ? item.userName.slice(0, 5) +
+                                    "..." +
+                                    item.userName.slice(-5)
+                                  : item.userName}
+                              </div>
+                              <div className="td">{item.points}</div>
+                            </div>
+                          ))}
+                      </div>
+                    ) : (
+                      <div className="table-tbody">
+                        {[1, 2, 3, 4, 5, 6].map((item, key: number) => (
+                          <div className="tr" key={key}>
+                            <div className="td">
+                              <Skeleton
+                                variant="rectangular"
+                                sx={{
+                                  height: "23.7px",
+                                  width: "70%",
+                                  borderRadius: "6px",
+                                }}
+                              />
+                            </div>
+                            <div className="td">
+                              <Skeleton
+                                variant="rectangular"
+                                sx={{
+                                  height: "23.7px",
+                                  width: "70%",
+                                  marginRight: "auto",
+                                  marginLeft: "auto",
+                                  borderRadius: "6px",
+                                }}
+                              />
+                            </div>
+                            <div className="td">
+                              <Skeleton
+                                variant="rectangular"
+                                sx={{
+                                  height: "23.7px",
+                                  marginLeft: "auto",
+                                  width: "70%",
+                                  borderRadius: "6px",
+                                }}
+                              />
+                            </div>
                           </div>
                         ))}
-                    </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
               {topTab === "collection" && (
                 <div className="dashboard-list-table scrollbar">
                   <div className="table-header" style={{ paddingBottom: 4 }}>
-                    <div className="th"></div>
                     <div className="th">Wallet</div>
                     <div className="th">Count</div>
                   </div>
                   <div className="tbody">
-                    <div className="table-tbody">
-                      {tableCollectionData &&
-                        tableCollectionData.map((item: any, key: number) => (
-                          <div
-                            className={
-                              item.userAddress === wallet.publicKey?.toBase58()
-                                ? "tr highlight"
-                                : "tr"
-                            }
-                            key={key}
-                          >
-                            <div className="td"></div>
-                            <div className="td">
-                              {item.id === wallet.publicKey?.toBase58()
-                                ? "You"
-                                : item.name}
+                    {!tableLoading ? (
+                      <div className="table-tbody">
+                        {tableCollectionData &&
+                          tableCollectionData.map((item: any, key: number) => (
+                            <div
+                              className={
+                                item.userAddress ===
+                                wallet.publicKey?.toBase58()
+                                  ? "tr highlight"
+                                  : "tr"
+                              }
+                              key={key}
+                            >
+                              <div className="td">
+                                {item.id === wallet.publicKey?.toBase58()
+                                  ? "You"
+                                  : item.name}
+                              </div>
+                              <div className="td">{item.count}</div>
                             </div>
-                            <div className="td">{item.count}</div>
+                          ))}
+                      </div>
+                    ) : (
+                      <div className="table-tbody">
+                        {[1, 2, 3, 4, 5, 6].map((item, key: number) => (
+                          <div className="tr" key={key}>
+                            <div className="td">
+                              <Skeleton
+                                variant="rectangular"
+                                sx={{
+                                  height: "23.7px",
+                                  width: "70%",
+                                  borderRadius: "6px",
+                                }}
+                              />
+                            </div>
+                            <div className="td">
+                              <Skeleton
+                                variant="rectangular"
+                                sx={{
+                                  height: "23.7px",
+                                  marginLeft: "auto",
+                                  width: "70%",
+                                  borderRadius: "6px",
+                                }}
+                              />
+                            </div>
                           </div>
                         ))}
-                    </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

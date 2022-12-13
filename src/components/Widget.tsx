@@ -84,7 +84,7 @@ export const LeaderboardState = (props: {
           rateFormat: item.rate,
           userName: item.name,
           userAddress: item.wallet,
-          points: item.points,
+          points: item.points.toFixed(0),
           mint: item.mint,
         });
       }
@@ -99,7 +99,7 @@ export const LeaderboardState = (props: {
             item.name.length > 30
               ? item.name.slice(0, 4) + ".." + item.name.slice(-4)
               : item.name,
-          count: item.count,
+          count: item.count.toFixed(0),
         });
       }
       setTableCollectionData(list);
@@ -153,9 +153,15 @@ export const LeaderboardState = (props: {
       {topTab === "soldier" && (
         <div className="dashboard-list-table">
           <div className="table-header">
-            <div className="th"></div>
-            <div className="th">Playername</div>
-            <div className="th">Points</div>
+            <div className="th" style={{ width: "40%" }}>
+              Soldiername
+            </div>
+            <div className="th" style={{ width: "35%" }}>
+              Username
+            </div>
+            <div className="th" style={{ width: "25%" }}>
+              Points
+            </div>
           </div>
           <div className="table-tbody">
             {tableData &&
@@ -169,18 +175,27 @@ export const LeaderboardState = (props: {
                   }
                   key={key}
                 >
-                  <div className="td"></div>
-                  <div className="td">{item.mint}</div>
-                  <div className="td">{item.points}</div>
+                  <div className="td" style={{ fontSize: 12, width: "40%" }}>
+                    {item.mint}
+                  </div>
+                  <div className="td" style={{ fontSize: 12, width: "35%" }}>
+                    {item.userName.length > 20
+                      ? item.userName.slice(0, 4) +
+                        "..." +
+                        item.userName.slice(-4)
+                      : item.userName}
+                  </div>
+                  <div className="td" style={{ fontSize: 12, width: "25%" }}>
+                    {item.points}
+                  </div>
                 </div>
               ))}
           </div>
         </div>
       )}
       {topTab === "collection" && (
-        <div className="dashboard-list-table">
+        <div className="dashboard-list-table mini">
           <div className="table-header">
-            <div className="th"></div>
             <div className="th">Wallet</div>
             <div className="th">Count</div>
           </div>
@@ -196,9 +211,12 @@ export const LeaderboardState = (props: {
                   }
                   key={key}
                 >
-                  <div className="td"></div>
-                  <div className="td">{item.name}</div>
-                  <div className="td">{item.count}</div>
+                  <div className="td" style={{ fontSize: 12 }}>
+                    {item.name}
+                  </div>
+                  <div className="td" style={{ fontSize: 12 }}>
+                    {item.count.toFixed(1)}
+                  </div>
                 </div>
               ))}
           </div>
